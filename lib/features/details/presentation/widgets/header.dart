@@ -15,7 +15,7 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const BannerWidget(isDotes: false),
+        const BannerWidget(isDotes: false,sliderData: []),
         Positioned(
           top: 8,
           left: 0,

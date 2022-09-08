@@ -5,6 +5,7 @@ import 'config/locale/app_localizations_setup.dart';
 import 'config/routes/app_routes.dart';
 import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
+import 'features/home_page/presentation/cubit/home_page_cubit.dart';
 import 'features/language/presentation/cubit/locale_cubit.dart';
 import 'package:elwatn/injector.dart'
 as injector;
@@ -18,6 +19,10 @@ class Elwatn extends StatelessWidget {
         BlocProvider(
           create: (_) =>
           injector.serviceLocator<LocaleCubit>()..getSavedLanguage(),
+        ),
+        BlocProvider(
+          create: (_) =>
+          injector.serviceLocator<HomePageCubit>(),
         ),
       ],
       child: BlocBuilder<LocaleCubit, LocaleState>(

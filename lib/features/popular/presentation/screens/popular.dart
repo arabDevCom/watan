@@ -18,7 +18,7 @@ class PopularScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-             BannerWidget(),
+             BannerWidget(sliderData: []),
             const SizedBox(height: 12),
             const Divider(
               endIndent: 26,

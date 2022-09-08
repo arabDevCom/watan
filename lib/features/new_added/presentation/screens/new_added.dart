@@ -17,7 +17,7 @@ final String kind;
       body: SingleChildScrollView(
         child: Column(
           children: [
-             const BannerWidget(),
+             const BannerWidget(sliderData: []),
             const SizedBox(height: 12),
             const Divider(
               endIndent: 26,

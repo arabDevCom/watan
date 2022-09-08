@@ -5,6 +5,7 @@ import '../../config/routes/app_routes.dart';
 import '../utils/app_colors.dart';
 import '../utils/assets_manager.dart';
 
+
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({Key? key, required this.openMyDrawer}) : super(key: key);
 
