@@ -1,3 +1,27 @@
 {
-  "app_name": "الوطن"
+  "app_name": "وطن",
+  "kurdish_language": "کوردی",
+  "english_language": "إنجليزى",
+  "arabic_language": "عربى",
+  "language_title": "اللغه",
+  "currency_hint": "العملة",
+  "iraq_dinar_text": "الدينار",
+  "dollar_text": "الدولار",
+  "save_text": "حفظ",
+  "notification_text": "الاشعارات",
+  "bloggs_text": "مقالات",
+  "about_us_text": "معلومات عنا",
+  "contact_us_text": "اتصل بنا",
+  "rate_app_text": "قيم التطبيق",
+  "privacy_text": "خصوصية",
+  "terms_and_conditions_text": "الأحكام والشروط",
+  "share_app_text": "شارك التطبيق",
+  "log_out_text": "تسجيل خروج",
+  "add_new_title": "الجديد",
+  "popular_title": "الرائج",
+  "view_more_text": "عرض المزيد",
+  "new_added_found_text": "جديد تم العثور عليه",
+  "no_data_message": "لا يوجد المزيد"
+
+
 }

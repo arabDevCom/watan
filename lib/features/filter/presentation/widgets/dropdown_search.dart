@@ -17,10 +17,9 @@ class DropdownSearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<String>(
-      popupProps: PopupProps.menu(
+      popupProps: const PopupProps.menu(
         showSelectedItems: true,
         fit: FlexFit.loose,
-        disabledItemFn: (String s) => s.startsWith('I'),
       ),
       items: dropdownList,
       dropdownDecoratorProps: DropDownDecoratorProps(

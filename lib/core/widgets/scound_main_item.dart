@@ -1,19 +1,33 @@
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/widgets/three_icon_details.dart';
+import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../config/routes/app_routes.dart';
+import '../../config/locale/app_localizations.dart';
+import '../../features/details/presentation/screens/details.dart';
+import '../utils/convert_numbers_method.dart';
+import 'network_image.dart';
 
 class SecondMainItemWidget extends StatelessWidget {
-  const SecondMainItemWidget({Key? key,  this.isFavorite=false}) : super(key: key);
+  const SecondMainItemWidget(
+      {Key? key, this.isFavorite = false, this.mainItemModel})
+      : super(key: key);
 
   final bool isFavorite;
+  final MainItem? mainItemModel;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, Routes.detailsRoute);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return DetailsScreen(mainItemModel: mainItemModel);
+            },
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -30,13 +44,21 @@ class SecondMainItemWidget extends StatelessWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18)),
-                      child: Image.asset(
-                        ImageAssets.itemImage1,
-                        fit: BoxFit.fill,
-                        width: 120,
-                        height: 120,
+                        borderRadius: BorderRadius.circular(18),
                       ),
+                      child: mainItemModel!.images!.isNotEmpty
+                          ? ManageNetworkImage(
+                              imageUrl:
+                                  mainItemModel!.images!.first.attachment!,
+                              width: 120,
+                              height: 120,
+                              borderRadius: 12,
+                            )
+                          : Image.asset(
+                              ImageAssets.watanLogo,
+                              width: 120,
+                              height: 120,
+                            ),
                     ),
                     Positioned(
                       top: 4,
@@ -47,10 +69,10 @@ class SecondMainItemWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: AppColors.white,
                             borderRadius: const BorderRadius.only(
-                                topRight:  Radius.circular(10))),
+                                topRight: Radius.circular(10))),
                         child: Center(
                           child: Text(
-                            "SALE",
+                            mainItemModel!.status!,
                             style: TextStyle(
                                 color: AppColors.primary, fontSize: 11),
                             textAlign: TextAlign.center,
@@ -62,31 +84,45 @@ class SecondMainItemWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8, right: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "House Font Of Garden",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            Text(
+                              AppLocalizations.of(context)!.isEnLocale
+                                  ? mainItemModel!.titleEn ?? "No Title"
+                                  : (AppLocalizations.of(context)!.isArLocale
+                                      ? mainItemModel!.titleAr ?? "لا عنوان"
+                                      : mainItemModel!.titleKo ??
+                                          "هیچ ناونیشانێک نییە"),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Icon(
-                              isFavorite?Icons.favorite: Icons.favorite_border,
-                              color:  isFavorite?AppColors.primary:AppColors.black,
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite
+                                  ? AppColors.primary
+                                  : AppColors.black,
                             ),
                           ],
                         ),
+                        //ToDo Categories Name
                         Text(
-                          "House",
+                          mainItemModel!.titleEn ?? "no title",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
                         ),
+                        //ToDo Location Name
                         Row(
                           children: const [
                             Icon(Icons.location_on),
@@ -96,23 +132,35 @@ class SecondMainItemWidget extends StatelessWidget {
                             )
                           ],
                         ),
-                        const ThreeIconsDetailsWidget(area: 250,bathrooms: 2,bedrooms: 6),
+                        ThreeIconsDetailsWidget(
+                          area: mainItemModel!.bedroom.toString(),
+                          bathrooms: mainItemModel!.bathRoom.toString(),
+                          bedrooms: mainItemModel!.bedroom.toString(),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             RichText(
                               text: TextSpan(
-                                style: TextStyle(
-                                    fontSize: 12, color: AppColors.black),
-                                children: const <TextSpan>[
+                                children: <TextSpan>[
                                   TextSpan(
-                                      text: 'IQD',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(text: ' 250.000!'),
+                                    text:
+                                        '${AppLocalizations.of(context)!.isEnLocale ? mainItemModel!.price ?? "0" : replaceToArabicNumber(mainItemModel!.price.toString())}',
+                                    style: TextStyle(
+                                        fontSize: 16, color: AppColors.black),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        "  ${AppLocalizations.of(context)!.isEnLocale ? mainItemModel!.currency! : "دولار"}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: AppColors.black),
+                                  ),
                                 ],
                               ),
                             ),
+                            //ToDo Company Icon
                             Image.asset(
                               ImageAssets.companyLogo,
                               width: 36,

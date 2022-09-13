@@ -62,10 +62,10 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const SplashScreen(),
         );
-      case Routes.newAddedRoute:
-        return MaterialPageRoute(
-          builder: (context) =>  const NewAdded(kind: ""),
-        );
+      // case Routes.newAddedRoute:
+      //   return MaterialPageRoute(
+      //     builder: (context) =>   const NewAdded(kind: "",slider: []),
+      //   );
       case Routes.notificationRoute:
         return MaterialPageRoute(
           builder: (context) =>  const NotificationScreen(),
@@ -104,7 +104,7 @@ class AppRoutes {
         );
         case Routes.loginScreenRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const LoginScreen(),
+          builder: (context) =>    LoginScreen(),
         );
         case Routes.welcomeRegisterRoute:
         return MaterialPageRoute(

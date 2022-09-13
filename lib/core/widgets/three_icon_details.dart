@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../config/locale/app_localizations.dart';
 import '../utils/assets_manager.dart';
+import '../utils/convert_numbers_method.dart';
 
 class ThreeIconsDetailsWidget extends StatelessWidget {
-  const ThreeIconsDetailsWidget({Key? key, required this.area, required this.bedrooms, required this.bathrooms}) : super(key: key);
-final int area;
-final int bedrooms;
-final int bathrooms;
+  const ThreeIconsDetailsWidget(
+      {Key? key,
+      required this.area,
+      required this.bedrooms,
+      required this.bathrooms})
+      : super(key: key);
+  final String area;
+  final String bedrooms;
+  final String bathrooms;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        //ToDo Area Num
         SvgPicture.asset(ImageAssets.areaIcon),
-         Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Text(" ${area}M", style: const TextStyle(fontSize: 12)),
+        Padding(
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Text(" $area", style: const TextStyle(fontSize: 12)),
         ),
+
         SvgPicture.asset(ImageAssets.roomsIcon),
-         Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Text(" $bedrooms", style: const TextStyle(fontSize: 12)),
+        Padding(
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Text(
+            " ${AppLocalizations.of(context)!.isEnLocale ? bedrooms == "null" ? "0" : bedrooms : replaceToArabicNumber(bedrooms.toString())}",
+            style: const TextStyle(fontSize: 12),
+          ),
         ),
         SvgPicture.asset(ImageAssets.bathIcon),
-         Text(" $bathrooms", style: const TextStyle(fontSize: 12)),
+        Text(
+          "   ${AppLocalizations.of(context)!.isEnLocale ? bathrooms == "null" ? "0" : bathrooms : replaceToArabicNumber(bathrooms.toString())}",
+          style: const TextStyle(fontSize: 12),
+        ),
       ],
     );
   }

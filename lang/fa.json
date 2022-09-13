@@ -1,0 +1,27 @@
+{
+  "app_name": "وتان",
+  "kurdish_language": "کوردی",
+  "english_language": "ئینگلیزی",
+  "arabic_language": "عەرەبی",
+  "language_title": "زمان",
+  "currency_hint": "دراو",
+  "iraq_dinar_text": "دینار",
+  "dollar_text": "دۆلار",
+  "save_text": "هەڵگرتن",
+  "notification_text": "ئاگادارکردنەوەکان",
+  "bloggs_text": "بابەتەکان",
+  "about_us_text": "زانیاری دەربارەی ئێمە",
+  "contact_us_text": "پەیوەندیمان پێوە بکەن",
+  "rate_app_text": "ئەپەکە هەڵسەنگێنە",
+  "privacy_text": "تایبەتمەندیەتی",
+  "terms_and_conditions_text": "بار و دۆخ و مەرجەکان",
+  "share_app_text": "ئەپەکە شەیر بکەن",
+  "log_out_text": "چوونە دەرەوە",
+  "add_new_title": "نوێیەکە",
+  "popular_title": "باو",
+  "view_more_text": "زیاتر نیشان دە",
+  "new_added_found_text": "نوێ دۆزرایەوە",
+  "no_data_message": "لەوە زیاتر نییە"
+
+
+}

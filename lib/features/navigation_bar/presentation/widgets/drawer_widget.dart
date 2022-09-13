@@ -3,7 +3,9 @@ import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/widgets/list_tile.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/separator.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -36,28 +38,32 @@ final VoidCallback closeDrawer;
               ),
               MyListTile(
                 image: ImageAssets.languageIcon,
-                text: "Language",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.languageTitle)!,
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.languageRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.notificationIcon,
-                text: "Notification",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.notificationText)!,
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.notificationRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.bloggsIcon,
-                text: "Bloggs",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.bloggsText)!,
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.bloggsRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.aboutUsIcon,
-                text: "About Us",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.aboutUsText)!,
                 onClick: () {
                   Navigator.of(context).pushNamed(Routes.aboutUsRoute);
                 },
@@ -65,7 +71,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.contactUsIcon,
-                text: "Contact Us",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.contactUsText)!,
                 onClick: () {
                   Navigator.of(context).pushNamed(Routes.contactUsScreenRoute);
                 },
@@ -73,7 +80,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.rateIcon,
-                text: "Rate App",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.rateAppText)!,
                 onClick: () {
                   // Navigator.of(context).pushNamed(Routes.bloggsRoute);
                 },
@@ -81,7 +89,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.privacyIcon,
-                text: "Privacy",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.privacyText)!,
                 onClick: () {
                   // Navigator.of(context).pushNamed(Routes.bloggsRoute);
                 },
@@ -89,7 +98,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.termsIcon,
-                text: "Terms and Conditions",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.termsAndConditionsText)!,
                 onClick: () {
                   Navigator.of(context).pushNamed(Routes.termsAndConditionsScreenRoute);
                 },
@@ -97,7 +107,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.shareIcon,
-                text: "Share App",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.shareAppText)!,
                 onClick: () {
                   // Navigator.of(context).pushNamed(Routes.bloggsRoute);
                 },
@@ -105,7 +116,8 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.logOutIcon,
-                text: "Log Out",
+                text: AppLocalizations.of(context)!
+                    .translate(AppStrings.logOutText)!,
                 onClick: () {
                   Navigator.of(context).pushNamed(Routes.loginScreenRoute);
                 },

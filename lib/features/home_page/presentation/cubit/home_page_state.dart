@@ -39,4 +39,20 @@ class CategoriesLoaded extends HomePageState {
   List<Object> get props => [categories];
 }
 
-class FinishingData extends HomePageState {}
+class NewsPopularItemsLoaded extends HomePageState {
+  final NewPopularItems newPopularItems;
+
+  NewsPopularItemsLoaded({required this.newPopularItems});
+
+  @override
+  List<Object> get props => [newPopularItems];
+}
+
+class FinishingData extends HomePageState {
+  final HomeSlider slider;
+  final Categories categories;
+  final NewPopularItems newPopularItems;
+
+  FinishingData({required this.newPopularItems,required this.slider, required this.categories});
+
+}

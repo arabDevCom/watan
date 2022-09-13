@@ -1,21 +1,25 @@
-import 'package:elwatn/core/widgets/banner_ads.dart';
 import 'package:elwatn/features/details/presentation/screens/detales%20photo.dart';
 import 'package:elwatn/features/details/presentation/widgets/icon_shape.dart';
 import 'package:flutter/material.dart';
 
+import '../../../home_page/domain/entities/main_item_domain_model.dart';
+import 'details_images_banner_widget.dart';
+
 class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({Key? key}) : super(key: key);
+  const HeaderWidget({Key? key, required this.itemImagesList})
+      : super(key: key);
 
   final bool isImage = true;
   final bool isVideo = true;
   final bool isMap = true;
   final bool isSchema = true;
+  final List<ItemImages> itemImagesList;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const BannerWidget(isDotes: false,sliderData: []),
+        DetailsBannerWidget(isDotes: false, imagesBanner: itemImagesList),
         Positioned(
           top: 8,
           left: 0,

@@ -1,3 +1,4 @@
+import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/all_details.dart';
@@ -12,35 +13,36 @@ import '../widgets/provided_by.dart';
 import '../widgets/simple_details.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({Key? key}) : super(key: key);
+  const DetailsScreen({Key? key, this.mainItemModel}) : super(key: key);
 
+  final MainItem? mainItemModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
-            children: const[
-              HeaderWidget(),
-              SizedBox(height: 12),
-              SimpleDetails(),
-              Divider(thickness: 1),
-              LocationWidget(),
-              Divider(thickness: 1),
-              AllDetails(),
-              Divider(thickness: 1),
-              AmenitiesWidget(),
-              Divider(thickness: 1),
-              OverViewWidget(),
-              Divider(thickness: 1),
-              ProvidedByWidget(),
-              Divider(thickness: 1),
-              BottomWidget(),
-              Divider(thickness: 1),
-              PropertyWidget(),
-              Divider(thickness: 1),
-              CommunicationWidget(),
-              Divider(thickness: 1),
+            children: [
+              HeaderWidget(itemImagesList:mainItemModel==null?[]: mainItemModel!.images!),
+              const SizedBox(height: 12),
+              const SimpleDetails(),
+              const Divider(thickness: 1),
+              const LocationWidget(),
+              const Divider(thickness: 1),
+              const AllDetails(),
+              const Divider(thickness: 1),
+              const AmenitiesWidget(),
+              const Divider(thickness: 1),
+              const OverViewWidget(),
+              const Divider(thickness: 1),
+              const ProvidedByWidget(),
+              const Divider(thickness: 1),
+              const BottomWidget(),
+              const Divider(thickness: 1),
+               PropertyWidget(mainItemModel: mainItemModel??MainItem()),
+              const Divider(thickness: 1),
+              const CommunicationWidget(),
+              const Divider(thickness: 1),
             ],
           ),
         ),

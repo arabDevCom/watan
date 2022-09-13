@@ -96,7 +96,7 @@ class AgencyProfileScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 18),
                 child: Divider(thickness: 2),
               ),
-              const PropertyWidget(),
+               // PropertyWidget(),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 0),
                 child: Divider(thickness: 2),

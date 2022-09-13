@@ -43,4 +43,6 @@ class LocaleCubit extends Cubit<LocaleState> {
   void toEnglish() => _changeLanguage(AppStrings.englishCode);
 
   void toArabic() => _changeLanguage(AppStrings.arabicCode);
+
+  void toKurdish() => _changeLanguage(AppStrings.kurdishCode);
 }

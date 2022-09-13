@@ -1,3 +1,4 @@
+import 'package:elwatn/features/show_more_posts/presentation/cubit/show_more_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +10,8 @@ import 'features/home_page/presentation/cubit/home_page_cubit.dart';
 import 'features/language/presentation/cubit/locale_cubit.dart';
 import 'package:elwatn/injector.dart'
 as injector;
+
+import 'features/login/presentation/cubit/login_cubit.dart';
 class Elwatn extends StatelessWidget {
   const Elwatn({Key? key}) : super(key: key);
 
@@ -23,6 +26,14 @@ class Elwatn extends StatelessWidget {
         BlocProvider(
           create: (_) =>
           injector.serviceLocator<HomePageCubit>(),
+        ),
+        BlocProvider(
+          create: (_) =>
+          injector.serviceLocator<ShowMoreCubit>(),
+        ),
+        BlocProvider(
+          create: (_) =>
+          injector.serviceLocator<LoginCubit>(),
         ),
       ],
       child: BlocBuilder<LocaleCubit, LocaleState>(

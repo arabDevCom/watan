@@ -23,5 +23,7 @@ class AppLocalizations {
   }
 
   String? translate(String key) => _localizedStrings[key];
+  bool get isArLocale => locale.languageCode == 'ar';
   bool get isEnLocale => locale.languageCode == 'en';
+  bool get isKuLocale => locale.languageCode == 'fa';
 }

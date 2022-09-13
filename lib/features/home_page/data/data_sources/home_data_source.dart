@@ -1,14 +1,18 @@
-
 import '../../../../core/api/base_api_consumer.dart';
 import '../../../../core/api/end_points.dart';
 import '../../domain/entities/categories_domain_model.dart';
+import '../../domain/entities/new_popular_domain_model.dart';
 import '../../domain/entities/slider_domain_model.dart';
 import '../models/categories_data_model.dart';
+import '../models/new_popular_data_model.dart';
 import '../models/slider_data_model.dart';
 
 abstract class BaseHomePageDataSource {
   Future<HomeSlider> getSliderImages();
+
   Future<Categories> getCategories();
+
+  Future<NewPopularItems> getNewPopularItems();
 }
 
 class HomePageDataSource implements BaseHomePageDataSource {
@@ -28,5 +32,9 @@ class HomePageDataSource implements BaseHomePageDataSource {
     return CategoriesModel.fromJson(response);
   }
 
-
+  @override
+  Future<NewPopularItems> getNewPopularItems() async {
+    final response = await apiConsumer.get(EndPoints.newPopularUrl);
+    return NewPopularItemsModel.fromJson(response);
+  }
 }

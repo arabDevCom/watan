@@ -1,3 +1,26 @@
 {
-  "app_name": "El Watn"
+  "app_name": "Watan",
+  "kurdish_language": "Kurdish",
+  "english_language": "ُEnglish",
+  "arabic_language": "Arabic",
+  "language_title": "Language",
+  "currency_hint": "Currency",
+  "iraq_dinar_text": "Dinar",
+  "dollar_text": "Dollar",
+  "save_text": "Save",
+  "notification_text": "Notification",
+  "bloggs_text": "Bloggs",
+  "about_us_text": "About Us",
+  "contact_us_text": "Contact Us",
+  "rate_app_text": "Rate App",
+  "privacy_text": "Privacy",
+  "terms_and_conditions_text": "Terms and Conditions",
+  "share_app_text": "Share App",
+  "log_out_text": "Log Out",
+  "add_new_title": "The New",
+  "popular_title": "Popular",
+  "view_more_text": "View More",
+  "new_added_found_text": "New Added Found",
+  "no_data_message": "No More Data"
+
 }

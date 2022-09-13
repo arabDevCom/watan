@@ -13,7 +13,7 @@ class PopularScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title:  Text(kind.toUpperCase()),
+        title:  Text(kind),
       ),
       body: SingleChildScrollView(
         child: Column(

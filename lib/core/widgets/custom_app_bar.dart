@@ -14,7 +14,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Spacer(),
+        const SizedBox(width: 5,),
         IconButton(
             onPressed: openMyDrawer,
             icon: SvgPicture.asset(
@@ -23,50 +23,17 @@ class CustomAppBar extends StatelessWidget {
               height: 21,
             )),
         const Spacer(),
+
+        Image.asset(ImageAssets.logoIcon),
+        const Spacer(),
+
         InkWell(
           onTap: () {
             Navigator.of(context).pushNamed(Routes.filterRoute);
           },
-          child: Row(
-            children: [
-              Text(
-                "Search",
-                style:
-                TextStyle(fontSize: 12, color: AppColors.black),
-              ),
-              const SizedBox(width: 5,),
-              SvgPicture.asset(ImageAssets.filterIcon)
-            ],
-          ),
+          child: SvgPicture.asset(ImageAssets.filterIcon,),
         ),
-        const Spacer(),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Agency",
-            style: TextStyle(fontSize: 12, color: AppColors.black),
-          ),
-        ),
-        const Spacer(),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Projects",
-            style: TextStyle(fontSize: 12, color: AppColors.black),
-          ),
-        ),
-        const Spacer(),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Estates",
-            style: TextStyle(fontSize: 12, color: AppColors.black),
-          ),
-        ),
-        const Spacer(),
-        Image.asset(ImageAssets.logoIcon),
-        const Spacer(),
-        const Spacer(),
+        const SizedBox(width: 16,)
       ],
     );
   }

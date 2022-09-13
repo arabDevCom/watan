@@ -28,7 +28,7 @@ class SimpleDetails extends StatelessWidget {
                     ],
                   ),
                 ),
-                const ThreeIconsDetailsWidget(area: 250,bathrooms: 2,bedrooms: 6),
+                const ThreeIconsDetailsWidget(area: "250",bathrooms: "2",bedrooms: "6"),
               ],
             ),
           ),

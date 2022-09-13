@@ -3,9 +3,10 @@ import 'app_localizations.dart';
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const AppLocalizationsDelegate();
+
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'ar'].contains(locale.languageCode);
+    return ['ar', 'en', 'fa'].contains(locale.languageCode);
   }
 
   @override
