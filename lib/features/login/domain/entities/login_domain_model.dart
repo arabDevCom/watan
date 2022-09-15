@@ -17,7 +17,7 @@ class LoginModel extends Equatable{
 
   final UserDataModel? data;
   final String? message;
-  final String? code;
+  final int? code;
 
   @override
   List<Object?> get props => [data,message,code];

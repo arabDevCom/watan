@@ -1,41 +1,60 @@
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/app_colors.dart';
+import '../../../../config/locale/app_localizations.dart';
+import '../../../../core/utils/is_language_methods.dart';
+import '../../../home_page/domain/entities/main_item_domain_model.dart';
 
 class LocationWidget extends StatelessWidget {
-  const LocationWidget({Key? key}) : super(key: key);
+  const LocationWidget({Key? key, this.mainItemModel}) : super(key: key);
+  final MainItem? mainItemModel;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "House Font Of Garden",
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)!.isEnLocale
+                      ? mainItemModel!.titleEn ?? "No Title"
+                      : (AppLocalizations.of(context)!.isArLocale
+                          ? mainItemModel!.titleAr ?? "لا عنوان"
+                          : mainItemModel!.titleKu ?? "هیچ ناونیشانێک نییە"),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+
                 Row(
-                  children: const [
-                    Icon(Icons.location_on),
+                  children: [
+                    const Icon(Icons.location_on),
                     Text(
-                      "erbil,32 park (sarbasti)",
-                      style: TextStyle(fontSize: 12),
+                      IsLanguage.isEnLanguage(context)
+                          ? mainItemModel!.locationNameEn!
+                          : (IsLanguage.isArLanguage(context)
+                              ? mainItemModel!.locationNameAr!
+                              : mainItemModel!.locationNameKu!),
+                      style: const TextStyle(fontSize: 12),
                     )
                   ],
                 ),
               ],
             ),
           ),
-         InkWell(
-           onTap: (){},
-           child: Image.asset(ImageAssets.mapImage,height: 48,width: 48,),)
+          InkWell(
+            onTap: () {},
+            child: Image.asset(
+              ImageAssets.mapImage,
+              height: 48,
+              width: 48,
+            ),
+          )
         ],
       ),
     );

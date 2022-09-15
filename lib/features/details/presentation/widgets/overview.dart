@@ -1,12 +1,15 @@
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../home_page/domain/entities/main_item_domain_model.dart';
 
 class OverViewWidget extends StatelessWidget {
-  const OverViewWidget({Key? key}) : super(key: key);
-  final String text =
-      "Two Floor House For Sale, Located in Erbil in Kwestan district, The House Area is 200sqm, the Price is (\$230,000) (Negotiable) \nConsists of: \n4 Bedrooms \n1 Living Room \n1 Hall \n1 Kitchen \n2 Bathrooms \n2 Wc";
+  const OverViewWidget({Key? key, this.mainItemModel}) : super(key: key);
+  final MainItem? mainItemModel;
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +18,19 @@ class OverViewWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Overview"),
+          Text(
+            translateText(AppStrings.overviewText, context),
+          ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             width: MediaQuery.of(context).size.width,
             child: Text(
-              text,
+              IsLanguage.isEnLanguage(context)
+                  ? mainItemModel!.descriptionEn!
+                  : (IsLanguage.isArLanguage(context)
+                      ? mainItemModel!.descriptionAr!
+                      : mainItemModel!.descriptionKu!),
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -34,14 +43,20 @@ class OverViewWidget extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: [
-              Expanded(child: Padding(
+              Expanded(
+                  child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 child: OutlinedButton(
-                    style:OutlinedButton.styleFrom(
+                    style: OutlinedButton.styleFrom(
                       side: const BorderSide(width: 1.5, color: Colors.grey),
-                    ) ,onPressed: (){}, child: Padding(
+                    ),
+                    onPressed: () {},
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: Text("View In Map",style: TextStyle(color: AppColors.black),),
+                      child: Text(
+                        translateText(AppStrings.viewInMapTextBtn, context),
+                        style: TextStyle(color: AppColors.black),
+                      ),
                     )),
               )),
             ],

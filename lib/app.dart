@@ -12,6 +12,7 @@ import 'package:elwatn/injector.dart'
 as injector;
 
 import 'features/login/presentation/cubit/login_cubit.dart';
+import 'features/register/presentation/cubit/register_cubit.dart';
 class Elwatn extends StatelessWidget {
   const Elwatn({Key? key}) : super(key: key);
 
@@ -34,6 +35,10 @@ class Elwatn extends StatelessWidget {
         BlocProvider(
           create: (_) =>
           injector.serviceLocator<LoginCubit>(),
+        ),
+        BlocProvider(
+          create: (_) =>
+          injector.serviceLocator<RegisterCubit>(),
         ),
       ],
       child: BlocBuilder<LocaleCubit, LocaleState>(

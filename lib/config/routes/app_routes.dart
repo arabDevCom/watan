@@ -2,7 +2,6 @@ import 'package:elwatn/features/bloggs/presentation/screens/bloggs.dart';
 import 'package:elwatn/features/details/presentation/screens/details.dart';
 import 'package:elwatn/features/filter/presentation/screens/filter.dart';
 import 'package:elwatn/features/language/presentation/screens/language.dart';
-import 'package:elwatn/features/new_added/presentation/screens/new_added.dart';
 import 'package:elwatn/features/register/presentation/screens/forget_password.dart';
 import 'package:elwatn/features/register/presentation/screens/new_password.dart';
 import 'package:elwatn/features/register/presentation/screens/reset_password.dart';
@@ -29,8 +28,6 @@ import '../../features/terms_and_conditions/presentation/screens/terms_and_condi
 
 class Routes {
   static const String initialRoute = '/';
-  static const String navigatorRoute = '/navigator';
-  static const String newAddedRoute = '/newAdded';
   static const String notificationRoute = '/notification';
   static const String bloggsRoute = '/bloggs';
   static const String bloggsDetailsRoute = '/bloggsDetails';
@@ -62,10 +59,6 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const SplashScreen(),
         );
-      // case Routes.newAddedRoute:
-      //   return MaterialPageRoute(
-      //     builder: (context) =>   const NewAdded(kind: "",slider: []),
-      //   );
       case Routes.notificationRoute:
         return MaterialPageRoute(
           builder: (context) =>  const NotificationScreen(),

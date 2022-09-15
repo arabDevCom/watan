@@ -28,6 +28,7 @@ import 'features/login/data/repositories/login_repositories.dart';
 import 'features/login/domain/repositories/base_login_repositories.dart';
 import 'features/login/domain/use_cases/login_use_case.dart';
 import 'features/login/presentation/cubit/login_cubit.dart';
+import 'features/register/presentation/cubit/register_cubit.dart';
 import 'features/show_more_posts/domain/use_cases/pagination_use_case.dart';
 import 'features/show_more_posts/domain/use_cases/show_more_use_case.dart';
 import 'features/show_more_posts/presentation/cubit/show_more_cubit.dart';
@@ -59,6 +60,11 @@ Future<void> setup() async {
   serviceLocator.registerFactory(
     () => LoginCubit(
       postLoginUseCase: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory(
+    () => RegisterCubit(
+      // postLoginUseCase: serviceLocator(),
     ),
   );
 

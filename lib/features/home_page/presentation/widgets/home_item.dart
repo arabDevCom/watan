@@ -1,11 +1,14 @@
 import 'package:elwatn/core/utils/app_colors.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/locale/app_localizations.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/convert_numbers_method.dart';
 import '../../../../core/widgets/network_image.dart';
+import '../../../../core/widgets/views.dart';
 import '../../../details/presentation/screens/details.dart';
 import '../../domain/entities/main_item_domain_model.dart';
 
@@ -17,7 +20,7 @@ class HomeItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return DetailsScreen(mainItemModel: mainItem);
         }));
       },
@@ -38,7 +41,6 @@ class HomeItemWidget extends StatelessWidget {
                           width: double.infinity,
                         )
                       : Image.asset(ImageAssets.watanLogo),
-                  //ToDo Status  Language
                   Positioned(
                     top: 16,
                     left: 9,
@@ -59,10 +61,17 @@ class HomeItemWidget extends StatelessWidget {
                               topRight: Radius.circular(18))),
                       child: Center(
                         child: Text(
-                          mainItem.status!,
-                          style:
-                              TextStyle(color: AppColors.primary, fontSize: 16),
-                          textAlign: TextAlign.center,
+                          mainItem.status == "null"
+                              ? "nooo"
+                              : mainItem.status == "sale"
+                                  ? AppLocalizations.of(context)!
+                                      .translate(AppStrings.statusSaleText)!
+                                  : AppLocalizations.of(context)!
+                                      .translate(AppStrings.statusRentText)!,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary),
                         ),
                       ),
                     ),
@@ -70,7 +79,8 @@ class HomeItemWidget extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
                 child: Column(
                   children: [
                     Row(
@@ -81,13 +91,13 @@ class HomeItemWidget extends StatelessWidget {
                               ? mainItem.titleEn ?? "No Title"
                               : (AppLocalizations.of(context)!.isArLocale
                                   ? mainItem.titleAr ?? "لا عنوان"
-                                  : mainItem.titleKo ?? "هیچ ناونیشانێک نییە"),
+                                  : mainItem.titleKu ?? "هیچ ناونیشانێک نییە"),
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        //ToDo Categories Name
+                        //ToDo Categories Language
                         Text(
-                          mainItem.titleEn ?? "No Title",
+                          mainItem.type ?? "No Type",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -102,22 +112,28 @@ class HomeItemWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          children: const [
-                            Icon(Icons.location_on),
-                            //ToDo Location Name
+                          children: [
+                            const Icon(Icons.location_on),
                             Text(
-                              "erbil,32 park (sarbasti)",
-                              style: TextStyle(fontSize: 12),
+                              IsLanguage.isEnLanguage(context)
+                                  ? mainItem.locationNameEn!
+                                  : (IsLanguage.isArLanguage(context)
+                                      ? mainItem.locationNameAr!
+                                      : mainItem.locationNameKu!),
+                              style: const TextStyle(fontSize: 12),
                             )
                           ],
                         ),
                         Row(
                           children: [
                             SvgPicture.asset(ImageAssets.areaIcon),
-                            //ToDo Area Num
                             Padding(
                               padding: const EdgeInsets.only(right: 8, left: 8),
-                              child: Text(" ${mainItem.size}",
+                              child: Text(
+                                  AppLocalizations.of(context)!.isEnLocale
+                                      ? mainItem.size ?? "0"
+                                      : replaceToArabicNumber(
+                                          mainItem.size.toString()),
                                   style: const TextStyle(fontSize: 12)),
                             ),
                             SvgPicture.asset(ImageAssets.roomsIcon),
@@ -164,7 +180,8 @@ class HomeItemWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                        //ToDo Company Icon
+                        ViewsWidget(views: mainItem.views.toString()),
+                        //ToDo User Icon
                         Image.asset(
                           ImageAssets.companyLogo,
                           width: 36,

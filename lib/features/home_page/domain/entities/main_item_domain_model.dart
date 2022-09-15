@@ -2,8 +2,9 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/models/main_item_data_model.dart';
 
+// ignore: must_be_immutable
 class MainItem extends Equatable {
-  const MainItem({
+  MainItem({
     this.id,
     this.status,
     this.phone,
@@ -13,24 +14,28 @@ class MainItem extends Equatable {
     this.descriptionAr,
     this.titleEn,
     this.descriptionEn,
-    this.titleKo,
-    this.descriptionKo,
+    this.titleKu,
+    this.descriptionKu,
     this.furniture,
+    this.type,
     this.price,
     this.currency,
     this.size,
     this.bedroom,
     this.babyRoom,
-    this.bathRoom,
     this.kitchen,
     this.receptionRoom,
     this.diningRoom,
+    this.bathRoom,
     this.advertizerNameAr,
     this.advertizerNameEn,
-    this.advertizerNameKo,
+    this.advertizerNameKu,
     this.whatsapp,
     this.latitude,
     this.longitude,
+    this.locationNameAr,
+    this.locationNameEn,
+    this.locationNameKu,
     this.isSold,
     this.isInvesBed,
     this.agentId,
@@ -43,8 +48,11 @@ class MainItem extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.images,
+    this.videos,
+    this.floorPlans,
     this.agent,
     this.company,
+    this.services,
   });
 
   final int? id;
@@ -56,8 +64,8 @@ class MainItem extends Equatable {
   final String? descriptionAr;
   final String? titleEn;
   final String? descriptionEn;
-  final String? titleKo;
-  final String? descriptionKo;
+  final String? titleKu;
+  final String? descriptionKu;
   final String? furniture;
   final int? price;
   final String? currency;
@@ -68,9 +76,10 @@ class MainItem extends Equatable {
   final int? kitchen;
   final int? receptionRoom;
   final int? diningRoom;
+  final String? type;
   final String? advertizerNameAr;
   final String? advertizerNameEn;
-  final String? advertizerNameKo;
+  final String? advertizerNameKu;
   final String? whatsapp;
   final String? latitude;
   final String? longitude;
@@ -85,9 +94,15 @@ class MainItem extends Equatable {
   final int? userId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final List<ImageModel>? images;
   final AgentModel? agent;
-  final dynamic company;
+  final String? locationNameAr;
+  final String? locationNameEn;
+  final String? locationNameKu;
+  final List<FloorPlan>? images;
+  final List<FloorPlan>? videos;
+  final List<FloorPlan>? floorPlans;
+  final CompanyModel? company;
+  final List<ServiceItemsModel>? services;
 
   @override
   List<Object?> get props => [
@@ -100,8 +115,8 @@ class MainItem extends Equatable {
         descriptionAr,
         titleEn,
         descriptionEn,
-        titleKo,
-        descriptionKo,
+        titleKu,
+        descriptionKu,
         furniture,
         price,
         currency,
@@ -114,7 +129,7 @@ class MainItem extends Equatable {
         diningRoom,
         advertizerNameAr,
         advertizerNameEn,
-        advertizerNameKo,
+        advertizerNameKu,
         whatsapp,
         latitude,
         longitude,
@@ -137,25 +152,25 @@ class MainItem extends Equatable {
 
 class Agent extends Equatable {
   const Agent({
-    required this.id,
-    required this.nameAr,
-    required this.nameEn,
-    required this.nameKo,
-    required this.image,
-    required this.about,
-    required this.phone,
-    required this.phoneCode,
-    required this.whatsapp,
-    required this.userId,
-    required this.companyId,
-    required this.createdAt,
-    required this.updatedAt,
+     this.id,
+     this.nameAr,
+     this.nameEn,
+     this.nameKu,
+     this.image,
+     this.about,
+     this.phone,
+     this.phoneCode,
+     this.whatsapp,
+     this.userId,
+     this.companyId,
+     this.createdAt,
+     this.updatedAt,
   });
 
   final int? id;
   final String? nameAr;
   final String? nameEn;
-  final String? nameKo;
+  final String? nameKu;
   final String? image;
   final String? about;
   final String? phone;
@@ -171,7 +186,7 @@ class Agent extends Equatable {
         id,
         nameAr,
         nameEn,
-        nameKo,
+        nameKu,
         image,
         about,
         phone,
@@ -184,15 +199,61 @@ class Agent extends Equatable {
       ];
 }
 
-class ItemImages extends Equatable {
-  const ItemImages({
+class Company extends Equatable {
+  const Company({
     required this.id,
-    required this.projectId,
-    required this.postId,
-    required this.attachment,
-    required this.type,
+    required this.facebook,
+    required this.instagram,
+    required this.twitter,
+    required this.snapchat,
+    required this.latitude,
+    required this.longitude,
+    required this.aboutAr,
+    required this.aboutEn,
+    required this.userId,
     required this.createdAt,
     required this.updatedAt,
+  });
+
+  final int? id;
+  final String? facebook;
+  final String? instagram;
+  final String? twitter;
+  final String? snapchat;
+  final String? latitude;
+  final String? longitude;
+  final String? aboutAr;
+  final String? aboutEn;
+  final int? userId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  @override
+  List<Object?> get props => [
+        id,
+        facebook,
+        instagram,
+        twitter,
+        snapchat,
+        latitude,
+        longitude,
+        aboutAr,
+        aboutEn,
+        userId,
+        createdAt,
+        updatedAt,
+      ];
+}
+
+class FloorPlan extends Equatable {
+  const FloorPlan({
+    this.id,
+    this.projectId,
+    this.postId,
+    this.attachment,
+    this.type,
+    this.createdAt,
+    this.updatedAt,
   });
 
   final int? id;
@@ -203,6 +264,26 @@ class ItemImages extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  factory FloorPlan.fromJson(Map<String, dynamic> json) => FloorPlan(
+        id: json["id"],
+        projectId: json["project_id"],
+        postId: json["post_id"],
+        attachment: json["attachment"],
+        type: json["type"],
+        createdAt: json["created_at"]!=null? DateTime.parse(json["created_at"]):DateTime(0),
+        updatedAt: json["updated_at"]!=null? DateTime.parse(json["updated_at"]):DateTime(0),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "project_id": projectId,
+        "post_id": postId,
+        "attachment": attachment,
+        "type": type,
+        "created_at": createdAt!.toIso8601String(),
+        "updated_at": updatedAt!.toIso8601String(),
+      };
+
   @override
   List<Object?> get props => [
         id,
@@ -212,5 +293,50 @@ class ItemImages extends Equatable {
         type,
         createdAt,
         updatedAt,
+      ];
+}
+
+class ServiceItems extends Equatable {
+  const ServiceItems({
+    required this.id,
+    required this.nameAr,
+    required this.nameEn,
+    required this.nameKo,
+    required this.image,
+    required this.icon,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.pivot,
+  });
+
+  final int? id;
+  final String? nameAr;
+  final String? nameEn;
+  final String? nameKo;
+  final String? image;
+  final String? icon;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final PivotModel? pivot;
+
+  @override
+  List<Object?> get props =>
+      [id, nameAr, nameEn, nameKo, image, icon, createdAt, updatedAt, pivot];
+}
+
+class Pivot extends Equatable {
+  const Pivot({
+    required this.postId,
+    required this.serviceId,
+  });
+
+  final int? postId;
+  final int? serviceId;
+
+
+  @override
+  List<Object?> get props => [
+        postId,
+        serviceId,
       ];
 }

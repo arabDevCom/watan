@@ -1,12 +1,15 @@
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/widgets/three_icon_details.dart';
+import 'package:elwatn/core/widgets/views.dart';
 import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../config/locale/app_localizations.dart';
 import '../../features/details/presentation/screens/details.dart';
+import '../utils/app_strings.dart';
 import '../utils/convert_numbers_method.dart';
+import '../utils/is_language_methods.dart';
 import 'network_image.dart';
 
 class SecondMainItemWidget extends StatelessWidget {
@@ -67,12 +70,20 @@ class SecondMainItemWidget extends StatelessWidget {
                         width: 40,
                         height: 19,
                         decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(10))),
+                          color: AppColors.white,
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
                         child: Center(
                           child: Text(
-                            mainItemModel!.status!,
+                            mainItemModel!.status == "null"
+                                ? "nooo"
+                                : mainItemModel!.status == "sale"
+                                ? AppLocalizations.of(context)!
+                                .translate(AppStrings.statusSaleText)!
+                                : AppLocalizations.of(context)!
+                                .translate(AppStrings.statusRentText)!,
                             style: TextStyle(
                                 color: AppColors.primary, fontSize: 11),
                             textAlign: TextAlign.center,
@@ -96,13 +107,14 @@ class SecondMainItemWidget extends StatelessWidget {
                                   ? mainItemModel!.titleEn ?? "No Title"
                                   : (AppLocalizations.of(context)!.isArLocale
                                       ? mainItemModel!.titleAr ?? "لا عنوان"
-                                      : mainItemModel!.titleKo ??
+                                      : mainItemModel!.titleKu ??
                                           "هیچ ناونیشانێک نییە"),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            //ToDo Favourite
                             Icon(
                               isFavorite
                                   ? Icons.favorite
@@ -113,27 +125,30 @@ class SecondMainItemWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        //ToDo Categories Name
+                        //ToDo Categories Languages
                         Text(
-                          mainItemModel!.titleEn ?? "no title",
+                          mainItemModel!.type ?? "no title",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
                           ),
                         ),
-                        //ToDo Location Name
                         Row(
-                          children: const [
-                            Icon(Icons.location_on),
+                          children:  [
+                            const Icon(Icons.location_on),
                             Text(
-                              "erbil,32 park (sarbasti)",
-                              style: TextStyle(fontSize: 12),
+                              IsLanguage.isEnLanguage(context)
+                                  ? mainItemModel!.locationNameEn!
+                                  : (IsLanguage.isArLanguage(context)
+                                  ? mainItemModel!.locationNameAr!
+                                  : mainItemModel!.locationNameKu!),
+                              style: const TextStyle(fontSize: 12),
                             )
                           ],
                         ),
                         ThreeIconsDetailsWidget(
-                          area: mainItemModel!.bedroom.toString(),
+                          area: mainItemModel!.size.toString(),
                           bathrooms: mainItemModel!.bathRoom.toString(),
                           bedrooms: mainItemModel!.bedroom.toString(),
                         ),
@@ -160,6 +175,7 @@ class SecondMainItemWidget extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            ViewsWidget(views: mainItemModel!.views.toString()),
                             //ToDo Company Icon
                             Image.asset(
                               ImageAssets.companyLogo,

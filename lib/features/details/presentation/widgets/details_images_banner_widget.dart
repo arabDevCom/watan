@@ -7,9 +7,10 @@ import '../../../home_page/presentation/widgets/dotes.dart';
 
 // ignore: must_be_immutable
 class DetailsBannerWidget extends StatefulWidget {
-  const DetailsBannerWidget({Key? key, this.isDotes = true, required this.imagesBanner})
+  const DetailsBannerWidget(
+      {Key? key, this.isDotes = true, required this.imagesBanner})
       : super(key: key);
-  final List<ItemImages> imagesBanner;
+  final List<FloorPlan> imagesBanner;
   final bool isDotes;
 
   @override
@@ -25,21 +26,22 @@ class _DetailsBannerWidgetState extends State<DetailsBannerWidget> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-              onPageChanged: (int i, CarouselPageChangedReason c) {
-                setState(() {
-                  page = i;
-                });
-              },
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              autoPlay: true,
-              height: MediaQuery.of(context).size.height * 0.25,
-              reverse: false,
-              viewportFraction: 1.0),
+            onPageChanged: (int i, CarouselPageChangedReason c) {
+              setState(() {
+                page = i;
+              });
+            },
+            enlargeCenterPage: true,
+            enableInfiniteScroll: false,
+            autoPlay: true,
+            height: MediaQuery.of(context).size.height * 0.25,
+            reverse: false,
+            viewportFraction: 1.0,
+          ),
           items: widget.imagesBanner.map((i) {
             return Builder(
               builder: (BuildContext context) {
-                return ManageNetworkImage(imageUrl: i.attachment!);
+                return ManageNetworkImage(imageUrl: i.attachment!,width: MediaQuery.of(context).size.width,borderRadius: 0,);
               },
             );
           }).toList(),
@@ -49,9 +51,9 @@ class _DetailsBannerWidgetState extends State<DetailsBannerWidget> {
             : const SizedBox(height: 0),
         widget.isDotes == true
             ? DotesWidget(
-          page: page,
-          length: widget.imagesBanner.length,
-        )
+                page: page,
+                length: widget.imagesBanner.length,
+              )
             : Container(),
       ],
     );

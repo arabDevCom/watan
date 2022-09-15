@@ -1,4 +1,3 @@
-import 'package:elwatn/features/home_page/domain/entities/slider_domain_model.dart';
 import 'package:elwatn/features/home_page/presentation/widgets/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,6 @@ import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/banner_ads.dart';
 import '../../../../core/widgets/show_loading_indicator.dart';
-import '../../domain/entities/categories_domain_model.dart';
 import '../cubit/home_page_cubit.dart';
 import '../widgets/home_model.dart';
 import 'package:elwatn/core/widgets/error_widget.dart' as error_widget;

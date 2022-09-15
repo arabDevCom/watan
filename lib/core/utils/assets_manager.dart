@@ -96,5 +96,6 @@ class ImageAssets {
   static const String livingRoomIcon = '$iconsPath/livingroom_icon.svg';
   static const String cameraIcon = '$iconsPath/camera_icon.svg';
   static const String addIcon = '$iconsPath/add_icon.svg';
+  static const String viewsIcon = '$iconsPath/views.svg';
 
 }

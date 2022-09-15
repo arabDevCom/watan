@@ -21,7 +21,29 @@
   "popular_title": "باو",
   "view_more_text": "زیاتر نیشان دە",
   "new_added_found_text": "نوێ دۆزرایەوە",
-  "no_data_message": "لەوە زیاتر نییە"
+  "no_data_message": "لەوە زیاتر نییە",
+  "status_sale_text": "فرۆشتن",
+  "status_rent_text": "بەکرێدان",
+  "details_text": "ووردەکاریەکان",
+  "posted_on_text": "بڵاوکردەوە لە",
+  "property_id_text": "ژمارەی سەرچاوە",
+  "type_text": "جۆری سەرچاوە",
+  "purpose_text": "مەبەست",
+  "price_text": "نرخ",
+  "furniture_text": "مۆبیلیاتی ناوماڵ",
+  "area_text": "ناوچە",
+  "bedroom_text": "ژووری نوستن",
+  "bathroom_text": "گەرماو",
+  "amenities_text": "سوودەکان",
+  "overview_text": "پوختە",
+  "view_in_map_text_btn": "لە نەخشەدا پیشان بدە",
+  "listing_provided_by_text": "لیستەکە لەلایەن...",
+  "agent_text": "بریکار",
+  "report_this_text": "ئەم بابەتە ڕاپۆرت بکە",
+  "all_about_agent_text": "زانیاری بریکار",
+  "recommended_text": "پێشنیاری کرد",
+  "whatsApp_text": "واتسئەپ",
+  "call_text": "پەیوەندی"
 
 
 }

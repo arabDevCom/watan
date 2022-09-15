@@ -37,5 +37,27 @@ class AppStrings {
   static const String  viewMoreText = 'view_more_text';
   static const String  newAddedFoundText = 'new_added_found_text';
   static const String  noDataMessage = 'no_data_message';
+  static const String  statusSaleText = 'status_sale_text';
+  static const String  statusRentText = 'status_rent_text';
+  static const String  detailsText = 'details_text';
+  static const String  postedOnText = 'posted_on_text';
+  static const String propertyIdText = 'property_id_text';
+  static const String typeText = 'type_text';
+  static const String purposeText = 'purpose_text';
+  static const String priceText = 'price_text';
+  static const String furnitureText = 'furniture_text';
+  static const String areaText = 'area_text';
+  static const String bedroomText = 'bedroom_text';
+  static const String bathroomText = 'bathroom_text';
+  static const String amenitiesText = 'amenities_text';
+  static const String overviewText = 'overview_text';
+  static const String viewInMapTextBtn = 'view_in_map_text_btn';
+  static const String listingProvidedByText = 'listing_provided_by_text';
+  static const String agentText = 'agent_text';
+  static const String reportThisText = 'report_this_text';
+  static const String allAboutAgentText = 'all_about_agent_text';
+  static const String recommendedText = 'recommended_text';
+  static const String whatsAppText = 'whatsApp_text';
+  static const String callText = 'call_text';
 
 }

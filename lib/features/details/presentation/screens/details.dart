@@ -16,6 +16,7 @@ class DetailsScreen extends StatelessWidget {
   const DetailsScreen({Key? key, this.mainItemModel}) : super(key: key);
 
   final MainItem? mainItemModel;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,25 +24,25 @@ class DetailsScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              HeaderWidget(itemImagesList:mainItemModel==null?[]: mainItemModel!.images!),
+              HeaderWidget(mainItem: mainItemModel!),
               const SizedBox(height: 12),
-              const SimpleDetails(),
+              SimpleDetails(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
-              const LocationWidget(),
+              LocationWidget(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
-              const AllDetails(),
+              AllDetails(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
-              const AmenitiesWidget(),
+              AmenitiesWidget(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
-              const OverViewWidget(),
+              OverViewWidget(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
-              const ProvidedByWidget(),
+              ProvidedByWidget(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
               const BottomWidget(),
               const Divider(thickness: 1),
-               PropertyWidget(mainItemModel: mainItemModel??MainItem()),
+              PropertyWidget(mainItemModel: mainItemModel ?? MainItem()),
               const Divider(thickness: 1),
-              const CommunicationWidget(),
+              CommunicationWidget(mainItemModel: mainItemModel),
               const Divider(thickness: 1),
             ],
           ),

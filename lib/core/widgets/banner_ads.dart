@@ -39,7 +39,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           items: widget.sliderData.map((i) {
             return Builder(
               builder: (BuildContext context) {
-                return ManageNetworkImage(imageUrl: i.image!);
+                return ManageNetworkImage(imageUrl: i.image!,borderRadius: 0,width: double.infinity,);
               },
             );
           }).toList(),

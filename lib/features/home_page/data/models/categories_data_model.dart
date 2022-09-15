@@ -27,9 +27,9 @@ class CategoriesDatumModel extends CategoriesDatum {
   factory CategoriesDatumModel.fromJson(Map<String, dynamic> json) =>
       CategoriesDatumModel(
         id: json["id"],
-        nameAr: json["name_ar"],
-        nameEn: json["name_en"],
-        nameKo: json["name_ko"],
+        nameAr: json["name_ar"]??"لا يوجد اسم",
+        nameEn: json["name_en"]??"No Name",
+        nameKo: json["name_ko"]??"هيچ ناو نييه‌",
         image: json["image"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),

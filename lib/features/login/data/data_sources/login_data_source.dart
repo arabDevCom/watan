@@ -15,8 +15,8 @@ class LoginDataSource extends BaseLoginDataSource{
   @override
   Future<LoginModel> postLoginData(String email, String password) async {
     final response = await apiConsumer.post(EndPoints.loginUrl,body: {
-      "email":email,
-      "password":password
+      "email":"$email",
+      "password":"$password"
     });
     return LoginDataModel.fromJson(response);
   }

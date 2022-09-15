@@ -21,7 +21,28 @@
   "popular_title": "الرائج",
   "view_more_text": "عرض المزيد",
   "new_added_found_text": "جديد تم العثور عليه",
-  "no_data_message": "لا يوجد المزيد"
-
+  "no_data_message": "لا يوجد المزيد",
+  "status_sale_text": "بيع",
+  "status_rent_text": "تأجير",
+  "details_text": "تفاصيل",
+  "posted_on_text": "تم النشر في",
+  "property_id_text": "رقم منشأه",
+  "type_text": "نوع منشأه",
+  "purpose_text": "غرض",
+  "price_text": "السعر",
+  "furniture_text": "أثاث المنزل",
+  "area_text": "مساحه",
+  "bedroom_text": "غرف النوم",
+  "bathroom_text": "حمامات",
+  "amenities_text": "المميزات",
+  "overview_text": "ملخص",
+  "view_in_map_text_btn": "عرض في الخريطة",
+  "listing_provided_by_text": "قائمة مقدمة من",
+  "agent_text": "وكيل",
+  "report_this_text": "الإبلاغ عن هذا",
+  "all_about_agent_text": "كل شيء عن الوكيل",
+  "recommended_text": "موصى به",
+  "whatsApp_text": "واتساب",
+  "call_text": "اتصال"
 
 }
