@@ -1,4 +1,6 @@
+import 'package:elwatn/features/add/presentation/cubit/add_ads_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
 
@@ -8,10 +10,25 @@ class RadioChooseWidget extends StatefulWidget {
   @override
   State<RadioChooseWidget> createState() => _RadioChooseWidgetState();
 }
+
 enum FurnishedChoose { yes, no }
 
 class _RadioChooseWidgetState extends State<RadioChooseWidget> {
-   FurnishedChoose? _choose  = FurnishedChoose.yes;
+  FurnishedChoose? _choose;
+
+  @override
+  void initState() {
+    super.initState();
+    if (context.read<AddAdsCubit>().btnText == 'update') {
+      if (context.read<AddAdsCubit>().furnished == 0) {
+        _choose = FurnishedChoose.no;
+      } else {
+        _choose = FurnishedChoose.yes;
+      }
+    } else {
+      _choose = FurnishedChoose.yes;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +41,12 @@ class _RadioChooseWidgetState extends State<RadioChooseWidget> {
             value: FurnishedChoose.yes,
             groupValue: _choose,
             onChanged: (FurnishedChoose? value) {
-              setState(() {
-                _choose = value;
-              });
+              setState(
+                () {
+                  _choose = value;
+                  context.read<AddAdsCubit>().furnished = 1;
+                },
+              );
             },
           ),
         ),
@@ -37,9 +57,12 @@ class _RadioChooseWidgetState extends State<RadioChooseWidget> {
             value: FurnishedChoose.no,
             groupValue: _choose,
             onChanged: (FurnishedChoose? value) {
-              setState(() {
-                _choose = value;
-              });
+              setState(
+                () {
+                  _choose = value;
+                  context.read<AddAdsCubit>().furnished = 0;
+                },
+              );
             },
           ),
         ),

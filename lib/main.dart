@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injector.setup();
   BlocOverrides.runZoned(
-        () => runApp(const Elwatn()),
+        () => runApp(const Watan()),
     blocObserver: AppBlocObserver(),
   );
 }

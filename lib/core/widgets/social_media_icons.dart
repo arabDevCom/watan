@@ -1,19 +1,36 @@
 import 'package:elwatn/core/utils/app_colors.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
+// ignore: must_be_immutable
 class SocialMediaWidget extends StatefulWidget {
-  const SocialMediaWidget({Key? key, required this.isEnable}) : super(key: key);
-final bool isEnable;
+  SocialMediaWidget(
+      {Key? key,
+      required this.isEnable,
+      required this.topRight,
+      required this.topLeft,
+      required this.facebookController,
+      required this.instaController,
+      required this.twitterController,
+      required this.snapController})
+      : super(key: key);
+  final bool isEnable;
+  double topRight;
+  double topLeft;
+  final TextEditingController facebookController;
+  final TextEditingController instaController;
+
+  final TextEditingController twitterController;
+  final TextEditingController snapController;
+
   @override
   State<SocialMediaWidget> createState() => _SocialMediaWidgetState();
 }
 
 class _SocialMediaWidgetState extends State<SocialMediaWidget> {
-  double topRight = 10;
-  double topLeft = 0;
   String hint = "Facebook";
   int controllerIndex = 0;
   TextEditingController facebookController = TextEditingController();
@@ -39,31 +56,39 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
                   onTap: (index) {
                     if (index == 0) {
                       setState(() {
-                        topRight = 10;
-                        topLeft = 0;
+                        IsLanguage.isEnLanguage(context)
+                            ? widget.topRight = 10
+                            : widget.topRight = 0;
+                        IsLanguage.isEnLanguage(context)
+                            ? widget.topLeft = 0
+                            : widget.topLeft = 10;
                         hint = "FaceBook";
-                        controllerIndex=index;
+                        controllerIndex = index;
                       });
                     } else if (index == 1) {
                       setState(() {
-                        topRight = 10;
-                        topLeft = 10;
+                        widget.topRight = 10;
+                        widget.topLeft = 10;
                         hint = "Instagram";
-                        controllerIndex=index;
+                        controllerIndex = index;
                       });
                     } else if (index == 2) {
                       setState(() {
-                        topRight = 10;
-                        topLeft = 10;
+                        widget.topRight = 10;
+                        widget.topLeft = 10;
                         hint = "Twitter";
-                        controllerIndex=index;
+                        controllerIndex = index;
                       });
                     } else if (index == 3) {
                       setState(() {
-                        topRight = 0;
-                        topLeft = 10;
+                        IsLanguage.isEnLanguage(context)
+                            ? widget.topRight = 0
+                            : widget.topRight = 10;
+                        IsLanguage.isEnLanguage(context)
+                            ? widget.topLeft = 10
+                            : widget.topLeft = 0;
                         hint = "Snap Chat";
-                        controllerIndex=index;
+                        controllerIndex = index;
                       });
                     }
                   },
@@ -90,8 +115,8 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
                 borderRadius: BorderRadius.only(
                     bottomLeft: const Radius.circular(10),
                     bottomRight: const Radius.circular(10),
-                    topRight: Radius.circular(topRight),
-                    topLeft: Radius.circular(topLeft)),
+                    topRight: Radius.circular(widget.topRight),
+                    topLeft: Radius.circular(widget.topLeft)),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -106,7 +131,6 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
                           borderSide: BorderSide.none),
                       fillColor: AppColors.scaffoldBackground,
                       filled: true),
-                  textAlign: TextAlign.left,
                 ),
               ),
             )
@@ -118,12 +142,16 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
 
   TextEditingController controller(int index) {
     if (index == 0) {
+      facebookController = widget.facebookController;
       return facebookController;
     } else if (index == 1) {
+      instaController = widget.instaController;
       return instaController;
     } else if (index == 2) {
+      twitterController = widget.twitterController;
       return twitterController;
     } else {
+      snapController = widget.snapController;
       return snapController;
     }
   }

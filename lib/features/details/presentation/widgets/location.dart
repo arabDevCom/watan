@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/is_language_methods.dart';
 import '../../../home_page/domain/entities/main_item_domain_model.dart';
+import '../screens/detales photo.dart';
 
 class LocationWidget extends StatelessWidget {
   const LocationWidget({Key? key, this.mainItemModel}) : super(key: key);
@@ -30,7 +31,6 @@ class LocationWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 Row(
                   children: [
                     const Icon(Icons.location_on),
@@ -48,7 +48,18 @@ class LocationWidget extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return DetailsPhotoScreen(
+                      initialPage: 2,
+                      mainItem: mainItemModel!,
+                    );
+                  },
+                ),
+              );
+            },
             child: Image.asset(
               ImageAssets.mapImage,
               height: 48,

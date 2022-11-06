@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../home_page/data/models/main_item_data_model.dart';
 import '../../data/models/login_data_model.dart';
 
 LoginModel loginFromJson(String str) => LoginDataModel.fromJson(json.decode(str));
@@ -44,9 +46,11 @@ class User extends Equatable{
     this.name,
     this.phone,
     this.email,
+    this.password,
     this.whatsapp,
     this.status,
     this.image,
+    this.fileImage,
     this.userType,
     this.facebook,
     this.instagram,
@@ -54,15 +58,18 @@ class User extends Equatable{
     this.snapchat,
     this.latitude,
     this.longitude,
+    this.packagesBalance,
   });
 
   final int? id;
   final String? name;
   final String? phone;
   final String? email;
+  final String? password;
   final String? whatsapp;
   final String? status;
   final String? image;
+  final FormData? fileImage;
   final int? userType;
   final String? facebook;
   final String? instagram;
@@ -70,6 +77,8 @@ class User extends Equatable{
   final String? snapchat;
   final String? latitude;
   final String? longitude;
+  final int? packagesBalance;
+
 
   @override
   List<Object?> get props => [
@@ -77,9 +86,11 @@ class User extends Equatable{
     name,
     phone,
     email,
+    password,
     whatsapp,
     status,
     image,
+    fileImage,
     userType,
     facebook,
     instagram,
@@ -87,6 +98,7 @@ class User extends Equatable{
     snapchat,
     latitude,
     longitude,
+    packagesBalance,
   ];
 
 

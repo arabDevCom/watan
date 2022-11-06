@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/assets_manager.dart';
+import '../cubit/filter_cubit.dart';
 
 class AreaRangeWidget extends StatelessWidget {
   const AreaRangeWidget({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class AreaRangeWidget extends StatelessWidget {
       Row(children: [
         Expanded(
           child: TextFormField(
+            controller: context.read<FilterCubit>().areaFromController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -31,6 +34,7 @@ class AreaRangeWidget extends StatelessWidget {
         const SizedBox(width: 25),
         Expanded(
           child: TextFormField(
+            controller: context.read<FilterCubit>().areaToController,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(

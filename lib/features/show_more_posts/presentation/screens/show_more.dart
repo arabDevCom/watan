@@ -27,9 +27,16 @@ class _ShowMoreScreenState extends State<ShowMoreScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<ShowMoreCubit>()
-        .getShowMoreData(pram: widget.kind.toLowerCase());
+    if(widget.kind.toLowerCase()=='popular'){
+      context
+          .read<ShowMoreCubit>()
+          .getShowMoreData(pram: 'popular');
+    }else{
+      context
+          .read<ShowMoreCubit>()
+          .getShowMoreData(pram: 'new');
+    }
+
   }
 
   @override
@@ -43,43 +50,6 @@ class _ShowMoreScreenState extends State<ShowMoreScreen> {
         builder: (BuildContext context, state) {
           if (state is ShowMoreLoading) {
             return const ShowLoadingIndicator();
-          } else if (state is ShowMoreLoaded) {
-            return LazyLoadScrollView(
-              isLoading: context.read<ShowMoreCubit>().isLoadingVertical,
-              onEndOfPage: () {
-                if (state.showMore.data!.links!.next == null) {
-                  snackBar(translateText(AppStrings.noDataMessage, context),
-                      context,color: AppColors.error);
-                } else {
-                  snackBar("loading", context);
-                  context.read<ShowMoreCubit>().getPaginationData(
-                      pram: state.showMore.data!.links!.next!);
-                }
-              },
-              child: BodyWidget(
-                showMoreList: context.read<ShowMoreCubit>().mainItemsList,
-                myContext: context,
-                sliderList: widget.sliderList,
-              ),
-            );
-          } else if (state is PaginationLoaded) {
-            return LazyLoadScrollView(
-              isLoading: context.read<ShowMoreCubit>().isLoadingVertical,
-              onEndOfPage: () {
-                if (state.showMore.data!.links!.next == null) {
-                  snackBar("No Data", context,color: AppColors.error);
-                } else {
-                  snackBar("loading", context);
-                  context.read<ShowMoreCubit>().getPaginationData(
-                      pram: state.showMore.data!.links!.next!);
-                }
-              },
-              child: BodyWidget(
-                showMoreList: context.read<ShowMoreCubit>().mainItemsList,
-                myContext: context,
-                sliderList: widget.sliderList,
-              ),
-            );
           } else if (state is ShowMoreLoadedError) {
             return error_widget.ErrorWidget(
               onPressed: () => context.read<ShowMoreCubit>().getShowMoreData(
@@ -87,10 +57,23 @@ class _ShowMoreScreenState extends State<ShowMoreScreen> {
                   ),
             );
           } else {
-            return BodyWidget(
-              showMoreList: context.read<ShowMoreCubit>().mainItemsList,
-              myContext: context,
-              sliderList: widget.sliderList,
+            return LazyLoadScrollView(
+              isLoading: context.read<ShowMoreCubit>().isLoadingVertical,
+              onEndOfPage: () {
+                if (context.read<ShowMoreCubit>().showMore.data!.links!.next == null) {
+                  snackBar(translateText(AppStrings.noDataMessage, context),
+                      context,color: AppColors.error);
+                } else {
+                  snackBar("loading", context);
+                  context.read<ShowMoreCubit>().getPaginationData(
+                      pram: context.read<ShowMoreCubit>().showMore.data!.links!.next!);
+                }
+              },
+              child: BodyWidget(
+                showMoreList: context.read<ShowMoreCubit>().mainItemsList,
+                myContext: context,
+                sliderList: widget.sliderList,
+              ),
             );
           }
         },

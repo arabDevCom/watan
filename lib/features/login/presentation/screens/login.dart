@@ -1,424 +1,123 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 
-import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/snackbar_method.dart';
-import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/show_loading_indicator.dart';
+import '../../../navigation_bar/presentation/screens/navigator_bar.dart';
+import '../../../register/presentation/screens/welcome_register.dart';
 import '../cubit/login_cubit.dart';
-import 'package:elwatn/core/widgets/error_widget.dart' as error_widget;
+import '../widgets/body_widget.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    emailController.text="osama7@gmail.com";
-    passwordController.text="01223366555";
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          "Login",
+          translateText(AppStrings.loginText, context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
           color: AppColors.black,
         ),
       ),
-      body: BlocBuilder<LoginCubit, LoginState>(
+      body: BlocConsumer<LoginCubit, LoginState>(
+        listener: (BuildContext context, state) {
+          if (state is SocialLoginSuccess) {
+            context.read<LoginCubit>().updateLoginStoreData();
+          }
+        },
         builder: (BuildContext context, state) {
           if (state is LoginLoading) {
             return const ShowLoadingIndicator();
           } else if (state is LoginLoaded) {
-            if(state.loginModel.code==200){
-             Future.delayed(const Duration(milliseconds: 700),(){
-               snackBar(state.loginModel.message,context,color: AppColors.success);
-             });
-            }else if(state.loginModel.code==411){
-              Future.delayed(const Duration(milliseconds: 700),(){
-                snackBar("Email not valid",context,color: AppColors.error);
+            if (state.loginModel.code == 200) {
+              if (state.loginModel.data!.user!.phone != null) {
+                Future.delayed(
+                  const Duration(milliseconds: 400),
+                  () {
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        alignment: Alignment.center,
+                        duration: const Duration(milliseconds: 1300),
+                        child: NavigatorBar(
+                          loginDataModel:
+                              context.read<LoginCubit>().userLoginModel!,
+                        ),
+                      ),
+                    );
+                    Future.delayed(
+                      const Duration(milliseconds: 700),
+                      () {
+                        context.read<LoginCubit>().loginSuccessfully();
+                      },
+                    );
+                  },
+                );
+              } else {
+                Future.delayed(
+                  const Duration(milliseconds: 400),
+                  () {
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        alignment: Alignment.center,
+                        duration: const Duration(milliseconds: 1300),
+                        child: const WelcomeRegister(),
+                      ),
+                    );
+                    Future.delayed(
+                      const Duration(milliseconds: 700),
+                      () {
+                        context.read<LoginCubit>().loginSuccessfully();
+                      },
+                    );
+                  },
+                );
+              }
+              return const ShowLoadingIndicator();
+            } else if (state.loginModel.code == 411) {
+              Future.delayed(const Duration(milliseconds: 400), () {
+                snackBar(
+                  translateText(AppStrings.login411message, context),
+                  context,
+                  color: AppColors.error,
+                );
               });
-            }else if(state.loginModel.code==406){
-              Future.delayed(const Duration(milliseconds: 700),(){
-                snackBar("Password not valid",context,color: AppColors.error);
+              return LoginBodyWidget();
+            } else {
+              Future.delayed(const Duration(milliseconds: 400), () {
+                snackBar(
+                  translateText(AppStrings.login406message, context),
+                  context,
+                  color: AppColors.error,
+                );
               });
+
+              return LoginBodyWidget();
             }
-            return Column(
-              children: [
-                Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(child: Image.asset(ImageAssets.watanLogo)),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration:
-                                const InputDecoration(label: Text("Email")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: passwordController,
-                            obscureText: true,
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration:
-                                const InputDecoration(label: Text("Password")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Password';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 60),
-                        CustomButton(
-                          text: "Login",
-                          color: AppColors.primary,
-                          paddingHorizontal: 25,
-                          onClick: () {
-                            print("emailController.text");
-                            print(emailController.text);
-                            print("passwordController.text");
-                            print(passwordController.text);
-
-                            if (_formKey.currentState!.validate()) {
-
-                              print("emailController.text");
-                              print(emailController.text);
-                              print("passwordController.text");
-                              print(passwordController.text);
-
-                              context.read<LoginCubit>().postLoginData(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  );
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //       content: Text('Processing Data')),
-                              // );
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.welcomeRegisterRoute);
-                                },
-                                child: Text(
-                                  "Register",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.forgetPasswordRoute);
-                                },
-                                child: Text(
-                                  "Forget Password",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Image.asset(
-                          ImageAssets.cityImage,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
           } else if (state is LoginLoadedError) {
-            Future.delayed(const Duration(milliseconds: 700),(){
-              snackBar("Error to connect to server",context,color: AppColors.error);
+            Future.delayed(const Duration(milliseconds: 400), () {
+              snackBar(
+                translateText(AppStrings.serverFail, context),
+                context,
+                color: AppColors.error,
+              );
             });
-            return Column(
-              children: [
-                Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(child: Image.asset(ImageAssets.watanLogo)),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration:
-                            const InputDecoration(label: Text("Email")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: passwordController,
-                            obscureText: true,
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration:
-                            const InputDecoration(label: Text("Password")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Password';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 60),
-                        CustomButton(
-                          text: "Login",
-                          color: AppColors.primary,
-                          paddingHorizontal: 25,
-                          onClick: () {
-                            print("emailController.text");
-                            print(emailController.text);
-                            print("passwordController.text");
-                            print(passwordController.text);
-
-                            if (_formKey.currentState!.validate()) {
-
-                              print("emailController.text");
-                              print(emailController.text);
-                              print("passwordController.text");
-                              print(passwordController.text);
-
-                              context.read<LoginCubit>().postLoginData(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //       content: Text('Processing Data')),
-                              // );
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.welcomeRegisterRoute);
-                                },
-                                child: Text(
-                                  "Register",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.forgetPasswordRoute);
-                                },
-                                child: Text(
-                                  "Forget Password",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Image.asset(
-                          ImageAssets.cityImage,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
+            return LoginBodyWidget();
           } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(child: Image.asset(ImageAssets.watanLogo)),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration:
-                            const InputDecoration(label: Text("Email")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: TextFormField(
-                            controller: passwordController,
-                            obscureText: true,
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration:
-                            const InputDecoration(label: Text("Password")),
-                            textAlign: TextAlign.left,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter Password';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 60),
-                        CustomButton(
-                          text: "Login",
-                          color: AppColors.primary,
-                          paddingHorizontal: 25,
-                          onClick: () {
-                            print("emailController.text");
-                            print(emailController.text);
-                            print("passwordController.text");
-                            print(passwordController.text);
-
-                            if (_formKey.currentState!.validate()) {
-                              context.read<LoginCubit>().postLoginData(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //       content: Text('Processing Data')),
-                              // );
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.welcomeRegisterRoute);
-                                },
-                                child: Text(
-                                  "Register",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.forgetPasswordRoute);
-                                },
-                                child: Text(
-                                  "Forget Password",
-                                  style: TextStyle(color: AppColors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Image.asset(
-                          ImageAssets.cityImage,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
+            return LoginBodyWidget();
           }
         },
       ),

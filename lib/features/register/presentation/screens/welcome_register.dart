@@ -1,9 +1,11 @@
-import 'package:elwatn/config/routes/app_routes.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/features/register/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/snackbar_method.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../cubit/register_cubit.dart';
 import '../widgets/welcome_registeration.dart';
@@ -17,7 +19,7 @@ class WelcomeRegister extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          "Register",
+          translateText(AppStrings.registerText, context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
@@ -35,34 +37,71 @@ class WelcomeRegister extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   Text(
-                    "Welcome to WATAN",
+                    translateText(AppStrings.welcomeText, context),
                     style: TextStyle(fontSize: 24, color: AppColors.primary),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Please select your user type ...",
+                    translateText(AppStrings.pleaseSelectText, context),
                     style: TextStyle(fontSize: 18, color: AppColors.grayLite),
                   ),
                   const SizedBox(height: 30),
-                  const WelcomeChoose(),
+                   const WelcomeChoose(),
                   const Spacer(),
                   CustomButton(
-                    text: "Next",
+                    text: translateText(AppStrings.nextBtnText, context),
                     color: AppColors.primary,
                     onClick: () {
                       if (context.read<RegisterCubit>().choose1 == true &&
                           context.read<RegisterCubit>().choose2 == true) {
-                        Navigator.pushNamed(context, Routes.registerScreenRoute);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return RegisterScreen(
+                                title:
+                                    "${translateText(AppStrings.registerText, context)} ${translateText(AppStrings.userText, context)}",
+                                isUser: true,
+                              );
+                            },
+                          ),
+                        );
                       } else if (context.read<RegisterCubit>().choose1 ==
                               true &&
                           context.read<RegisterCubit>().choose2 == false) {
-                        Navigator.pushNamed(context, Routes.registerCompanyRoute);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return RegisterScreen(
+                                title:
+                                    "${translateText(AppStrings.registerText, context)} ${translateText(AppStrings.companyAndOfficeText, context)}",
+                                isUser: false,
+                              );
+                            },
+                          ),
+                        );
                       } else if (context.read<RegisterCubit>().choose1 ==
                               false &&
                           context.read<RegisterCubit>().choose2 == true) {
-                        Navigator.pushNamed(context, Routes.bloggsRoute);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return RegisterScreen(
+                                title:
+                                    "${translateText(AppStrings.registerText, context)} ${translateText(AppStrings.projectText, context)}",
+                                isUser: false,
+                              );
+                            },
+                          ),
+                        );
                       } else {
-                        snackBar("Choose User",context,color: AppColors.primary);
+                        snackBar(
+                          translateText(AppStrings.chooseMessage, context),
+                          context,
+                          color: AppColors.primary,
+                        );
                       }
                     },
                   ),

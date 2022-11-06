@@ -43,8 +43,7 @@ class RegisterCompanyBodyWidget extends StatelessWidget {
           isPassword: true,
           textInputType: TextInputType.visiblePassword,
         ),
-         ListTileAllDetailsWidget(image: ImageAssets.locationGoldIcon, text: "Location",iconColor: AppColors.primary),
-        Image.asset(ImageAssets.detailsMapImage),
+
       ],
     );
   }

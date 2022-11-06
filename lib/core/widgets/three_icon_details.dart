@@ -20,7 +20,6 @@ class ThreeIconsDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        //ToDo Area Num
         SvgPicture.asset(ImageAssets.areaIcon),
         Padding(
           padding: const EdgeInsets.only(right: 8, left: 8),

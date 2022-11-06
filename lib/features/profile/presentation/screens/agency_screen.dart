@@ -1,8 +1,13 @@
 import 'package:elwatn/config/routes/app_routes.dart';
+import 'package:elwatn/core/widgets/show_loading_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:elwatn/core/widgets/error_widget.dart' as error_widget;
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/snackbar_method.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../cubit/profile_cubit.dart';
 import '../widgets/agency_item.dart';
 
 class AgencyScreen extends StatelessWidget {
@@ -21,25 +26,70 @@ class AgencyScreen extends StatelessWidget {
             color: AppColors.black,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              ...List.generate(
-                12,
-                (index) => const AgencyItem(),
-              ),
-              const SizedBox(height: 25),
-              CustomButton(
-                paddingHorizontal:65 ,
-                text: "Add Agency",
-                color: AppColors.primary,
-                onClick: () {
-                  Navigator.pushNamed(context, Routes.newAndEditAgencyScreenRoute);
+        body: BlocConsumer<ProfileCubit, ProfileState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is ProfileAgentDeletedSuccessfully) {
+              Future.delayed(const Duration(seconds: 2), () {
+                snackBar("Delete Successfully", context,
+                    color: AppColors.success);
+              });
+            }
+            if (state is ProfileAgentError) {
+              return error_widget.ErrorWidget(
+                onPressed: () => context.read<ProfileCubit>().getAgentList(
+                      context
+                          .read<ProfileCubit>()
+                          .loginDataModel
+                          .data!
+                          .accessToken!,
+                    ),
+              );
+            } else if (state is ProfileAgentLoaded) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<ProfileCubit>().getAgentList(
+                        context
+                            .read<ProfileCubit>()
+                            .loginDataModel
+                            .data!
+                            .accessToken!,
+                      );
                 },
-              ),
-              const SizedBox(height: 35),
-            ],
-          ),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70),
+                      child: ListView.builder(
+                        itemCount: state.agentProfileList.data!.length,
+                        itemBuilder: (context, index) => AgencyItem(
+                          agentModel: state.agentProfileList.data![index],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: CustomButton(
+                        paddingHorizontal: 65,
+                        text: "Add Agency",
+                        color: AppColors.primary,
+                        onClick: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.newAndEditAgencyScreenRoute,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return const ShowLoadingIndicator();
+            }
+          },
         ));
   }
 }

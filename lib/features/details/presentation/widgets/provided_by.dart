@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/translate_text_method.dart';
 import '../../../home_page/domain/entities/main_item_domain_model.dart';
 
@@ -26,7 +28,24 @@ class ProvidedByWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Image.asset(ImageAssets.companyLogo),
+          CachedNetworkImage(
+            imageUrl: mainItemModel!.userModel!.image!,
+            width: 60,
+            height: 60,
+            fit: BoxFit.fill,
+            placeholder: (context, url) => CircularProgressIndicator(
+              color: AppColors.primary2,
+            ),
+            errorWidget: (context, url, error) => Icon(
+              Icons.error,
+              size: 64,
+              color: AppColors.primary,
+            ),
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              backgroundColor: AppColors.primary2,
+              backgroundImage: imageProvider,
+            ),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -44,9 +63,7 @@ class ProvidedByWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            "${translateText(AppStrings.agentText, context)}"
-            " :  "
-            "${IsLanguage.isEnLanguage(context) ? mainItemModel!.agent!.nameEn! : (IsLanguage.isArLanguage(context) ? mainItemModel!.agent!.nameAr! : mainItemModel!.agent!.nameKu!)}",
+            mainItemModel!.userModel!.name!,
             style: const TextStyle(fontSize: 14),
           ),
           const SizedBox(height: 16),

@@ -1,12 +1,19 @@
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/widgets/three_icon_details.dart';
 import 'package:elwatn/core/widgets/views.dart';
+import 'package:elwatn/features/add/presentation/cubit/add_ads_cubit.dart';
 import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../config/locale/app_localizations.dart';
+import '../../features/add/presentation/screens/add_screen.dart';
 import '../../features/details/presentation/screens/details.dart';
+import '../../features/login/data/models/login_data_model.dart';
+import '../../features/login/domain/entities/login_domain_model.dart';
+import '../../features/my_ads/presentation/cubit/my_ads_cubit.dart';
 import '../utils/app_strings.dart';
 import '../utils/convert_numbers_method.dart';
 import '../utils/is_language_methods.dart';
@@ -14,10 +21,14 @@ import 'network_image.dart';
 
 class SecondMainItemWidget extends StatelessWidget {
   const SecondMainItemWidget(
-      {Key? key, this.isFavorite = false, this.mainItemModel})
+      {Key? key,
+      this.isFavorite = false,
+      this.mainItemModel,
+      this.isMyAdds = false})
       : super(key: key);
 
   final bool isFavorite;
+  final bool isMyAdds;
   final MainItem? mainItemModel;
 
   @override
@@ -80,12 +91,14 @@ class SecondMainItemWidget extends StatelessWidget {
                             mainItemModel!.status == "null"
                                 ? "nooo"
                                 : mainItemModel!.status == "sale"
-                                ? AppLocalizations.of(context)!
-                                .translate(AppStrings.statusSaleText)!
-                                : AppLocalizations.of(context)!
-                                .translate(AppStrings.statusRentText)!,
+                                    ? AppLocalizations.of(context)!
+                                        .translate(AppStrings.statusSaleText)!
+                                    : AppLocalizations.of(context)!
+                                        .translate(AppStrings.statusRentText)!,
                             style: TextStyle(
-                                color: AppColors.primary, fontSize: 11),
+                              color: AppColors.primary,
+                              fontSize: 11,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -102,27 +115,45 @@ class SecondMainItemWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              AppLocalizations.of(context)!.isEnLocale
-                                  ? mainItemModel!.titleEn ?? "No Title"
-                                  : (AppLocalizations.of(context)!.isArLocale
-                                      ? mainItemModel!.titleAr ?? "لا عنوان"
-                                      : mainItemModel!.titleKu ??
-                                          "هیچ ناونیشانێک نییە"),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(context)!.isEnLocale
+                                    ? mainItemModel!.titleEn ?? "No Title"
+                                    : (AppLocalizations.of(context)!.isArLocale
+                                        ? mainItemModel!.titleAr ?? "لا عنوان"
+                                        : mainItemModel!.titleKu ??
+                                            "هیچ ناونیشانێک نییە"),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             //ToDo Favourite
-                            Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: isFavorite
-                                  ? AppColors.primary
-                                  : AppColors.black,
-                            ),
+                            isMyAdds
+                                ? InkWell(
+                                    onTap: () {
+                                      context
+                                          .read<MyAdsCubit>()
+                                          .deleteMyProfileAds(
+                                            mainItemModel!.id.toString(),
+                                            'myAds',
+                                          );
+                                    },
+                                    child: SvgPicture.asset(
+                                      ImageAssets.deleteAccountIcon,
+                                    ),
+                                  )
+                                : Icon(
+                                    isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isFavorite
+                                        ? AppColors.primary
+                                        : AppColors.black,
+                                  ),
                           ],
                         ),
                         //ToDo Categories Languages
@@ -135,14 +166,14 @@ class SecondMainItemWidget extends StatelessWidget {
                           ),
                         ),
                         Row(
-                          children:  [
+                          children: [
                             const Icon(Icons.location_on),
                             Text(
                               IsLanguage.isEnLanguage(context)
                                   ? mainItemModel!.locationNameEn!
                                   : (IsLanguage.isArLanguage(context)
-                                  ? mainItemModel!.locationNameAr!
-                                  : mainItemModel!.locationNameKu!),
+                                      ? mainItemModel!.locationNameAr!
+                                      : mainItemModel!.locationNameKu!),
                               style: const TextStyle(fontSize: 12),
                             )
                           ],
@@ -183,7 +214,58 @@ class SecondMainItemWidget extends StatelessWidget {
                               height: 28,
                             ),
                           ],
-                        )
+                        ),
+                        isMyAdds == true
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      context
+                                          .read<MyAdsCubit>()
+                                          .changeStatusMyProfileAds(
+                                            mainItemModel!.id.toString(),
+                                            'myAds',
+                                          );
+                                    },
+                                    child: Text(
+                                      "Add To My Solid",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.primary),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      context
+                                          .read<AddAdsCubit>()
+                                          .putDataToUpdate(mainItemModel!);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Scaffold(
+                                            body: SafeArea(
+                                              child: AddScreen(
+                                                isUpdate: true,
+                                                mainItemModel: mainItemModel,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "Edit",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : const SizedBox()
                       ],
                     ),
                   ),

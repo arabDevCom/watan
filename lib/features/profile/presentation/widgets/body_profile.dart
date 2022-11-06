@@ -1,11 +1,25 @@
 import 'package:elwatn/config/routes/app_routes.dart';
+import 'package:elwatn/core/utils/app_colors.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/features/profile/presentation/widgets/list_tile_profile_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import '../../../../core/utils/translate_text_method.dart';
+import '../../../login/data/models/login_data_model.dart';
+import '../../../my_ads/presentation/screens/my_ads.dart';
+import '../../../packages/presentation/screens/package_screen.dart';
+import '../../../register/presentation/cubit/register_cubit.dart';
+import '../../../register/presentation/screens/register_company.dart';
+import '../../../register/presentation/screens/register_screen.dart';
+import '../cubit/profile_cubit.dart';
 
 class BodyProfileWidget extends StatelessWidget {
-  const BodyProfileWidget({Key? key, this.kind = "profile"}) : super(key: key);
-  final String kind;
+  const BodyProfileWidget({Key? key, required this.loginDataModel})
+      : super(key: key);
+  final LoginDataModel loginDataModel;
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +34,125 @@ class BodyProfileWidget extends StatelessWidget {
           child: Column(
             children: [
               ListTileProfileItem(
-                text: "My Adds",
+                text: translateText(AppStrings.myAddsText, context),
                 image: ImageAssets.adsGoldIcon,
-                onClick: ()=> Navigator.of(context).pushNamed(Routes.adsRoute),
+                onClick: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyAdsScreen(
+                      loginModel: loginDataModel,
+                      kindOfClass: 'myAds',
+                    ),
+                  ),
+                ),
               ),
-              ListTileProfileItem(
-                text:kind=="company"?"Packages": "Soled Property",
-                image: ImageAssets.soledGoldIcon,
-                onClick: ()=> Navigator.of(context).pushNamed(Routes.soledStatesRoute),
-              ),
-              ListTileProfileItem(
-                text: "Edit Profile",
-                image: ImageAssets.editorIcon,
-                onClick: () {},
-              ),
-              kind == "office"
+              loginDataModel.data!.user!.userType != 3
                   ? ListTileProfileItem(
-                      text: "Agency",
+                      text:
+                          translateText(AppStrings.soledPropertyText, context),
+                      image: ImageAssets.soledGoldIcon,
+                      onClick: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MyAdsScreen(
+                            loginModel: loginDataModel,
+                            kindOfClass: 'mySolid',
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 0,
+                    ),
+              loginDataModel.data!.user!.userType != 1
+                  ? ListTileProfileItem(
+                      text: translateText(AppStrings.agencyText, context),
                       image: ImageAssets.agencyGoldIcon,
                       onClick: () {
                         Navigator.pushNamed(context, Routes.agencyScreenRoute);
                       },
                     )
-                  : const SizedBox(
-                      height: 0,
-                    ),
+                  : const SizedBox(height: 0),
+              loginDataModel.data!.user!.userType != 1
+                  ? ListTileProfileItem(
+                      text: translateText(AppStrings.packagesText, context),
+                      image: ImageAssets.packagesIcon,
+                      onClick: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return PackageScreen(
+                            loginDataModel: loginDataModel,
+                          );
+                        }));
+                      },
+                    )
+                  : const SizedBox(height: 0),
               ListTileProfileItem(
-                text: "Delete Account",
+                text: translateText(AppStrings.editProfileText, context),
+                image: ImageAssets.editorIcon,
+                onClick: () {
+                  context.read<RegisterCubit>().registerBtn = "update";
+                  context.read<RegisterCubit>().putDataToEdit(loginDataModel);
+                  print(loginDataModel.data!.user!.userType);
+                  if (loginDataModel.data!.user!.userType == 1) {
+                    print("if");
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RegisterScreen(
+                            title: 'Update Profile',
+                            isUser: true,
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    print("else");
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RegisterScreen(
+                            title: 'Update Profile',
+                            isUser: false,
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              ListTileProfileItem(
+                text: translateText(AppStrings.deleteAccountText, context),
                 image: ImageAssets.deleteAccountIcon,
-                onClick: () {},
+                onClick: () {
+                  Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title:
+                        "\n${translateText(AppStrings.deleteAccountText, context)}",
+                    desc:
+                        "\n\nNote that , When you Delete your Account your Ads will Delete\n\n",
+                    buttons: [
+                      DialogButton(
+                        onPressed: () => Navigator.pop(context),
+                        color: AppColors.buttonBackground,
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
+                      DialogButton(
+                        onPressed: () =>
+                            context.read<ProfileCubit>().deleteUserAccount(
+                                  loginDataModel.data!.accessToken!,
+                                ),
+                        color: AppColors.error,
+                        child: const Text(
+                          "Confirm",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      )
+                    ],
+                  ).show();
+                },
               ),
             ],
           ),

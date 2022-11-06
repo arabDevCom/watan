@@ -1,3 +1,4 @@
+import 'package:elwatn/features/show_lists/presentation/screens/show_lists_items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,96 +22,86 @@ class CategoriesWidget extends StatelessWidget {
         width: double.infinity,
         child: GridView.builder(
           shrinkWrap: true,
-
           scrollDirection: Axis.horizontal,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
-            childAspectRatio: 2/3,
+            childAspectRatio: 2 / 3,
             mainAxisSpacing: (MediaQuery.of(context).size.width / 5) - 70,
           ),
           itemCount: categoriesDatum.length,
           itemBuilder: (context, index) {
-            return Stack(
-              children: [
-                categoriesDatum[index].image!.substring(
-                            categoriesDatum[index].image!.length - 3) ==
-                        "svg"
-                    ? SvgPicture.network(
-                        categoriesDatum[index].image!,
-                        height: 80,
-                        width: 80,
-                      )
-                    : Positioned(
-                        top: 0,
-                        bottom: 0,
-                        right: 0,
-                        left: 0,
-                        child: ManageNetworkImage(
-                          imageUrl: categoriesDatum[index].image!,
-                        ),
-                      ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(12),
-                            bottomLeft: Radius.circular(12))),
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      IsLanguage.isEnLanguage(context)
-                          ? categoriesDatum[index].nameEn!
-                          : (IsLanguage.isArLanguage(context)
-                              ? categoriesDatum[index].nameAr!
-                              : categoriesDatum[index].nameKo!),
-                      style: TextStyle(fontSize: 14, color: AppColors.white),
+            return InkWell(
+              onTap: () {
+                if (index == 0) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ShowLists(
+                          kind: categoriesDatum[index].nameEn!, index: index),
                     ),
-                  ),
-                )
-              ],
+                  );
+                } else if (index == 1) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ShowLists(
+                          kind: categoriesDatum[index].nameEn!, index: index),
+                    ),
+                  );
+                } else if (index == 2) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ShowLists(
+                          kind: categoriesDatum[index].nameEn!, index: index),
+                    ),
+                  );
+                }
+              },
+              child: Stack(
+                children: [
+                  categoriesDatum[index].image!.substring(
+                              categoriesDatum[index].image!.length - 3) ==
+                          "svg"
+                      ? SvgPicture.network(
+                          categoriesDatum[index].image!,
+                          height: 80,
+                          width: 80,
+                        )
+                      : Positioned(
+                          top: 0,
+                          bottom: 0,
+                          right: 0,
+                          left: 0,
+                          child: ManageNetworkImage(
+                            imageUrl: categoriesDatum[index].image!,
+                          ),
+                        ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(12),
+                              bottomLeft: Radius.circular(12))),
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        IsLanguage.isEnLanguage(context)
+                            ? categoriesDatum[index].nameEn!
+                            : (IsLanguage.isArLanguage(context)
+                                ? categoriesDatum[index].nameAr!
+                                : categoriesDatum[index].nameKo!),
+                        style: TextStyle(fontSize: 14, color: AppColors.white),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             );
           },
         ),
       ),
     );
-
-    //   SingleChildScrollView(
-    //   scrollDirection: Axis.horizontal,
-    //   child: Row(
-    //     children: [
-    //       ...List.generate(
-    //         categoriesDatum.length,
-    //         (index) => Padding(
-    //           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-    //           child: Column(
-    //             children: [
-    //               categoriesDatum[index].image!.substring(
-    //                           categoriesDatum[index].image!.length - 3) ==
-    //                       "svg"
-    //                   ? SvgPicture.network(
-    //                       categoriesDatum[index].image!,
-    //                       height: 32,
-    //                       width: 32,
-    //                     )
-    //                   : ManageNetworkImage(
-    //                       imageUrl: categoriesDatum[index].image!,
-    //                       height: 38,
-    //                       width: 38,
-    //                     ),
-    //               Text(
-    //                 categoriesDatum[index].nameEn!,
-    //                 style: const TextStyle(fontSize: 14),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

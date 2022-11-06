@@ -21,4 +21,17 @@ class AppColors {
   static Color grayLite = Colors.grey[700]!;
   static Color opacityWhite = Colors.white.withOpacity(0.5);
   static Color transparent = Colors.transparent;
+
+  static  Color grey1 = HexColor("#777777");
+  static  Color grey2 = HexColor("#E5E5E5");
+  static  Color grey3 = HexColor("#f3f3f3");
+  static  Color grey4 = HexColor("#C4C4C4");
+  static  Color grey5 = HexColor("#DADADA");
+  static  Color grey6 = HexColor("#747474");
+  static  Color grey7 = HexColor("#F3F3F3");
+
+  static const  Color color1 = Color(0xff143360);
+  static const  Color color2 = Color(0xffFFF2E3);
+  static const  Color color3 = Color(0xff282828);
+  static const  Color color4 = Color(0xffFFF4E6);
 }

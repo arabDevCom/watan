@@ -1,114 +1,83 @@
-import 'package:elwatn/features/details/presentation/widgets/list_tile_all_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/assets_manager.dart';
-import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_textfield.dart';
-import '../../../../core/widgets/profile_photo.dart';
-import '../../../../core/widgets/social_media_icons.dart';
-import '../widgets/choose_language.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/snackbar_method.dart';
+import '../../../../core/utils/translate_text_method.dart';
+import '../../../../core/widgets/show_loading_indicator.dart';
+import '../cubit/profile_cubit.dart';
+import '../widgets/new_edit_agent_body_widget.dart';
 
-class NewAndEditAgencyScreen extends StatelessWidget {
+class NewAndEditAgencyScreen extends StatefulWidget {
   const NewAndEditAgencyScreen({Key? key}) : super(key: key);
 
   @override
+  State<NewAndEditAgencyScreen> createState() => _NewAndEditAgencyScreenState();
+}
+
+class _NewAndEditAgencyScreenState extends State<NewAndEditAgencyScreen> {
+  late ProfileCubit profileCubit;
+  final formKey =GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+    profileCubit.image = null;
+    profileCubit.imageLink = '';
+    profileCubit.agentBtnText = '';
+    profileCubit.nameController.clear();
+    profileCubit.emailController.clear();
+    profileCubit.passwordController.clear();
+    profileCubit.phoneController.clear();
+    profileCubit.whatsappController.clear();
+    profileCubit.aboutController.clear();
+    profileCubit.facebookController.clear();
+    profileCubit.instaController.clear();
+    profileCubit.twitterController.clear();
+    profileCubit.snapController.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    profileCubit = context.read<ProfileCubit>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          "Agency",
+          translateText(AppStrings.agentText, context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
           color: AppColors.black,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                ProfilePhotoWidget(),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.idNameGoldIcon,
-              title: "Agency Name",
-              textInputType: TextInputType.text,
-            ),
-             ListTileAllDetailsWidget(image: ImageAssets.speakIcon,text: "Language",iconColor: AppColors.primary),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              child: Row(
-                children: const [
-                  Spacer(),
-                  ChooseLanguageWidget(
-                    title: "Arabic",
-                    image: ImageAssets.iraqLanguageImage,
-                  ),
-                  Spacer(),
-                  ChooseLanguageWidget(
-                    title: "English",
-                    image: ImageAssets.englishLanguageImage,
-                  ),
-                  Spacer(),
-                  ChooseLanguageWidget(
-                    title: "Kurdish",
-                    image: ImageAssets.kurdishLanguageImage,
-                  ),
-                  Spacer(),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.emailRegisterIcon,
-              title: "Email",
-              textInputType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.mobileGoldIcon,
-              title: "Phone",
-              textInputType: TextInputType.phone,
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.whatsappGoldIcon,
-              title: "Whatsapp",
-              textInputType: TextInputType.phone,
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.aboutIcon,
-              title: "About",
-              textInputType: TextInputType.text,
-              minLine: 6,
-            ),
-            const SizedBox(height: 12),
-            const CustomTextField(
-              image: ImageAssets.lockGoldIcon,
-              title: "Password",
-              isPassword: true,
-              textInputType: TextInputType.visiblePassword,
-            ),
-            const SizedBox(height: 12),
-             const SocialMediaWidget(isEnable: true),
-            const SizedBox(height: 48),
-            CustomButton(
-              paddingHorizontal: 65,
-              text: "Create",
-              color: AppColors.primary,
-              onClick: () {
-                // Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileAddedAgentLoaded) {
+            Future.delayed(const Duration(milliseconds: 700), () {
+              snackBar("Agent Added Successfully",context,color: AppColors.success);
+              Navigator.pop(context);
+            });
+            return const ShowLoadingIndicator();
+          }
+          if (state is ProfileEditAgentLoaded) {
+            Future.delayed(const Duration(milliseconds: 700), () {
+              snackBar("Agent Edited Successfully",context,color: AppColors.success);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
+            return const ShowLoadingIndicator();
+          }
+          if(state is ProfileAddedAgentLoading ||state is ProfileEditAgentLoading){
+            return const ShowLoadingIndicator();
+          }else if(state is ProfileAgentValidator ){
+            context.read<ProfileCubit>().changeStatus(0);
+            return NewEditAgentBodyWidget(status: "error");
+          }else {
+            return NewEditAgentBodyWidget(status: "new");
+          }
+        },
       ),
     );
   }

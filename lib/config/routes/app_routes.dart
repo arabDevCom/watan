@@ -6,42 +6,30 @@ import 'package:elwatn/features/register/presentation/screens/forget_password.da
 import 'package:elwatn/features/register/presentation/screens/new_password.dart';
 import 'package:elwatn/features/register/presentation/screens/reset_password.dart';
 import 'package:elwatn/features/register/presentation/screens/welcome_register.dart';
-import 'package:elwatn/features/soled_states/presentation/screens/soled_states.dart';
 import 'package:elwatn/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/app_strings.dart';
-import '../../features/about_us/presentation/screens/about_us.dart';
-import '../../features/ads/presentation/screens/ads.dart';
-import '../../features/bloggs/presentation/screens/bloggs_details.dart';
 import '../../features/contact_us/presentation/screens/contact_us.dart';
-import '../../features/details/presentation/screens/detales photo.dart';
+import '../../features/filter/presentation/screens/filter_result.dart';
 import '../../features/login/presentation/screens/login.dart';
+import '../../features/map/presentation/screens/map.dart';
 import '../../features/notification/presentation/screens/notification.dart';
-import '../../features/profile/presentation/screens/agency_profile.dart';
 import '../../features/profile/presentation/screens/agency_screen.dart';
 import '../../features/profile/presentation/screens/new_edit_agency.dart';
 import '../../features/register/presentation/screens/register_company.dart';
-import '../../features/register/presentation/screens/register_screen.dart';
-import '../../features/terms_and_conditions/presentation/screens/terms_and_conditions.dart';
 
 
 class Routes {
   static const String initialRoute = '/';
   static const String notificationRoute = '/notification';
   static const String bloggsRoute = '/bloggs';
-  static const String bloggsDetailsRoute = '/bloggsDetails';
   static const String filterRoute = '/filter';
   static const String detailsRoute = '/details';
-  static const String soledStatesRoute = '/soledStates';
-  static const String adsRoute = '/ads';
   static const String languageRoute = '/language';
   static const String detailsPhotoScreenRoute = '/detailsPhotoScreen';
   static const String loginScreenRoute = '/loginScreen';
   static const String welcomeRegisterRoute = '/welcomeRegister';
-  static const String registerScreenRoute = '/registerScreen';
-  static const String aboutUsRoute = '/aboutUs';
-  static const String termsAndConditionsScreenRoute = '/termsAndConditionsScreen';
   static const String agencyScreenRoute = '/agencyScreen';
   static const String contactUsScreenRoute = '/contactUsScreen';
   static const String registerCompanyRoute = '/registerCompany';
@@ -49,7 +37,8 @@ class Routes {
   static const String resetPasswordRoute = '/resetPassword';
   static const String newPasswordRoute = '/newPassword';
   static const String newAndEditAgencyScreenRoute = '/newAndEditAgencyScreen';
-  static const String agencyProfileScreenRoute = '/agencyProfileScreen';
+  static const String mapScreenRoute = '/mapScreen';
+  static const String filterResultRoute = '/filterResult';
 }
 
 class AppRoutes {
@@ -67,10 +56,6 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) =>  const BloggsScreen(),
         );
-        case Routes.bloggsDetailsRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   BloggsDetailsScreen(title: "var park project"),
-        );
       case Routes.filterRoute:
         return MaterialPageRoute(
           builder: (context) =>   const FilterScreen(),
@@ -79,57 +64,39 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) =>   const DetailsScreen(),
         );
-        case Routes.soledStatesRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   const SoledStates(),
-        );
-      case Routes.adsRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   const AdsScreen(),
-        );
         case Routes.languageRoute:
         return MaterialPageRoute(
           builder: (context) =>   const LanguageScreen(),
         );
-        case Routes.detailsPhotoScreenRoute:
+        case Routes.filterResultRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const DetailsPhotoScreen(),
+          builder: (context) =>   const FilterResult(),
         );
         case Routes.loginScreenRoute:
         return MaterialPageRoute(
-          builder: (context) =>    LoginScreen(),
+          builder: (context) =>    const LoginScreen(),
         );
         case Routes.welcomeRegisterRoute:
         return MaterialPageRoute(
           builder: (context) =>   const WelcomeRegister(),
         );
-        case Routes.registerScreenRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   const RegisterScreen(),
-        );
-        case Routes.aboutUsRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   AboutUsScreen(),
-        );
-        case Routes.termsAndConditionsScreenRoute:
-        return MaterialPageRoute(
-          builder: (context) =>   TermsAndConditionsScreen(),
-        );
+
+
         case Routes.agencyScreenRoute:
         return MaterialPageRoute(
           builder: (context) =>   const AgencyScreen(),
         );
         case Routes.contactUsScreenRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const ContactUsScreen(),
+          builder: (context) =>    ContactUsScreen(),
         );
         case Routes.registerCompanyRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const RegisterCompany(),
+          builder: (context) =>    RegisterCompany(),
         );
         case Routes.forgetPasswordRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const ForgetPasswordScreen(),
+          builder: (context) =>    ForgetPasswordScreen(),
         );
         case Routes.resetPasswordRoute:
         return MaterialPageRoute(
@@ -137,15 +104,19 @@ class AppRoutes {
         );
         case Routes.newPasswordRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const NewPassword(),
+          builder: (context) =>    NewPassword(),
         );
         case Routes.newAndEditAgencyScreenRoute:
         return MaterialPageRoute(
           builder: (context) =>   const NewAndEditAgencyScreen(),
         );
-        case Routes.agencyProfileScreenRoute:
+        // case Routes.agencyProfileScreenRoute:
+        // return MaterialPageRoute(
+        //   builder: (context) =>   const AgencyProfileScreen(),
+        // );
+        case Routes.mapScreenRoute:
         return MaterialPageRoute(
-          builder: (context) =>   const AgencyProfileScreen(),
+          builder: (context) =>   const MapScreen(),
         );
       default:
         return undefinedRoute();

@@ -54,23 +54,12 @@ class HomeModelWidget extends StatelessWidget {
         },
         ElevatedButton(
           onPressed: () {
-            if (kind ==
-                AppLocalizations.of(context)!
-                    .translate(AppStrings.popularTitle)!) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ShowMoreScreen(
-                  kind: kind,
-                  sliderList: slider,
-                );
-              }));
-            } else {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ShowMoreScreen(
-                  kind: kind,
-                  sliderList: slider,
-                );
-              }));
-            }
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ShowMoreScreen(
+                kind: kind,
+                sliderList: slider,
+              );
+            },));
           },
           style: ElevatedButton.styleFrom(
               maximumSize: Size.infinite,

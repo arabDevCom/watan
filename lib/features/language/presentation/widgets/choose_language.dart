@@ -15,21 +15,11 @@ class ChooseLanguageWidget extends StatefulWidget {
 }
 
 class _ChooseLanguageWidgetState extends State<ChooseLanguageWidget> {
-
-
-
   List<String> images = [
     (ImageAssets.englishLanguageImage),
     (ImageAssets.iraqLanguageImage),
     (ImageAssets.kurdishLanguageImage),
   ];
-
-
-
-  List<bool> isChecked = [true, false, false];
-
-
-
   @override
   Widget build(BuildContext context) {
     List<String> titles = [
@@ -56,7 +46,7 @@ class _ChooseLanguageWidgetState extends State<ChooseLanguageWidget> {
             child: LanguageTileWidget(
                 images: images[index],
                 titles: titles[index],
-                isChecked: isChecked[index]),
+                isChecked: widget.isChecked[index]),
           );
         })
       ],

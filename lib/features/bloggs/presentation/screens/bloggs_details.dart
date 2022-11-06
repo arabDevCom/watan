@@ -1,13 +1,15 @@
+import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/widgets/network_image.dart';
+import '../../domain/entities/bloggs_domain_model.dart';
 
 class BloggsDetailsScreen extends StatelessWidget {
-  BloggsDetailsScreen({Key? key, required this.title}) : super(key: key);
-  final String title;
-  String text =
-      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.";
+  const BloggsDetailsScreen({Key? key, required this.bloggsDatum})
+      : super(key: key);
+  final BloggsDatum bloggsDatum;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,11 @@ class BloggsDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          title,
+          IsLanguage.isEnLanguage(context)
+              ? bloggsDatum.nameEn!
+              : IsLanguage.isArLanguage(context)
+                  ? bloggsDatum.nameAr!
+                  : bloggsDatum.nameKu!,
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
@@ -28,17 +34,19 @@ class BloggsDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Column(
             children: [
-              Image.asset(
-                ImageAssets.bloggsImage,
-                fit: BoxFit.fill,
-              ),
+              ManageNetworkImage(
+                  imageUrl: bloggsDatum.image!, borderRadius: 25),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: IsLanguage.isEnLanguage(context)?Alignment.centerLeft:Alignment.centerRight,
                   child: Text(
-                    title,
+                      IsLanguage.isEnLanguage(context)
+                          ? bloggsDatum.nameEn!
+                          : IsLanguage.isArLanguage(context)
+                          ? bloggsDatum.nameAr!
+                          : bloggsDatum.nameKu!,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -48,7 +56,11 @@ class BloggsDetailsScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
-                  text,
+                    IsLanguage.isEnLanguage(context)
+                        ? bloggsDatum.descriptionEn!
+                        : IsLanguage.isArLanguage(context)
+                        ? bloggsDatum.descriptionAr!
+                        : bloggsDatum.descriptionKu!,
                   style: const TextStyle(fontSize: 12),
                 ),
               ),

@@ -11,8 +11,7 @@ class FurnishedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListTileAllDetailsWidget(
-            image: ImageAssets.areaIcon, text: "Furnished"),
+        ListTileAllDetailsWidget(image: ImageAssets.areaIcon, text: "Furnished"),
         const SizedBox(height: 6),
         const RadioChooseWidget(),
       ],

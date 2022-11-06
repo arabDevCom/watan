@@ -1,16 +1,24 @@
 import 'package:elwatn/core/utils/app_colors.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:elwatn/core/widgets/list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../config/locale/app_localizations.dart';
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/helper/location_helper.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/separator.dart';
+import '../../../app_settings/presentation/screens/app_settings.dart';
+import '../../../language/presentation/cubit/locale_cubit.dart';
+import '../../../login/data/models/login_data_model.dart';
 
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({Key? key, required this.closeDrawer}) : super(key: key);
-final VoidCallback closeDrawer;
+  const DrawerWidget({Key? key, required this.closeDrawer, required this.loginDataModel}) : super(key: key);
+  final VoidCallback closeDrawer;
+  final LoginDataModel loginDataModel;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,41 +46,42 @@ final VoidCallback closeDrawer;
               ),
               MyListTile(
                 image: ImageAssets.languageIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.languageTitle)!,
+                text: translateText(AppStrings.languageTitle,context),
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.languageRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.notificationIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.notificationText)!,
+                text: translateText(AppStrings.notificationText,context),
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.notificationRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.bloggsIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.bloggsText)!,
+                text: translateText(AppStrings.bloggsText,context),
                 onClick: () =>
                     Navigator.of(context).pushNamed(Routes.bloggsRoute),
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.aboutUsIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.aboutUsText)!,
+                text: translateText(AppStrings.aboutUsText,context),
                 onClick: () {
-                  Navigator.of(context).pushNamed(Routes.aboutUsRoute);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AppSettingsScreens(
+                        kind: AppStrings.aboutUsText,
+                      ),
+                    ),
+                  );
                 },
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.contactUsIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.contactUsText)!,
+                text: translateText(AppStrings.contactUsText,context),
                 onClick: () {
                   Navigator.of(context).pushNamed(Routes.contactUsScreenRoute);
                 },
@@ -80,8 +89,7 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.rateIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.rateAppText)!,
+                text: translateText(AppStrings.rateAppText,context),
                 onClick: () {
                   // Navigator.of(context).pushNamed(Routes.bloggsRoute);
                 },
@@ -89,39 +97,63 @@ final VoidCallback closeDrawer;
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.privacyIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.privacyText)!,
+                text: translateText(AppStrings.privacyText,context),
                 onClick: () {
-                  // Navigator.of(context).pushNamed(Routes.bloggsRoute);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AppSettingsScreens(
+                        kind: AppStrings.privacyText,
+                      ),
+                    ),
+                  );
                 },
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.termsIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.termsAndConditionsText)!,
+                text: translateText(AppStrings.termsAndConditionsText,context),
                 onClick: () {
-                  Navigator.of(context).pushNamed(Routes.termsAndConditionsScreenRoute);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AppSettingsScreens(
+                        kind: AppStrings.termsAndConditionsText,
+                      ),
+                    ),
+                  );
                 },
               ),
               MySeparator(height: 1, color: AppColors.gray),
               MyListTile(
                 image: ImageAssets.shareIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.shareAppText)!,
+                text: translateText(AppStrings.shareAppText,context),
                 onClick: () {
-                  // Navigator.of(context).pushNamed(Routes.bloggsRoute);
+                  LocationHelper.getCurrantLocation().then((value) {
+                  });
+                  // Navigator.of(context).pushNamed(Routes.mapScreenRoute);
                 },
               ),
               MySeparator(height: 1, color: AppColors.gray),
-              MyListTile(
+             loginDataModel.message!=null? MyListTile(
                 image: ImageAssets.logOutIcon,
-                text: AppLocalizations.of(context)!
-                    .translate(AppStrings.logOutText)!,
-                onClick: () {
-                  Navigator.of(context).pushNamed(Routes.loginScreenRoute);
+                text: translateText(AppStrings.logOutText,context),
+                onClick: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  bool result = await prefs.remove('user');
+                  if(result){
+                    print('staaaaart');
+                    Navigator.pushReplacementNamed(context,Routes.initialRoute);
+                    context.read<LocaleCubit>();
+                  }else{
+                    print("يا دى النيله المنيله بسواد ");
+                  }
                 },
-              ),
+              ):MyListTile(
+               image: ImageAssets.logOutIcon,
+               text: translateText(AppStrings.loginText,context),
+               onClick: () {
+                 Navigator.of(context).pushNamed(Routes.loginScreenRoute);
+               },
+             ),
               const SizedBox(
                 height: 12,
               )

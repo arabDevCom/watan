@@ -34,7 +34,12 @@ class HomePageDataSource implements BaseHomePageDataSource {
 
   @override
   Future<NewPopularItems> getNewPopularItems() async {
+    print("ooooo");
     final response = await apiConsumer.get(EndPoints.newPopularUrl);
+    print("response");
+    print(response);
+    print("NewPopularItemsModel.fromJson(response)");
+    // print(NewPopularItemsModel.fromJson(response).data!.dataNew);
     return NewPopularItemsModel.fromJson(response);
   }
 }

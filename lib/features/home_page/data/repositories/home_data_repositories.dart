@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+  import 'package:dartz/dartz.dart';
 
 import 'package:elwatn/core/error/failures.dart';
 import 'package:elwatn/features/home_page/domain/entities/categories_domain_model.dart';
@@ -41,8 +41,11 @@ class HomePageRepositories implements BaseHomeRepositories {
   Future<Either<Failure, NewPopularItems>> getNewPopularItems() async {
     try {
       final newPopularData = await homePageDataSource.getNewPopularItems();
+      print("1111111");
+      print(newPopularData);
       return Right(newPopularData);
     } on ServerException {
+      print("9999999");
       return Left(ServerFailure());
     }
   }

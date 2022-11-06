@@ -5,8 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/map_failure_message.dart';
 import '../../domain/entities/show_more_domain_model.dart';
 import '../../domain/use_cases/pagination_use_case.dart';
 
@@ -21,7 +20,6 @@ class ShowMoreCubit extends Cubit<ShowMoreState> {
   late ShowMore showMore;
   List<MainItem> mainItemsList=[];
   List<MainItem> newMainItemsList=[];
-  late ShowMore newShowMore;
 
   Future<void> getShowMoreData({required String pram}) async {
     emit(ShowMoreLoading());
@@ -29,7 +27,7 @@ class ShowMoreCubit extends Cubit<ShowMoreState> {
     emit(
       response.fold(
         (failure) =>
-            ShowMoreLoadedError(message: _mapFailureToMessage(failure)),
+            ShowMoreLoadedError(message: MapFailureMessage.mapFailureToMessage(failure)),
         (showMore) {
           this.showMore=showMore;
           mainItemsList=showMore.data!.mainItem!;
@@ -40,36 +38,24 @@ class ShowMoreCubit extends Cubit<ShowMoreState> {
   }
 
   Future<void> getPaginationData({required String pram}) async {
-    emit(PaginationLoading());
     Either<Failure, ShowMore> response = await getPaginationUseCase(pram);
     emit(
       response.fold(
             (failure) =>
-            ShowMoreLoadedError(message: _mapFailureToMessage(failure)),
+            ShowMoreLoadedError(message: MapFailureMessage.mapFailureToMessage(failure)),
             (showMore) {
-             newShowMore=showMore;
+              this.showMore=showMore;
              newMainItemsList=showMore.data!.mainItem!;
              loadMoreVertical();
-             return PaginationLoaded(showMore: showMore);
+             return ShowMoreLoaded(showMore: showMore);
         },
       ),
     );
   }
 
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return AppStrings.serverFailure;
-      case CacheFailure:
-        return AppStrings.cacheFailure;
-      default:
-        return AppStrings.unexpectedError;
-    }
-  }
 
    loadMoreVertical()  async {
     changeBool(isLoadingVertical);
-    // await Future.delayed(const Duration(seconds: 3));
     mainItemsList =List.from(mainItemsList)..addAll(newMainItemsList);
     changeBool(isLoadingVertical);
   }

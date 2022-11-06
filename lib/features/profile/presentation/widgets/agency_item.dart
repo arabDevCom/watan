@@ -1,18 +1,34 @@
-import 'package:elwatn/config/routes/app_routes.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/call_method.dart';
+import '../../../../core/utils/whatsapp_launch_method.dart';
+import '../../../home_page/data/models/main_item_data_model.dart';
+import '../cubit/profile_cubit.dart';
+import '../screens/agency_profile.dart';
 
 class AgencyItem extends StatelessWidget {
-  const AgencyItem({Key? key}) : super(key: key);
+  const AgencyItem({Key? key, required this.agentModel}) : super(key: key);
+  final AgentModel agentModel;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.pushNamed(context, Routes.agencyProfileScreenRoute);
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AgencyProfileScreen(
+              agentModel: agentModel,
+            ),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -24,15 +40,22 @@ class AgencyItem extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Row(
               children: [
-                SizedBox(
-                  height: 101,
+                CachedNetworkImage(
+                  imageUrl: agentModel.image!,
                   width: 101,
-                  child: CircleAvatar(
-                    child: Image.asset(
-                      ImageAssets.personImage,
-                      width: 101,
-                      height: 101,
-                    ),
+                  height: 101,
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => CircularProgressIndicator(
+                    color: AppColors.primary2,
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    size: 64,
+                    color: AppColors.primary,
+                  ),
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundColor: AppColors.primary2,
+                    backgroundImage: imageProvider,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -43,13 +66,20 @@ class AgencyItem extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             textAlign: TextAlign.center,
-                            "Mustafa Ibrahim",
-                            style: TextStyle(
+                            agentModel.name!,
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          SvgPicture.asset(ImageAssets.deleteAccountIcon),
+                          InkWell(
+                              onTap: () {
+                                context
+                                    .read<ProfileCubit>()
+                                    .deleteAgent(agentModel.id!, context);
+                              },
+                              child: SvgPicture.asset(
+                                  ImageAssets.deleteAccountIcon)),
                         ],
                       ),
                       Padding(
@@ -76,19 +106,23 @@ class AgencyItem extends StatelessWidget {
                               flex: 4,
                               child: ElevatedButton.icon(
                                 icon: SvgPicture.asset(ImageAssets.callIcon),
-                                onPressed: () {},
+                                onPressed: () {
+                                  phoneCallMethod(agentModel.phone!);
+                                },
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                         //to set border radius to button
-                                        borderRadius: BorderRadius.circular(30)),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
                                     backgroundColor:
                                         AppColors.callButtonBackground,
                                     side: BorderSide.none),
-                                label: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 14),
+                                label: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
                                   child: Text(
-                                    "Call",
-                                    style: TextStyle(fontSize: 12),
+                                    translateText(AppStrings.callText, context),
+                                    style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
                               ),
@@ -97,20 +131,29 @@ class AgencyItem extends StatelessWidget {
                             Expanded(
                               flex: 5,
                               child: ElevatedButton.icon(
-                                icon: SvgPicture.asset(ImageAssets.whatsappIcon),
-                                onPressed: () {},
+                                icon:
+                                    SvgPicture.asset(ImageAssets.whatsappIcon),
+                                onPressed: () {
+                                  launchWhatsApp(
+                                    agentModel.phoneCode! +
+                                        agentModel.whatsapp!,
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                         //to set border radius to button
-                                        borderRadius: BorderRadius.circular(30)),
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
                                     backgroundColor:
                                         AppColors.whatsappButtonBackground,
                                     side: BorderSide.none),
-                                label: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 14),
+                                label: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
                                   child: Text(
-                                    "Whats App",
-                                    style: TextStyle(fontSize: 12),
+                                    translateText(
+                                        AppStrings.whatsAppText, context),
+                                    style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
                               ),

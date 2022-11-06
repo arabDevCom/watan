@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/map_failure_message.dart';
 import '../../domain/entities/categories_domain_model.dart';
 import '../../domain/entities/new_popular_domain_model.dart';
 import '../../domain/entities/slider_domain_model.dart';
@@ -19,7 +19,9 @@ class HomePageCubit extends Cubit<HomePageState> {
       {required this.getNewAndPopularItemsUseCase,
       required this.getCategoriesUseCase,
       required this.getSliderUseCase})
-      : super(HomePageInitial());
+      : super(HomePageInitial()) {
+    getAllDataOfHomePage();
+  }
 
   final GetSliderUseCase getSliderUseCase;
   final GetCategoriesUseCase getCategoriesUseCase;
@@ -29,67 +31,66 @@ class HomePageCubit extends Cubit<HomePageState> {
   Categories? categories;
   NewPopularItems? newPopularItems;
 
+  getAllDataOfHomePage() {
+    getSliderData().whenComplete(
+      () => getCategoriesData().whenComplete(
+        () => getNewPopularItemsData().whenComplete(
+          () => emit(
+              HomePageGetAllDataFinish(slider!, categories!, newPopularItems!)),
+        ),
+      ),
+    );
+  }
+
   Future<void> getSliderData() async {
     emit(HomePageLoading());
     Either<Failure, HomeSlider> response = await getSliderUseCase(NoParams());
 
-    emit(response.fold(
-        (failure) => HomePageError(message: _mapFailureToMessage(failure)),
+    emit(
+      response.fold(
+        (failure) => HomePageError(
+            message: MapFailureMessage.mapFailureToMessage(failure)),
         (slider) {
-      this.slider = slider;
-      return HomePageLoaded(slider: slider);
-    }));
+          this.slider = slider;
+          return HomePageSliderLoaded(slider: slider);
+        },
+      ),
+    );
   }
 
   Future<void> getCategoriesData() async {
     emit(HomePageLoading());
     Either<Failure, Categories> response =
         await getCategoriesUseCase(NoParams());
-    emit(response.fold(
-        (failure) => HomePageError(message: _mapFailureToMessage(failure)),
+    emit(
+      response.fold(
+        (failure) => HomePageError(
+            message: MapFailureMessage.mapFailureToMessage(failure)),
         (categories) {
-      this.categories = categories;
-      return CategoriesLoaded(categories: categories);
-    }));
+          this.categories = categories;
+          return HomePageCategoriesLoaded(categories: categories);
+        },
+      ),
+    );
   }
 
   Future<void> getNewPopularItemsData() async {
+    print("5555555");
     emit(HomePageLoading());
     Either<Failure, NewPopularItems> response =
         await getNewAndPopularItemsUseCase(NoParams());
-    emit(response.fold(
-        (failure) => HomePageError(message: _mapFailureToMessage(failure)),
+    emit(
+      response.fold(
+        (failure) => HomePageError(
+            message: MapFailureMessage.mapFailureToMessage(failure)),
         (newPopularItems) {
-      this.newPopularItems = newPopularItems;
-      return NewsPopularItemsLoaded(newPopularItems: newPopularItems);
-    }));
-  }
-
-  getAllMethodsOfData() {
-    getSliderData();
-    getCategoriesData();
-    getNewPopularItemsData();
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return AppStrings.serverFailure;
-      case CacheFailure:
-        return AppStrings.cacheFailure;
-      default:
-        return AppStrings.unexpectedError;
-    }
-  }
-
-  finishingData() {
-    if (slider != null && categories != null && newPopularItems != null) {
-      emit(FinishingData(
-          slider: slider!,
-          categories: categories!,
-          newPopularItems: newPopularItems!));
-    } else {
-      print("not yet");
-    }
+          print("ufufuufuwy");
+          print(newPopularItems);
+          this.newPopularItems = newPopularItems;
+          return HomePageNewsPopularItemsLoaded(
+              newPopularItems: newPopularItems);
+        },
+      ),
+    );
   }
 }

@@ -1,11 +1,14 @@
+import '../../../home_page/data/models/main_item_data_model.dart';
 import '../../domain/entities/login_domain_model.dart';
 
 class LoginDataModel extends LoginModel {
   const LoginDataModel(
-      {required super.data, required super.message, required super.code});
+      { super.data,  super.message,  super.code});
 
   factory LoginDataModel.fromJson(Map<String, dynamic> json) => LoginDataModel(
-        data:json["data"]!=null ?UserDataModel.fromJson(json["data"]):const UserDataModel(),
+        data: json["data"] != null
+            ? UserDataModel.fromJson(json["data"])
+            : const UserDataModel(),
         message: json["message"],
         code: json["code"],
       );
@@ -18,10 +21,7 @@ class LoginDataModel extends LoginModel {
 }
 
 class UserDataModel extends UserData {
-  const UserDataModel(
-      { super.user,
-       super.accessToken,
-       super.tokenType});
+  const UserDataModel({super.user, super.accessToken, super.tokenType});
 
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
         user: UserModel.fromJson(json["user"]),
@@ -38,33 +38,39 @@ class UserDataModel extends UserData {
 
 class UserModel extends User {
   const UserModel(
-      {required super.id,
-      required super.name,
-      required super.phone,
-      required super.email,
-      required super.whatsapp,
-      required super.status,
-      required super.image,
-      required super.userType,
-      required super.facebook,
-      required super.instagram,
-      required super.twitter,
-      required super.snapchat,
-      required super.latitude,
-      required super.longitude});
+      { super.id,
+       super.name,
+       super.phone,
+       super.email,
+       super.password,
+       super.whatsapp,
+       super.status,
+       super.image,
+       super.fileImage,
+       super.userType,
+       super.facebook,
+       super.instagram,
+       super.twitter,
+       super.snapchat,
+       super.latitude,
+       super.packagesBalance,
+       super.longitude});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["id"],
         name: json["name"],
         phone: json["phone"],
         email: json["email"],
+        password: json["password"],
         whatsapp: json["whatsapp"],
         status: json["status"],
         image: json["image"],
+        fileImage: json["fileImage"],
         userType: json["user_type"],
         facebook: json["facebook"],
         instagram: json["instagram"],
         twitter: json["twitter"],
+    packagesBalance: json["packages_balance"]??0,
         snapchat: json["snapchat"],
         latitude: json["latitude"],
         longitude: json["longitude"],
@@ -75,9 +81,11 @@ class UserModel extends User {
         "name": name,
         "phone": phone,
         "email": email,
+        "password": password,
         "whatsapp": whatsapp,
         "status": status,
         "image": image,
+        "fileImage": fileImage,
         "user_type": userType,
         "facebook": facebook,
         "instagram": instagram,
@@ -85,5 +93,6 @@ class UserModel extends User {
         "snapchat": snapchat,
         "latitude": latitude,
         "longitude": longitude,
-      };
+    "packages_balance": packagesBalance,
+  };
 }

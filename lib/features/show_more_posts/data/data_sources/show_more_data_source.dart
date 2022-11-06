@@ -17,7 +17,7 @@ class ShowMoreDataSource implements BaseShowDataDataSource {
   @override
   Future<ShowMore> getShowMoreData(String params) async {
     final response = await apiConsumer.get(EndPoints.showMorePostsUrl, queryParameters:{
-      "show_more_type": "params"
+      "show_more_type": params
     });
     return ShowMoreModel.fromJson(response);
   }

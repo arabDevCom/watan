@@ -1,17 +1,20 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:elwatn/core/utils/app_colors.dart';
 import 'package:elwatn/features/home_page/presentation/screens/home_page.dart';
-import 'package:elwatn/features/location/presentation/screens/location_screen.dart';
 import 'package:elwatn/features/profile/presentation/screens/user_profile.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../add/presentation/screens/add_screen.dart';
+import '../../../add_project/presentation/Screens/add_project_screen.dart';
+import '../../../chat/presentation/screens/conversation_screen/conversation_page.dart';
 import '../../../favorite/presentation/screens/favorite.dart';
+import '../../../login/data/models/login_data_model.dart';
 import '../widgets/drawer_widget.dart';
 
 class NavigatorBar extends StatefulWidget {
-  const NavigatorBar({Key? key}) : super(key: key);
+  const NavigatorBar({Key? key, required this.loginDataModel})
+      : super(key: key);
+  final LoginDataModel loginDataModel;
 
   @override
   State<NavigatorBar> createState() => _NavigatorBarState();
@@ -26,13 +29,16 @@ class _NavigatorBarState extends State<NavigatorBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer:  DrawerWidget(closeDrawer: (){
-        _scaffoldKey.currentState!.closeDrawer();
-      }),
+      drawer: DrawerWidget(
+        closeDrawer: () {
+          _scaffoldKey.currentState!.closeDrawer();
+        },
+        loginDataModel: widget.loginDataModel,
+      ),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
         index: 2,
-        height: 50.0,
+        height: 60.0,
         items: [
           _page != 0
               ? const Icon(Icons.favorite_border, size: 30)
@@ -45,8 +51,8 @@ class _NavigatorBarState extends State<NavigatorBar> {
               ? const Icon(Icons.home, size: 30)
               : const Icon(Icons.home, size: 40, color: Colors.white),
           _page != 3
-              ? const Icon(Icons.location_on, size: 30)
-              : const Icon(Icons.location_on, size: 40, color: Colors.white),
+              ? const Icon(Icons.chat, size: 30)
+              : const Icon(Icons.chat, size: 40, color: Colors.white),
           _page != 4
               ? const Icon(Icons.add_box_sharp, size: 30)
               : const Icon(Icons.add_box_sharp, size: 40, color: Colors.white),
@@ -64,16 +70,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
         letIndexChange: (index) => true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomAppBar(openMyDrawer: (){
-                _scaffoldKey.currentState!.openDrawer();
-              }),
-              pages(),
-            ],
-          ),
-        ),
+        child: pages(),
       ),
     );
   }
@@ -82,13 +79,17 @@ class _NavigatorBarState extends State<NavigatorBar> {
     if (_page == 0) {
       return const FavoriteScreen();
     } else if (_page == 1) {
-      return const UserProfile();
+      return UserProfile(loginDataModel: widget.loginDataModel);
     } else if (_page == 2) {
-      return const HomePage();
+      return HomePage(
+        scaffoldKey: _scaffoldKey,
+      );
     } else if (_page == 3) {
-      return const LocationScreen();
+      return ConversationPage(loginDataModel: widget.loginDataModel);
     } else {
-      return const AddScreen();
+      return widget.loginDataModel.data!.user!.userType == 3
+          ? AddProjectScreen(loginModel: widget.loginDataModel)
+          : AddScreen();
     }
   }
 }

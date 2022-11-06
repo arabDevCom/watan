@@ -10,8 +10,7 @@ import '../error/exceptions.dart';
 import 'app_interceptors.dart';
 import 'base_api_consumer.dart';
 import 'end_points.dart';
-import 'package:elwatn/injector.dart'
-as injector;
+import 'package:elwatn/injector.dart' as injector;
 
 class DioConsumer implements BaseApiConsumer {
   final Dio client;
@@ -39,9 +38,14 @@ class DioConsumer implements BaseApiConsumer {
   }
 
   @override
-  Future get(String path, {Map<String, dynamic>? queryParameters}) async {
+  Future get(String path,
+      {Map<String, dynamic>? queryParameters, Options? options}) async {
     try {
-      final response = await client.get(path, queryParameters: queryParameters);
+      final response = await client.get(
+        path,
+        queryParameters: queryParameters,
+        options: options,
+      );
       return _handleResponseAsJson(response);
     } on DioError catch (error) {
       _handleDioError(error);
@@ -52,11 +56,15 @@ class DioConsumer implements BaseApiConsumer {
   Future post(String path,
       {Map<String, dynamic>? body,
       bool formDataIsEnabled = false,
-      Map<String, dynamic>? queryParameters}) async {
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
-      final response = await client.post(path,
-          data: formDataIsEnabled ? FormData.fromMap(body!) : body,
-          queryParameters: queryParameters);
+      final response = await client.post(
+        path,
+        data: formDataIsEnabled ? FormData.fromMap(body!) : body,
+        queryParameters: queryParameters,
+        options: options,
+      );
       return _handleResponseAsJson(response);
     } on DioError catch (error) {
       _handleDioError(error);
@@ -66,10 +74,15 @@ class DioConsumer implements BaseApiConsumer {
   @override
   Future put(String path,
       {Map<String, dynamic>? body,
-      Map<String, dynamic>? queryParameters}) async {
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     try {
-      final response =
-          await client.put(path, data: body, queryParameters: queryParameters);
+      final response = await client.put(
+        path,
+        data: body,
+        queryParameters: queryParameters,
+        options: options,
+      );
       return _handleResponseAsJson(response);
     } on DioError catch (error) {
       _handleDioError(error);
@@ -105,6 +118,25 @@ class DioConsumer implements BaseApiConsumer {
       case DioErrorType.cancel:
       case DioErrorType.other:
         throw const NoInternetConnectionException();
+    }
+  }
+
+  @override
+  Future newPost(String path,
+      {bool formDataIsEnabled = false,
+      Map<String, dynamic>? body,
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
+    try {
+      final response = await client.post(
+        path,
+        data: formDataIsEnabled ? FormData.fromMap(body!) : body,
+        queryParameters: queryParameters,
+        options: options,
+      );
+      return response;
+    } on DioError catch (error) {
+      _handleDioError(error);
     }
   }
 }

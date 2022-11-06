@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/widgets/social_media_icons.dart';
 import '../widgets/body_register_company.dart';
 import '../../../../core/widgets/profile_photo.dart';
 import '../widgets/register_buttons.dart';
 
 class RegisterCompany extends StatelessWidget {
-  const RegisterCompany({Key? key}) : super(key: key);
+   RegisterCompany({Key? key}) : super(key: key);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +29,12 @@ class RegisterCompany extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                ProfilePhotoWidget(),
+                ProfilePhotoWidget(kind: "company"),
               ],
             ),
             const RegisterCompanyBodyWidget(),
-            const SocialMediaWidget(isEnable: true),
-            const RegisterButtons(),
+            // const SocialMediaWidget(isEnable: true),
+             RegisterButtons(formKey: _formKey),
           ],
         ),
       ),

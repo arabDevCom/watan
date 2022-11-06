@@ -6,15 +6,30 @@ import 'config/locale/app_localizations_setup.dart';
 import 'config/routes/app_routes.dart';
 import 'config/themes/app_theme.dart';
 import 'core/utils/app_strings.dart';
+import 'features/add/presentation/cubit/add_ads_cubit.dart';
+import 'features/add_project/presentation/cubit/add_project_cubit.dart';
+import 'features/app_settings/presentation/cubit/app_setting_cubit.dart';
+import 'features/bloggs/presentation/cubit/bloggs_cubit.dart';
+import 'features/chat/presentation/screens/conversation_screen/cubit/conversation_page_cubit.dart';
+import 'features/contact_us/presentation/cubit/contact_us_cubit.dart';
+import 'features/details/presentation/cubit/details_cubit.dart';
+import 'features/filter/presentation/cubit/filter_cubit.dart';
 import 'features/home_page/presentation/cubit/home_page_cubit.dart';
 import 'features/language/presentation/cubit/locale_cubit.dart';
-import 'package:elwatn/injector.dart'
-as injector;
+import 'package:elwatn/injector.dart' as injector;
 
 import 'features/login/presentation/cubit/login_cubit.dart';
+import 'features/map/presentation/cubit/map_cubit.dart';
+import 'features/my_ads/presentation/cubit/my_ads_cubit.dart';
+import 'features/packages/presentation/cubit/package_cubit.dart';
+import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/project_details/presentation/cubit/project_details_cubit.dart';
 import 'features/register/presentation/cubit/register_cubit.dart';
-class Elwatn extends StatelessWidget {
-  const Elwatn({Key? key}) : super(key: key);
+import 'features/report_post/presentation/cubit/report_post_cubit.dart';
+import 'features/show_lists/presentation/cubit/show_lists_cubit.dart';
+
+class Watan extends StatelessWidget {
+  const Watan({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +37,64 @@ class Elwatn extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) =>
-          injector.serviceLocator<LocaleCubit>()..getSavedLanguage(),
+              injector.serviceLocator<LocaleCubit>()..getSavedLanguage(),
         ),
         BlocProvider(
-          create: (_) =>
-          injector.serviceLocator<HomePageCubit>(),
+          create: (_) => injector.serviceLocator<HomePageCubit>(),
         ),
         BlocProvider(
-          create: (_) =>
-          injector.serviceLocator<ShowMoreCubit>(),
+          create: (_) => injector.serviceLocator<ShowMoreCubit>(),
         ),
         BlocProvider(
-          create: (_) =>
-          injector.serviceLocator<LoginCubit>(),
+          create: (_) => injector.serviceLocator<LoginCubit>(),
         ),
         BlocProvider(
-          create: (_) =>
-          injector.serviceLocator<RegisterCubit>(),
+          create: (_) => injector.serviceLocator<RegisterCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<BloggsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<AppSettingCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<FilterCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<MapCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ShowListsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<DetailsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ContactUsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<MyAdsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<AddAdsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ProfileCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ReportPostCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ProjectDetailsCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<PackageCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<ConversationPageCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<AddProjectCubit>(),
         ),
       ],
       child: BlocBuilder<LocaleCubit, LocaleState>(
@@ -52,9 +108,9 @@ class Elwatn extends StatelessWidget {
             onGenerateRoute: AppRoutes.onGenerateRoute,
             supportedLocales: AppLocalizationsSetup.supportedLocales,
             localeResolutionCallback:
-            AppLocalizationsSetup.localeResolutionCallback,
+                AppLocalizationsSetup.localeResolutionCallback,
             localizationsDelegates:
-            AppLocalizationsSetup.localizationsDelegates,
+                AppLocalizationsSetup.localizationsDelegates,
           );
         },
       ),

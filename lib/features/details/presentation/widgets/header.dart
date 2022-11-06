@@ -9,11 +9,6 @@ import 'details_images_banner_widget.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({Key? key, required this.mainItem}) : super(key: key);
-
-  final bool isImage = true;
-  final bool isVideo = true;
-  final bool isMap = true;
-  final bool isSchema = true;
   final MainItem mainItem;
 
   @override
@@ -33,11 +28,12 @@ class HeaderWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: IconShapeWidget(
-                      text: "null",
-                      icon: Icons.arrow_back_sharp,
-                      onClick: () {
-                        Navigator.of(context).pop();
-                      }),
+                    text: "null",
+                    icon: Icons.arrow_back_sharp,
+                    onClick: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ),
               Expanded(
@@ -71,26 +67,9 @@ class HeaderWidget extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return const DetailsPhotoScreen(
+                              return DetailsPhotoScreen(
                                 initialPage: 0,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    )
-                  : const SizedBox(width: 0),
-              isMap ? const Spacer() : const SizedBox(width: 0),
-              isMap
-                  ? IconShapeWidget(
-                      text: "map",
-                      icon: Icons.location_on,
-                      onClick: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const DetailsPhotoScreen(
-                                initialPage: 1,
+                                mainItem: mainItem,
                               );
                             },
                           ),
@@ -106,14 +85,15 @@ class HeaderWidget extends StatelessWidget {
                       text: IsLanguage.isEnLanguage(context)
                           ? mainItem.videos!.length.toString()
                           : replaceToArabicNumber(
-                          mainItem.videos!.length.toString()),
+                              mainItem.videos!.length.toString()),
                       icon: Icons.video_camera_back,
                       onClick: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return const DetailsPhotoScreen(
-                                initialPage: 2,
+                              return DetailsPhotoScreen(
+                                initialPage: 1,
+                                mainItem: mainItem,
                               );
                             },
                           ),
@@ -126,17 +106,18 @@ class HeaderWidget extends StatelessWidget {
                   : const SizedBox(width: 0),
               mainItem.floorPlans!.isNotEmpty
                   ? IconShapeWidget(
-                      text:IsLanguage.isEnLanguage(context)
+                      text: IsLanguage.isEnLanguage(context)
                           ? mainItem.floorPlans!.length.toString()
                           : replaceToArabicNumber(
-                          mainItem.floorPlans!.length.toString()),
+                              mainItem.floorPlans!.length.toString()),
                       icon: Icons.schema_outlined,
                       onClick: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return const DetailsPhotoScreen(
-                                initialPage: 3,
+                              return DetailsPhotoScreen(
+                                initialPage: 2,
+                                mainItem: mainItem,
                               );
                             },
                           ),

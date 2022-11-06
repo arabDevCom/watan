@@ -23,41 +23,57 @@ class AmenitiesWidget extends StatelessWidget {
             translateText(AppStrings.amenitiesText, context),
           ),
           const SizedBox(height: 18),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                ...List.generate(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  ...List.generate(
                     mainItemModel!.services!.length,
-                    (index) => Column(
-                          children: [
-                            Container(
-                              width: 120,
-                              height: 106,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1, color: AppColors.gray)),
-                              child: Center(
-                                child: ManageNetworkImage(
-                                  imageUrl:
-                                      mainItemModel!.services![index].icon!,
-                                  width: 70,
-                                  height: 70,
+                    (index) => mainItemModel!.services![index].service!.id != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 120,
+                                  height: 106,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 1, color: AppColors.gray)),
+                                  child: Center(
+                                    child: ManageNetworkImage(
+                                      imageUrl: mainItemModel!.services![index]
+                                                  .service!.icon ==
+                                              null
+                                          ? "https://cdn-icons-png.flaticon.com/512/8546/8546452.png"
+                                          : mainItemModel!
+                                              .services![index].service!.icon!,
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  IsLanguage.isEnLanguage(context)
+                                      ? mainItemModel!
+                                          .services![index].service!.nameEn!
+                                      : (IsLanguage.isArLanguage(context)
+                                          ? mainItemModel!
+                                              .services![index].service!.nameAr!
+                                          : mainItemModel!
+                                              .services![index].service!.nameKo!),
+                                  style: const TextStyle(fontSize: 18),
+                                )
+                              ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              IsLanguage.isEnLanguage(context)
-                                  ? mainItemModel!.services![index].nameEn!
-                                  : (IsLanguage.isArLanguage(context)
-                                      ? mainItemModel!.services![index].nameAr!
-                                      : mainItemModel!.services![index].nameKo!),
-                              style: const TextStyle(fontSize: 18),
-                            )
-                          ],
-                        ))
-              ],
+                          )
+                        : const SizedBox(width: 0),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

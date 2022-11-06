@@ -1,5 +1,6 @@
 const String imagePath = 'assets/images';
 const String iconsPath = 'assets/icons';
+const String lottiePath = 'assets/lottie';
 
 class ImageAssets {
   static const String image = '$imagePath/image.png';
@@ -33,7 +34,11 @@ class ImageAssets {
   static const String resetPasswordImage = '$imagePath/reset_password_image.png';
   static const String newPasswordImage = '$imagePath/new_password.png';
   static const String agencyImage = '$imagePath/agency.png';
-
+  static const String markerImage = '$imagePath/map_marker.png';
+  static const String avatarImage = '$imagePath/avatar.png';
+  static const String socialFacebookImage = '$imagePath/social_facebook.png';
+  static const String socialGoogleImage = '$imagePath/social_google.png';
+  static const String socialTwitterImage = '$imagePath/social_twitter.png';
 
   // icons
   static const String areaIcon = '$iconsPath/area_icon.svg';
@@ -97,5 +102,24 @@ class ImageAssets {
   static const String cameraIcon = '$iconsPath/camera_icon.svg';
   static const String addIcon = '$iconsPath/add_icon.svg';
   static const String viewsIcon = '$iconsPath/views.svg';
+  static const String packagesIcon = '$iconsPath/packages.svg';
+  static const String mapIcon = '$iconsPath/map_icon.svg';
+  static const String marksIcon = '$iconsPath/marks.svg';
+  static const String clockIcon = '$iconsPath/clock.svg';
+  static const String walletIcon = '$iconsPath/wallet.svg';
+  static const String chatIcon = '$iconsPath/chat.svg';
+  static const String commercialPlotIcon = '$iconsPath/commercial_plot.svg';
+  static const String industrialLandIcon = '$iconsPath/industrial_land.svg';
+  static const String officeIcon = '$iconsPath/office.svg';
+  static const String shopIcon = '$iconsPath/shop.svg';
+  static const String reasonIcon = '$iconsPath/reason.svg';
+  static const String uploadPhotoIcon = '$iconsPath/upload_photo.svg';
+  static const String reloadIcon = '$iconsPath/reload.svg';
+  static const String homeAddIcon = '$iconsPath/home_add.svg';
+
+
+
+ //Lottie
+  static const String noLogin = '$lottiePath/login.json';
 
 }

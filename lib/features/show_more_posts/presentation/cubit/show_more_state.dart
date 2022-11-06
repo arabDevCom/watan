@@ -27,14 +27,3 @@ class ShowMoreLoadedError extends ShowMoreState {
   List<Object> get props => [message];
 }
 class ChangeBoolean extends ShowMoreState {}
-
-class PaginationLoading extends ShowMoreState {}
-
-class PaginationLoaded extends ShowMoreState {
-  final ShowMore showMore;
-
-  PaginationLoaded({required this.showMore});
-
-  @override
-  List<Object> get props => [showMore];
-}

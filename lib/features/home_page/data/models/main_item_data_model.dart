@@ -1,55 +1,59 @@
+import 'package:dio/dio.dart';
+
 import '../../domain/entities/main_item_domain_model.dart';
 
 class MainItemModel extends MainItem {
-  MainItemModel(
-      {required super.id,
-      required super.status,
-      required super.phone,
-      required super.phoneCode,
-      required super.views,
-      required super.titleAr,
-      required super.descriptionAr,
-      required super.titleEn,
-      required super.descriptionEn,
-      required super.titleKu,
-      required super.descriptionKu,
-      required super.furniture,
-      required super.price,
-      required super.currency,
-      required super.size,
-      required super.bedroom,
-      required super.bathRoom,
-      required super.babyRoom,
-      required super.kitchen,
-      required super.receptionRoom,
-      required super.diningRoom,
-      required super.advertizerNameAr,
-      required super.advertizerNameEn,
-      required super.advertizerNameKu,
-      required super.whatsapp,
-      required super.latitude,
-      required super.longitude,
-      required super.isSold,
-      required super.isInvesBed,
-      required super.agentId,
-      required super.companyId,
-      required super.areaId,
-      required super.subAreaId,
-      required super.categoryId,
-      required super.subCategoryId,
-      required super.userId,
-      required super.createdAt,
-      required super.updatedAt,
-      required super.images,
-      super.agent,
-      required super.company,
-      required super.floorPlans,
-      required super.videos,
-      required super.type,
-      required super.locationNameAr,
-      required super.locationNameEn,
-      required super.locationNameKu,
-      required super.services});
+  const MainItemModel({
+    required super.id,
+    required super.status,
+    required super.phone,
+    required super.phoneCode,
+    required super.views,
+    required super.titleAr,
+    required super.descriptionAr,
+    required super.titleEn,
+    required super.descriptionEn,
+    required super.titleKu,
+    required super.descriptionKu,
+    required super.furniture,
+    required super.price,
+    required super.currency,
+    required super.size,
+    required super.bedroom,
+    required super.bathRoom,
+    required super.babyRoom,
+    required super.kitchen,
+    required super.receptionRoom,
+    required super.diningRoom,
+    required super.advertizerNameAr,
+    required super.advertizerNameEn,
+    required super.advertizerNameKu,
+    required super.whatsapp,
+    required super.latitude,
+    required super.longitude,
+    required super.isSold,
+    required super.isInvesBed,
+    required super.agentId,
+    required super.companyId,
+    required super.areaId,
+    required super.subAreaId,
+    required super.categoryId,
+    required super.subCategoryId,
+    required super.userId,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.images,
+    required super.agent,
+    required super.company,
+    required super.floorPlans,
+    required super.videos,
+    required super.type,
+    required super.locationNameAr,
+    required super.locationNameEn,
+    required super.locationNameKu,
+    required super.services,
+    required super.userModel,
+  });
 
   factory MainItemModel.fromJson(Map<String, dynamic> json) => MainItemModel(
         id: json["id"],
@@ -91,22 +95,31 @@ class MainItemModel extends MainItem {
         subAreaId: json["sub_area_id"],
         categoryId: json["category_id"],
         subCategoryId: json["sub_category_id"],
+        userModel: json["user"] != null
+            ? MainItemUserModel.fromJson(json["user"])
+            : MainItemUserModel(),
         userId: json["user_id"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         images: List<FloorPlan>.from(
             json["images"].map((x) => FloorPlan.fromJson(x))),
-        videos: List<FloorPlan>.from(json["videos"].map((x) => x)),
-        floorPlans: List<FloorPlan>.from(
-            json["floor_plans"].map((x) => FloorPlan.fromJson(x))),
+        videos: List<FloorPlan>.from(
+            json["videos"].map((x) => FloorPlan.fromJson(x))),
+        // videos: json["videos"] != null
+        //     ? List<FloorPlan>.from(json["videos"].map((x) => x))
+        //     : [],
+        floorPlans: json["floor_plans"] != null
+            ? List<FloorPlan>.from(
+                json["floor_plans"].map((x) => FloorPlan.fromJson(x)))
+            : [],
         agent: json["agent"] == null
             ? const AgentModel(
-                nameAr: "لا يوجد اسم وكيل",
-                nameEn: "No Agent Name",
-                nameKu: "ناوی بریکار نییە",
-                )
+                name: "لا يوجد اسم وكيل",
+              )
             : AgentModel.fromJson(json["agent"]),
-        company: CompanyModel.fromJson(json["company"]),
+        company: json["company"] != null
+            ? CompanyModel.fromJson(json["company"])
+            : const CompanyModel(),
         services: List<ServiceItemsModel>.from(
             json["services"].map((x) => ServiceItemsModel.fromJson(x))),
       );
@@ -158,57 +171,113 @@ class MainItemModel extends MainItem {
         "videos": List<FloorPlan>.from(videos!.map((x) => x)),
         "floor_plans": List<FloorPlan>.from(floorPlans!.map((x) => x.toJson())),
         "agent": agent == null ? null : agent!.toJson(),
+        "user": userModel!.toJson(),
         "company": company!.toJson(),
         "services": List<dynamic>.from(services!.map((x) => x.toJson())),
       };
 }
 
 class AgentModel extends Agent {
-  const AgentModel(
-      {super.id,
-      super.nameAr,
-      super.nameEn,
-      super.nameKu,
-      super.image,
-      super.about,
-      super.phone,
-      super.phoneCode,
-      super.whatsapp,
-      super.userId,
-      super.companyId,
-      super.createdAt,
-      super.updatedAt});
+  const AgentModel({
+    super.id,
+    super.name,
+    super.email,
+    super.password,
+    super.image,
+    super.about,
+    super.phone,
+    super.languages,
+    super.phoneCode,
+    super.whatsapp,
+    super.userId,
+    super.companyId,
+    super.createdAt,
+    super.updatedAt,
+    super.facebook,
+    super.instagram,
+    super.twitter,
+    super.snapchat,
+    super.token,
+    super.method,
+  });
 
   factory AgentModel.fromJson(Map<String, dynamic> json) => AgentModel(
         id: json["id"],
-        nameAr: json["name_ar"] ?? "لا يوجد اسم وكيل",
-        nameEn: json["name_en"] ?? "No Agent Name",
-        nameKu: json["name_ku"] ?? "ناوی بریکار نییە",
+        name: json["name"] ?? "لا يوجد اسم وكيل",
         image: json["image"],
         about: json["about"],
         phone: json["phone"],
+        email: json["email"],
+        password: json["password"],
+        languages: json["languages"] != null
+            ? List<String>.from(json["languages"].map((x) => x ?? ""))
+            : [],
         phoneCode: json["phone_code"],
         whatsapp: json["whatsapp"],
         userId: json["user_id"],
         companyId: json["company_id"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        facebook: json["facebook"],
+        instagram: json["instagram"],
+        twitter: json["twitter"],
+        snapchat: json["snapchat"],
+        method: json["_method"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name_ar": nameAr,
-        "name_en": nameEn,
-        "name_ku": nameKu,
+        "name": name,
         "image": image,
         "about": about,
         "phone": phone,
+        "email": email,
+        "password": password,
         "phone_code": phoneCode,
         "whatsapp": whatsapp,
+        "languages": List<dynamic>.from(languages!.map((x) => x)),
         "user_id": userId,
         "company_id": companyId,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "_method": method,
+      };
+
+  Future<Map<String, dynamic>> postToJson() async => {
+        "name": name,
+        "about": about,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "phone_code": phoneCode,
+        "whatsapp": whatsapp,
+        "languages[]": languages,
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "image": image != null ? await MultipartFile.fromFile(image!) : "",
+        "_method": method,
+      };
+
+  Future<Map<String, dynamic>> editToJson() async => {
+        "name": name,
+        "about": about,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "phone_code": phoneCode,
+        "whatsapp": whatsapp,
+        "languages[]": languages,
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "_method": method,
       };
 }
 
@@ -232,6 +301,7 @@ class FloorPlanModel extends FloorPlan {
         updatedAt: json["updated_at"],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         "id": id,
         "project_id": projectId,
@@ -244,19 +314,19 @@ class FloorPlanModel extends FloorPlan {
 }
 
 class CompanyModel extends Company {
-  CompanyModel(
-      {required super.id,
-      required super.facebook,
-      required super.instagram,
-      required super.twitter,
-      required super.snapchat,
-      required super.latitude,
-      required super.longitude,
-      required super.aboutAr,
-      required super.aboutEn,
-      required super.userId,
-      required super.createdAt,
-      required super.updatedAt});
+  const CompanyModel(
+      {super.id,
+      super.facebook,
+      super.instagram,
+      super.twitter,
+      super.snapchat,
+      super.latitude,
+      super.longitude,
+      super.aboutAr,
+      super.aboutEn,
+      super.userId,
+      super.createdAt,
+      super.updatedAt});
 
   factory CompanyModel.fromJson(Map<String, dynamic> json) => CompanyModel(
         id: json["id"],
@@ -290,28 +360,64 @@ class CompanyModel extends Company {
 }
 
 class ServiceItemsModel extends ServiceItems {
-  ServiceItemsModel(
+  const ServiceItemsModel(
       {required super.id,
-      required super.nameAr,
-      required super.nameEn,
-      required super.nameKo,
-      required super.image,
-      required super.icon,
+      required super.serviceId,
+      required super.postId,
+      required super.projectId,
+      required super.service,
       required super.createdAt,
-      required super.updatedAt,
-      required super.pivot});
+      required super.updatedAt});
 
   factory ServiceItemsModel.fromJson(Map<String, dynamic> json) =>
       ServiceItemsModel(
         id: json["id"],
-        nameAr: json["name_ar"] ?? "",
-        nameEn: json["name_en"] ?? "بدون اسم",
+        serviceId: json["service_id"],
+        postId: json["post_id"],
+        projectId: json["project_id"],
+        createdAt: json["created_at"] != null
+            ? DateTime.parse(json["created_at"])
+            : DateTime(0),
+        updatedAt: json["updated_at"] != null
+            ? DateTime.parse(json["updated_at"])
+            : DateTime(0),
+        service: json["service"] != null
+            ? ServicesItemDataModel.fromJson(json["service"])
+            : const ServicesItemDataModel(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "service_id": serviceId,
+        "post_id": postId,
+        "project_id": projectId,
+        "created_at": createdAt!.toIso8601String(),
+        "updated_at": updatedAt!.toIso8601String(),
+        "service": service!.toJson(),
+      };
+}
+
+class ServicesItemDataModel extends ServicesItemData {
+  const ServicesItemDataModel(
+      {super.id,
+      super.nameAr,
+      super.nameEn,
+      super.nameKo,
+      super.image,
+      super.icon,
+      super.createdAt,
+      super.updatedAt});
+
+  factory ServicesItemDataModel.fromJson(Map<String, dynamic> json) =>
+      ServicesItemDataModel(
+        id: json["id"],
+        nameAr: json["name_ar"] ?? "لا يوجد اسم",
+        nameEn: json["name_en"] ?? "No Name",
         nameKo: json["name_ko"] ?? "هيچ ناو نييه‌",
         image: json["image"],
         icon: json["icon"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        pivot: PivotModel.fromJson(json["pivot"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -323,20 +429,50 @@ class ServiceItemsModel extends ServiceItems {
         "icon": icon,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
-        "pivot": pivot!.toJson(),
       };
 }
 
-class PivotModel extends Pivot {
-  PivotModel({required super.postId, required super.serviceId});
+class MainItemUserModel extends MainItemUser {
+  MainItemUserModel({
+    super.id,
+    super.name,
+    super.email,
+    super.whatsapp,
+    super.phone,
+    super.image,
+    super.status,
+    super.userType,
+    super.packagesBalance,
+    super.createdAt,
+    super.updatedAt,
+  });
 
-  factory PivotModel.fromJson(Map<String, dynamic> json) => PivotModel(
-        postId: json["post_id"],
-        serviceId: json["service_id"],
+  factory MainItemUserModel.fromJson(Map<String, dynamic> json) =>
+      MainItemUserModel(
+        id: json["id"],
+        name: json["name"],
+        email: json["email"],
+        whatsapp: json["whatsapp"],
+        phone: json["phone"],
+        image: json["image"],
+        status: json["status"],
+        userType: json["user_type"],
+        packagesBalance: json["packages_balance"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "post_id": postId,
-        "service_id": serviceId,
+        "id": id,
+        "name": name,
+        "email": email,
+        "whatsapp": whatsapp,
+        "phone": phone,
+        "image": image,
+        "status": status,
+        "user_type": userType,
+        "packages_balance": packagesBalance,
+        "created_at": createdAt!.toIso8601String(),
+        "updated_at": updatedAt!.toIso8601String(),
       };
 }
