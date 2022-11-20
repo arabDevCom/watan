@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/widgets/network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -21,39 +22,47 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CarouselSlider(
-          options: CarouselOptions(
-              onPageChanged: (int i, CarouselPageChangedReason c) {
-                setState(() {
-                  page = i;
-                });
-              },
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              autoPlay: true,
-              height: MediaQuery.of(context).size.height * 0.25,
-              reverse: false,
-              viewportFraction: 1.0),
-          items: widget.sliderData.map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return ManageNetworkImage(imageUrl: i.image!,borderRadius: 0,width: double.infinity,);
-              },
-            );
-          }).toList(),
-        ),
-        widget.isDotes == true
-            ? const SizedBox(height: 18)
-            : const SizedBox(height: 0),
-        widget.isDotes == true
-            ? DotesWidget(
-                page: page,
-                length: widget.sliderData.length,
-              )
-            : Container(),
-      ],
-    );
+    if (widget.sliderData.isEmpty) {
+      return Image.asset(ImageAssets.watanLogo);
+    } else {
+      return Column(
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(
+                onPageChanged: (int i, CarouselPageChangedReason c) {
+                  setState(() {
+                    page = i;
+                  });
+                },
+                enlargeCenterPage: true,
+                enableInfiniteScroll: false,
+                autoPlay: true,
+                height: MediaQuery.of(context).size.height * 0.25,
+                reverse: false,
+                viewportFraction: 1.0),
+            items: widget.sliderData.map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return ManageNetworkImage(
+                    imageUrl: i.image!,
+                    borderRadius: 0,
+                    width: double.infinity,
+                  );
+                },
+              );
+            }).toList(),
+          ),
+          widget.isDotes == true
+              ? const SizedBox(height: 18)
+              : const SizedBox(height: 0),
+          widget.isDotes == true
+              ? DotesWidget(
+                  page: page,
+                  length: widget.sliderData.length,
+                )
+              : Container(),
+        ],
+      );
+    }
   }
 }

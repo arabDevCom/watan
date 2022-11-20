@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:elwatn/features/navigation_bar/presentation/screens/navigator_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/assets_manager.dart';
@@ -33,13 +33,26 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       );
 
-  _startDelay() {
+  _startDelay() async {
+    if (await Permission.location.request().isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.location,
+      ].request();
+      print(statuses[Permission.location]);
+    }
+    if (await Permission.storage.request().isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+      print(statuses[Permission.storage]);
+    }
+
     _timer = Timer(const Duration(milliseconds: 3000), () => _goNext());
   }
 
-  _getStoreUser() async {
+  Future<void> _getStoreUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.getString('user')!=null){
+    if (prefs.getString('user') != null) {
       Map<String, dynamic> userMap = jsonDecode(prefs.getString('user')!);
       LoginDataModel loginDataModel = LoginDataModel.fromJson(userMap);
       this.loginDataModel = loginDataModel;
@@ -49,8 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _getStoreUser();
-    _startDelay();
+    _getStoreUser().then((value) => _startDelay());
   }
 
   @override

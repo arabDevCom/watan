@@ -29,7 +29,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     this.updateProfileUseCase,
     this.updateStoreProfileUseCase,
     this.sendCodeUseCase,
-    this.checkCodeUseCase, this.resetPasswordUseCase,
+    this.checkCodeUseCase,
+    this.resetPasswordUseCase,
   ) : super(RegisterInitial());
 
   bool choose1 = false;
@@ -41,6 +42,8 @@ class RegisterCubit extends Cubit<RegisterState> {
   String imageLink = "";
   String registerBtn = "";
   String token = "";
+  double latitude = 0;
+  double longitude = 0;
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController whatsappController = TextEditingController();
@@ -61,12 +64,12 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   putDataToEdit(LoginDataModel userModel) {
     registerBtn = "update";
-    if(userModel.data!.user!.phone!=null){
+    if (userModel.data!.user!.phone != null) {
       registerBtn = "update";
       token = userModel.data!.accessToken!;
       userType = userModel.data!.user!.userType!;
-    }else{
-      token =userModel.data!.accessToken!;
+    } else {
+      token = userModel.data!.accessToken!;
       registerBtn = "save";
     }
     emailController.text = userModel.data!.user!.email!;
@@ -109,18 +112,53 @@ class RegisterCubit extends Cubit<RegisterState> {
     choose2 = ch2;
     userType = type;
     emit(RegisterUserChanged());
+    Future.delayed(Duration(milliseconds: 250), () {
+      emit(RegisterUserChangedDone());
+    });
   }
 
-  postRegisterData(RegistrationUserModel user) async {
+  postRegisterData() async {
     emit(RegisterLoading());
     Either<Failure, RegistrationDataModel> response =
-        await postRegisterUserUseCase(user);
+        await postRegisterUserUseCase(RegistrationUserModel(
+      userType: userType.toString(),
+      name: nameController.text,
+      email: emailController.text,
+      phone: phoneController.text,
+      whatsapp: whatsappController.text,
+      password: passwordController.text,
+      longitude: longitude,
+      latitude: latitude,
+      facebook: facebookController.text,
+      instagram: instaController.text,
+      twitter: twitterController.text,
+      snapchat: snapController.text,
+    ));
     response.fold(
       (failure) {
         return RegisterFailure(
             message: MapFailureMessage.mapFailureToMessage(failure));
       },
-      (userModel) => RegisterLoaded(userModel),
+      (userModel) async {
+        userModel.code == 200;
+
+        if (userModel.code == 200) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user', jsonEncode(userModel)).then((value) {
+            emit(RegisterLoaded(userModel));
+            Future.delayed(
+              const Duration(seconds: 2),
+              () {
+                emit(RegisterInitial());
+              },
+            );
+          });
+        } else if (userModel.code == 409) {
+          emit(RegisterValidator(409));
+        } else {
+          emit(RegisterValidator(410));
+        }
+      },
     );
   }
 
@@ -179,7 +217,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(CheckCodeLoading());
     final response = await checkCodeUseCase(code);
     response.fold((l) => emit(CheckCodeFailure()), (r) {
-      if (r.code==200) {
+      if (r.code == 200) {
         checkCodeOfEmail = r.checkCode;
         emit(CheckCodeSuccessfully());
         Future.delayed(Duration(seconds: 2), () {
@@ -196,9 +234,9 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   resetPassword(String password) async {
     emit(ResetPasswordLoading());
-    final response = await resetPasswordUseCase([checkCodeOfEmail,password]);
+    final response = await resetPasswordUseCase([checkCodeOfEmail, password]);
     response.fold((l) => emit(ResetPasswordFailure()), (r) {
-      if (r.code==200) {
+      if (r.code == 200) {
         emit(ResetPasswordSuccessfully());
         Future.delayed(const Duration(seconds: 2), () {
           emit(RegisterInitial());
@@ -211,5 +249,4 @@ class RegisterCubit extends Cubit<RegisterState> {
       }
     });
   }
-
 }

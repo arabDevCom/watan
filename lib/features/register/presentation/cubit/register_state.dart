@@ -28,6 +28,12 @@ class RegisterFailure extends RegisterState {
 }
 
 class RegisterUserChanged extends RegisterState {}
+class RegisterUserChangedDone extends RegisterState {}
+class RegisterValidator extends RegisterState {
+  final  int code;
+
+  RegisterValidator(this.code);
+}
 
 // ignore: must_be_immutable
 class UserPhotoPicked extends RegisterState {

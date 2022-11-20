@@ -39,7 +39,7 @@ class _ReportPostScreenState extends State<ReportPostScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          'Report Post',
+          translateText(AppStrings.reportPostText, context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(

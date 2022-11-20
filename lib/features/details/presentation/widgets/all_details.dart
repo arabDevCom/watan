@@ -15,13 +15,28 @@ class AllDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String type = '';
+    if (mainItemModel!.type == '1') {
+      type = translateText(AppStrings.apartmentText, context);
+    } else if (mainItemModel!.type == '2') {
+      type = translateText(AppStrings.villaText, context);
+    } else if (mainItemModel!.type == '3') {
+      type = translateText(AppStrings.industrialLandText, context);
+    } else if (mainItemModel!.type == '4') {
+      type = translateText(AppStrings.commercialPlotText, context);
+    } else if (mainItemModel!.type == '5') {
+      type = translateText(AppStrings.shopText, context);
+    } else if (mainItemModel!.type == '6') {
+      type = translateText(AppStrings.officeText, context);
+    } else {
+      type = mainItemModel!.type!;
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              translateText(AppStrings.detailsText,context)),
+          Text(translateText(AppStrings.detailsText, context)),
           const SizedBox(height: 12),
           ListTileAllDetailsWidget(
             image: ImageAssets.dateIcon,
@@ -41,8 +56,8 @@ class AllDetails extends StatelessWidget {
             text:
                 //ToDo Type Language
                 "${translateText(AppStrings.typeText, context)}"
-                "  :  "
-                "${mainItemModel!.type}",
+                        "  :  " +
+                    type,
           ),
           ListTileAllDetailsWidget(
             image: ImageAssets.purposeIcon,
@@ -61,8 +76,8 @@ class AllDetails extends StatelessWidget {
           ListTileAllDetailsWidget(
             image: ImageAssets.furnitureIcon,
             text: "${translateText(AppStrings.furnitureText, context)}"
-                "  :  "
-                "${IsLanguage.isEnLanguage(context) ? mainItemModel!.furniture ?? "0" : replaceToArabicNumber(mainItemModel!.furniture.toString())}",
+                    "  :  " +
+                '${mainItemModel!.furniture == '0' ? translateText(AppStrings.noDataMessage, context) : translateText(AppStrings.yesText, context)}',
           ),
           ListTileAllDetailsWidget(
             image: ImageAssets.areaIcon,
@@ -75,7 +90,7 @@ class AllDetails extends StatelessWidget {
             image: ImageAssets.roomsIcon,
             text: "${translateText(AppStrings.bedroomText, context)}"
                 "  :  "
-                "${IsLanguage.isEnLanguage(context) ? mainItemModel!.bedroom ?? "0" : replaceToArabicNumber(mainItemModel!.bedroom.toString())}",
+                "${mainItemModel!.bedroom == 0 ? translateText(AppStrings.studioText, context) : IsLanguage.isEnLanguage(context) ? mainItemModel!.bedroom ?? "0" : replaceToArabicNumber(mainItemModel!.bedroom.toString())}",
           ),
           ListTileAllDetailsWidget(
             image: ImageAssets.bathIcon,

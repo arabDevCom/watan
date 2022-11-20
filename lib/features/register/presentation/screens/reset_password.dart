@@ -93,37 +93,40 @@ class _ResetPasswordState extends State<ResetPassword> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 30),
-                        child: PinCodeTextField(
-                          hintCharacter: '0',
-                          pastedTextStyle: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.bold),
-                          appContext: context,
-                          length: 6,
-                          animationType: AnimationType.fade,
-                          validator: (v) {
-                            if (v!.length < 5) {
-                              return "";
-                            } else {
-                              return null;
-                            }
-                          },
-                          pinTheme: PinTheme(
-                            inactiveColor: AppColors.gray,
-                            activeColor: AppColors.gray,
-                            shape: PinCodeFieldShape.underline,
-                            selectedColor: AppColors.primary,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: PinCodeTextField(
+                            hintCharacter: '0',
+                            pastedTextStyle: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold),
+                            appContext: context,
+                            length: 6,
+                            animationType: AnimationType.fade,
+                            validator: (v) {
+                              if (v!.length < 5) {
+                                return "";
+                              } else {
+                                return null;
+                              }
+                            },
+                            pinTheme: PinTheme(
+                              inactiveColor: AppColors.gray,
+                              activeColor: AppColors.gray,
+                              shape: PinCodeFieldShape.underline,
+                              selectedColor: AppColors.primary,
+                            ),
+                            cursorColor: AppColors.primary,
+                            animationDuration: const Duration(milliseconds: 300),
+                            errorAnimationController: errorController,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                currentText = value;
+                              });
+                            },
                           ),
-                          cursorColor: AppColors.primary,
-                          animationDuration: const Duration(milliseconds: 300),
-                          errorAnimationController: errorController,
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            print(value);
-                            setState(() {
-                              currentText = value;
-                            });
-                          },
                         ),
                       ),
                     ),

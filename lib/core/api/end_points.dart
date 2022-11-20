@@ -17,6 +17,7 @@ class EndPoints {
   static const String myAdsUrl = '${baseUrl}ads/myads';
   static const String mySolidUrl = '${baseUrl}ads/list';
   static const String deleteAdsUrl = '${baseUrl}ads/delete-ad/';
+  static const String deleteProjectUrl = '${baseUrl}ads/delete-project/';
   static const String changeStatusAdsUrl = '${baseUrl}ads/update_ad_status/';
   static const String filterUrl = '${baseUrl}general/filter';
   static const String agentProfileListUrl = '${baseUrl}company/agent';
@@ -40,4 +41,9 @@ class EndPoints {
   static const String addAdsUrl = '${baseUrl}ads/add_ads';
   static const String updateAdsUrl = '${baseUrl}ads/update_ad/';
   static const String addProjectUrl = '${baseUrl}ads/add-project';
+  static const String updateProjectUrl = '${baseUrl}ads/update_project/';
+  static const String favouritesUrl = '${baseUrl}ads/favourites-lists';
+  static const String changePostFavouriteStatusUrl = '${baseUrl}ads/add-or-remove-post-to-favourite';
+  static const String changeProjectFavouriteStatusUrl = '${baseUrl}company/add-or-remove-project-to-favourite';
+  static const String getAllLocationsUrl = '${baseUrl}home/get-all-locations';
 }

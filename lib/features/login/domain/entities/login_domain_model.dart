@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../home_page/data/models/main_item_data_model.dart';
 import '../../data/models/login_data_model.dart';
 
 LoginModel loginFromJson(String str) => LoginDataModel.fromJson(json.decode(str));
@@ -75,8 +74,8 @@ class User extends Equatable{
   final String? instagram;
   final String? twitter;
   final String? snapchat;
-  final String? latitude;
-  final String? longitude;
+  final double? latitude;
+  final double? longitude;
   final int? packagesBalance;
 
 

@@ -17,7 +17,6 @@ import '../../features/map/presentation/screens/map.dart';
 import '../../features/notification/presentation/screens/notification.dart';
 import '../../features/profile/presentation/screens/agency_screen.dart';
 import '../../features/profile/presentation/screens/new_edit_agency.dart';
-import '../../features/register/presentation/screens/register_company.dart';
 
 
 class Routes {
@@ -89,10 +88,6 @@ class AppRoutes {
         case Routes.contactUsScreenRoute:
         return MaterialPageRoute(
           builder: (context) =>    ContactUsScreen(),
-        );
-        case Routes.registerCompanyRoute:
-        return MaterialPageRoute(
-          builder: (context) =>    RegisterCompany(),
         );
         case Routes.forgetPasswordRoute:
         return MaterialPageRoute(

@@ -5,10 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/translate_text_method.dart';
-import '../../../login/domain/entities/login_domain_model.dart';
-import '../../data/models/register_data_model.dart';
 import '../cubit/register_cubit.dart';
 
+// ignore: must_be_immutable
 class RegisterButtons extends StatelessWidget {
   RegisterButtons({Key? key, required this.formKey}) : super(key: key);
   final GlobalKey<FormState> formKey;
@@ -35,16 +34,19 @@ class RegisterButtons extends StatelessWidget {
                             AppStrings.passwordValidationMessage, context),
                         context,
                         color: AppColors.error);
+                  } else if (context.read<RegisterCubit>().image == null) {
+                    snackBar(translateText(AppStrings.selectImageValidator, context), context,
+                        color: AppColors.error);
+                  } else if (context.read<RegisterCubit>().longitude == 0 ||
+                      context.read<RegisterCubit>().latitude == 0) {
+                    snackBar(translateText(AppStrings.selectLocationText, context), context,
+                        color: AppColors.error);
                   } else {
-                    if (registerCubit!.registerBtn == 'update'||registerCubit!.registerBtn == 'save') {
-                      print("registerCubit!.registerBtn");
-                      print(registerCubit!.registerBtn);
-                      print("registerCubit!.userType");
-                      print(registerCubit!.userType);
+                    if (registerCubit!.registerBtn == 'update' ||
+                        registerCubit!.registerBtn == 'save') {
                       registerCubit!.updateProfileData();
                     } else {
-                      print('posting');
-                      // registerCubit!.postRegisterData(getUserData());
+                      registerCubit!.postRegisterData();
                     }
                   }
                 }
@@ -59,9 +61,9 @@ class RegisterButtons extends StatelessWidget {
                   backgroundColor: AppColors.primary),
               child: Text(
                 context.read<RegisterCubit>().registerBtn == "update"
-                    ? "Update"
+                    ? translateText(AppStrings.updateBtnText, context)
                     : context.read<RegisterCubit>().registerBtn == "save"
-                        ? "Save"
+                        ? translateText(AppStrings.saveText, context)
                         : translateText(AppStrings.startBtn, context),
               ),
             ),
@@ -87,18 +89,6 @@ class RegisterButtons extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  RegistrationUserModel getUserData() {
-    return RegistrationUserModel(
-      email: registerCubit!.emailController.text,
-      password: registerCubit!.passwordController.text,
-      phone: registerCubit!.phoneController.text,
-      whatsapp: registerCubit!.whatsappController.text,
-      name: registerCubit!.nameController.text,
-      userType: registerCubit!.userType.toString(),
-      imagePath: registerCubit!.image!.path,
     );
   }
 }

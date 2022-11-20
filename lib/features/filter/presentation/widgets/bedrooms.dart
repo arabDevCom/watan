@@ -1,3 +1,7 @@
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/core/utils/convert_numbers_method.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:elwatn/features/add/presentation/cubit/add_ads_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +28,7 @@ class _BedRoomsWidgetState extends State<BedRoomsWidget> {
     if (widget.typeClass == 'add') {
       if (context.read<AddAdsCubit>().btnText == 'update') {
         selected = context.read<AddAdsCubit>().bedroom;
-      }else{
+      } else {
         context.read<AddAdsCubit>().bedroom = -1;
       }
     } else {
@@ -44,8 +48,8 @@ class _BedRoomsWidgetState extends State<BedRoomsWidget> {
               height: 20,
             ),
             const SizedBox(width: 10),
-            const Text(
-              "Bed Rooms",
+            Text(
+              translateText(AppStrings.bedroomText, context),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             )
           ],
@@ -90,7 +94,11 @@ class _BedRoomsWidgetState extends State<BedRoomsWidget> {
                       ),
                       child: Center(
                         child: Text(
-                          index == 0 ? "Studio" : index.toString(),
+                          index == 0
+                              ? translateText(AppStrings.studioText, context)
+                              : IsLanguage.isEnLanguage(context)
+                                  ? index.toString()
+                                  : replaceToArabicNumber(index.toString()),
                           style: TextStyle(
                             fontSize: 12,
                             color: selected == index ? AppColors.primary : null,

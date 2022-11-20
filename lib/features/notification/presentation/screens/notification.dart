@@ -24,7 +24,7 @@ class NotificationScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...List.generate(30, (index) => const SecondMainItemWidget())
+            ...List.generate(30, (index) =>  SecondMainItemWidget())
           ],
         ),
       ),

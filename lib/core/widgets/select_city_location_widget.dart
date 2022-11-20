@@ -126,7 +126,6 @@ class SelectCityLocation extends StatelessWidget {
         : kind == 'addProject'
             ? BlocBuilder<AddProjectCubit, AddProjectState>(
                 builder: (BuildContext context, state) {
-                  print('55555555');
                   if (state is AddProjectCitiesLocationLoading) {
                     return Stack(
                       children: [
@@ -219,7 +218,6 @@ class SelectCityLocation extends StatelessWidget {
                       children: [
                         DropdownSearchLocationWidget(
                           kind: "addAds",
-                          update: 'loading',
                           isEnable:
                               context.read<AddAdsCubit>().isCitiesDropdown,
                           labelText: translateText(

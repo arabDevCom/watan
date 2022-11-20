@@ -5,6 +5,8 @@ import 'package:scroll_navigation/navigation/title_scroll_navigation.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../home_page/domain/entities/main_item_domain_model.dart';
 import '../widgets/veiw_map_widget.dart';
 
@@ -49,7 +51,7 @@ class _DetailsPhotoScreenState extends State<DetailsPhotoScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          "Details",
+          translateText(AppStrings.detailsText,context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
@@ -64,6 +66,7 @@ class _DetailsPhotoScreenState extends State<DetailsPhotoScreen> {
       ),
       body: TitleScrollNavigation(
         initialPage: widget.initialPage,
+
         showIdentifier: false,
         barStyle: TitleNavigationBarStyle(
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -73,19 +76,15 @@ class _DetailsPhotoScreenState extends State<DetailsPhotoScreen> {
             spaceBetween: MediaQuery.of(context).size.width / 4 + 10,
             activeColor: AppColors.primary,
             background: AppColors.buttonBackground),
-        titles: const [
-          "Image",
-          "Videos",
-          "Map",
+        titles:  [
+          translateText(AppStrings.imagesText,context),
+          translateText(AppStrings.videoText,context),
+          translateText(AppStrings.mapText,context),
         ],
         pages: [
           SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text("Found Images ${widget.mainItem.images!.length}"),
-                ),
                 ...List.generate(
                   widget.mainItem.images!.length,
                   (index) => Padding(
@@ -104,11 +103,6 @@ class _DetailsPhotoScreenState extends State<DetailsPhotoScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child:
-                      Text("Found Video (${widget.mainItem.videos!.length})"),
-                ),
                 if (widget.mainItem.videos!.isNotEmpty) ...{
                   FutureBuilder(
                     future: _initializeVideoPlayerFuture,

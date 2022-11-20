@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/translate_text_method.dart';
 
 class RadioChooseWidget extends StatefulWidget {
   const RadioChooseWidget({Key? key}) : super(key: key);
@@ -35,7 +37,12 @@ class _RadioChooseWidgetState extends State<RadioChooseWidget> {
     return Column(
       children: [
         ListTile(
-          title: const Text('Yes'),
+          title: Text(
+            translateText(
+              AppStrings.yesText,
+              context,
+            ),
+          ),
           leading: Radio<FurnishedChoose>(
             activeColor: AppColors.primary,
             value: FurnishedChoose.yes,
@@ -51,7 +58,12 @@ class _RadioChooseWidgetState extends State<RadioChooseWidget> {
           ),
         ),
         ListTile(
-          title: const Text('No'),
+          title: Text(
+            translateText(
+              AppStrings.noText,
+              context,
+            ),
+          ),
           leading: Radio<FurnishedChoose>(
             activeColor: AppColors.primary,
             value: FurnishedChoose.no,

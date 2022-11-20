@@ -68,7 +68,6 @@ class _PaymentPlanesWidgetState extends State<PaymentPlanesWidget> {
                     setState(() {
                       context.read<AddProjectCubit>().addPaymentPlans();
                     });
-                    print("Done");
                   }
                 },
                 child: Icon(

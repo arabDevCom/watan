@@ -4,6 +4,7 @@ import 'package:elwatn/features/home_page/presentation/screens/home_page.dart';
 import 'package:elwatn/features/profile/presentation/screens/user_profile.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/no_login_page.dart';
 import '../../../add/presentation/screens/add_screen.dart';
 import '../../../add_project/presentation/Screens/add_project_screen.dart';
 import '../../../chat/presentation/screens/conversation_screen/conversation_page.dart';
@@ -77,19 +78,27 @@ class _NavigatorBarState extends State<NavigatorBar> {
 
   Widget pages() {
     if (_page == 0) {
-      return const FavoriteScreen();
+      return widget.loginDataModel.message == null
+          ? NotLoginPage()
+          : FavoriteScreen();
     } else if (_page == 1) {
-      return UserProfile(loginDataModel: widget.loginDataModel);
+      return widget.loginDataModel.message == null
+          ? NotLoginPage()
+          : UserProfile(loginDataModel: widget.loginDataModel);
     } else if (_page == 2) {
       return HomePage(
         scaffoldKey: _scaffoldKey,
       );
     } else if (_page == 3) {
-      return ConversationPage(loginDataModel: widget.loginDataModel);
+      return widget.loginDataModel.message == null
+          ? NotLoginPage()
+          : ConversationPage(loginDataModel: widget.loginDataModel);
     } else {
-      return widget.loginDataModel.data!.user!.userType == 3
-          ? AddProjectScreen(loginModel: widget.loginDataModel)
-          : AddScreen();
+      return widget.loginDataModel.message == null
+          ? NotLoginPage()
+          : widget.loginDataModel.data!.user!.userType == 3
+              ? AddProjectScreen()
+              : AddScreen();
     }
   }
 }

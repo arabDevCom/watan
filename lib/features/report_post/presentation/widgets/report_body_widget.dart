@@ -32,19 +32,19 @@ class ReportBodyWidget extends StatelessWidget {
             children: [
               CustomTextField(
                 image: ImageAssets.reasonIcon,
-                title: 'Report Reason',
+                title: translateText(AppStrings.reportReasonText, context),
                 textInputType: TextInputType.text,
                 controller: context.read<ReportPostCubit>().reasonController,
-                validatorMessage: "You Should Enter The Reason",
+                validatorMessage: translateText(AppStrings.reasonValidator, context),
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 image: ImageAssets.rewriteIcon,
-                title: "Details",
+                title: translateText(AppStrings.detailsText, context),
                 textInputType: TextInputType.text,
                 minLine: 8,
                 controller: context.read<ReportPostCubit>().detailsController,
-                validatorMessage: "You Should Enter The Details",
+                validatorMessage: translateText(AppStrings.detailsValidator, context),
               ),
               const SizedBox(height: 16),
               InkWell(
@@ -69,13 +69,13 @@ class ReportBodyWidget extends StatelessWidget {
                             flex: 8,
                             child: Row(
                               children: [
-                                const Text(
-                                  "Photo",
+                                 Text(
+                                  translateText(AppStrings.imagesText, context),
                                   textAlign: TextAlign.justify,
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 Text(
-                                  "   (optional)",
+                                  "   (${translateText(AppStrings.optionalText, context)})",
                                   textAlign: TextAlign.justify,
                                   style: TextStyle(
                                       fontSize: 12, color: AppColors.gray),

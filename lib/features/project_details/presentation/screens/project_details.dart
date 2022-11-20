@@ -31,6 +31,9 @@ class ProjectDetails extends StatefulWidget {
 
 class _ProjectDetailsState extends State<ProjectDetails> {
   late LoginDataModel loginDataModel;
+  bool isFavourite = false;
+  bool isLoading = false;
+
 
   _getStoreUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,6 +55,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   @override
   void initState() {
     super.initState();
+    isFavourite = widget.mainProjectItemModel.isFavourite!;
     _getStoreUser();
   }
 

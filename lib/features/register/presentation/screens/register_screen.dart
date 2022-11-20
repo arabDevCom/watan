@@ -1,6 +1,7 @@
 import 'package:elwatn/config/routes/app_routes.dart';
 import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
+import 'package:elwatn/core/utils/snackbar_method.dart';
 import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:elwatn/core/widgets/custom_textfield.dart';
 import 'package:elwatn/core/widgets/show_loading_indicator.dart';
@@ -32,7 +33,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void initState() {
     super.initState();
     if (context.read<LoginCubit>().isNewUser) {
-      print('new');
       context.read<RegisterCubit>().registerBtn = 'save';
       context
           .read<RegisterCubit>()
@@ -67,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          widget.title,
+          '${widget.title}',
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
@@ -77,14 +77,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocBuilder<RegisterCubit, RegisterState>(
         builder: (BuildContext context, state) {
           registerCubit = context.read<RegisterCubit>();
-          if (state is UpdateProfileLoading) {
+          if (state is UpdateProfileLoading||state is RegisterLoading) {
             return const ShowLoadingIndicator();
           }
-          if (state is UpdateStoreDataSuccessfully) {
+          if (state is UpdateStoreDataSuccessfully||state is RegisterLoaded) {
             Future.delayed(const Duration(seconds: 1), () {
               Navigator.pushReplacementNamed(context, Routes.initialRoute);
             });
             return const ShowLoadingIndicator();
+          }
+          if(state is RegisterValidator){
+            if(state.code==409){
+              Future.delayed(Duration(milliseconds: 300),(){
+                snackBar(translateText(AppStrings.phoneValidatorMessage, context), context,color: AppColors.error);
+              });
+            }else{
+              Future.delayed(Duration(milliseconds: 300),(){
+                snackBar(translateText(AppStrings.emailValidatorMessage, context), context,color: AppColors.error);
+              });
+            }
           }
           return Form(
             key: formKey,
@@ -102,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller: context.read<RegisterCubit>().nameController,
                       image: ImageAssets.idNameGoldIcon,
                       title: translateText(AppStrings.nameHint, context),
@@ -113,6 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller: context.read<RegisterCubit>().phoneController,
                       image: ImageAssets.mobileGoldIcon,
                       title: translateText(AppStrings.phoneHint, context),
@@ -125,6 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller:
                           context.read<RegisterCubit>().whatsappController,
                       image: ImageAssets.whatsappGoldIcon,
@@ -138,6 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller: context.read<RegisterCubit>().emailController,
                       image: ImageAssets.emailRegisterIcon,
                       title: translateText(AppStrings.emailHint, context),
@@ -149,6 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller:
                           context.read<RegisterCubit>().passwordController,
                       image: ImageAssets.lockGoldIcon,
@@ -162,6 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      imageColor: AppColors.primary,
                       controller: context
                           .read<RegisterCubit>()
                           .confirmPasswordController,

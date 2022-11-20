@@ -12,13 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/is_language_methods.dart';
 import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/select_city_location_widget.dart';
 import '../../../../core/widgets/select_city_widget.dart';
 import '../cubit/filter_cubit.dart';
-import '../widgets/dropdown_search.dart';
-import '../widgets/dropdown_search_locations.dart';
 import '../widgets/price.dart';
 import '../widgets/property_type.dart';
 
@@ -49,6 +46,7 @@ class FilterScreen extends StatelessWidget {
                 return const ShowLoadingIndicator();
               } else if (state is FilterResponseLoaded) {
                 Future.delayed(const Duration(milliseconds: 700), () {
+
                   Navigator.pushNamed(context, Routes.filterResultRoute).then(
                       (value) => context.read<FilterCubit>().pageChange());
                 });
@@ -108,9 +106,9 @@ class FilterScreen extends StatelessWidget {
                   const BedRoomsWidget(typeClass: 'filter'),
                   const SizedBox(height: 6),
                   const Divider(thickness: 2),
-                  const ListNumbersWidget(
+                   ListNumbersWidget(
                     image: ImageAssets.bathGoldIcon,
-                    title: "Bathroom",
+                    title: translateText(AppStrings.bathroomText, context),
                   ),
                   const SizedBox(height: 6),
                   const Divider(thickness: 2),
@@ -119,10 +117,8 @@ class FilterScreen extends StatelessWidget {
                   const Divider(thickness: 2),
                   const AgencyWidget(),
                   const SizedBox(height: 6),
-                  const Divider(thickness: 2),
                   const TheBottomWidget(),
                   const SizedBox(height: 6),
-                  const Divider(thickness: 2),
                 ],
               );
             },

@@ -8,7 +8,9 @@ class RegistrationDataModel extends RegistrationDomainModel {
 
   factory RegistrationDataModel.fromJson(Map<String, dynamic> json) =>
       RegistrationDataModel(
-        data: RegistrationDataData.fromJson(json["data"]),
+        data: json["data"] != null
+            ? RegistrationDataData.fromJson(json["data"])
+            : RegistrationDataData(),
         message: json["message"],
         code: json["code"],
       );
@@ -21,10 +23,7 @@ class RegistrationDataModel extends RegistrationDomainModel {
 }
 
 class RegistrationDataData extends RegistrationDomainData {
-  const RegistrationDataData(
-      {required super.user,
-      required super.accessToken,
-      required super.tokenType});
+  const RegistrationDataData({super.user, super.accessToken, super.tokenType});
 
   factory RegistrationDataData.fromJson(Map<String, dynamic> json) =>
       RegistrationDataData(
@@ -41,7 +40,7 @@ class RegistrationDataData extends RegistrationDomainData {
 }
 
 class RegistrationUserModel extends RegistrationUser {
-  const RegistrationUserModel({
+   RegistrationUserModel({
     super.id,
     super.name,
     super.phone,
@@ -100,34 +99,62 @@ class RegistrationUserModel extends RegistrationUser {
         "longitude": longitude,
       };
 
-  Future<Map<String, dynamic>> updateUserProfileToJson() async => {
-    "name": name,
-    "phone": phone,
-    "email": email,
-    "password": password,
-    "whatsapp": whatsapp,
-    "image": await MultipartFile.fromFile(image!),
-    "user_type": userType,
-    "facebook": facebook,
-    "instagram": instagram,
-    "twitter": twitter,
-    "snapchat": snapchat,
-    "latitude": latitude,
-    "longitude": longitude,
-  };
-  Map<String, dynamic> updateUserProfileWithoutPhotoToJson()  => {
-    "name": name,
-    "phone": phone,
-    "email": email,
-    "password": password,
-    "whatsapp": whatsapp,
-    "user_type": userType,
-    "facebook": facebook,
-    "instagram": instagram,
-    "twitter": twitter,
-    "snapchat": snapchat,
-    "latitude": latitude,
-    "longitude": longitude,
-  };
+  Map<String, dynamic> toJsonRegisterUser() => {
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "whatsapp": whatsapp,
+        "image": image,
+        "imagePath": imagePath,
+        "user_type": userType,
+      };
 
+  Map<String, dynamic> toJsonRegisterProject() => {
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "whatsapp": whatsapp,
+        "image": image,
+        "imagePath": imagePath,
+        "user_type": userType,
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "latitude": latitude,
+        "longitude": longitude,
+      };
+
+  Future<Map<String, dynamic>> updateUserProfileToJson() async => {
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "whatsapp": whatsapp,
+        "image": await MultipartFile.fromFile(image!),
+        "user_type": userType,
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "latitude": latitude,
+        "longitude": longitude,
+      };
+
+  Map<String, dynamic> updateUserProfileWithoutPhotoToJson() => {
+        "name": name,
+        "phone": phone,
+        "email": email,
+        "password": password,
+        "whatsapp": whatsapp,
+        "user_type": userType,
+        "facebook": facebook,
+        "instagram": instagram,
+        "twitter": twitter,
+        "snapchat": snapchat,
+        "latitude": latitude,
+        "longitude": longitude,
+      };
 }

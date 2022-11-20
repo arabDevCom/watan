@@ -15,7 +15,7 @@ class ShowMoreRepositories implements BaseShowMoreRepositories{
   ShowMoreRepositories({required this.networkInfo,required this.showDataDataSource});
 
   @override
-  Future<Either<Failure, ShowMore>> getShowMoreData(String param) async {
+  Future<Either<Failure, ShowMore>> getShowMoreData(List<String> param) async {
     try {
       final showMoreData = await showDataDataSource.getShowMoreData(param);
       return Right(showMoreData);
@@ -25,7 +25,7 @@ class ShowMoreRepositories implements BaseShowMoreRepositories{
   }
 
   @override
-  Future<Either<Failure, ShowMore>> getPaginationData(String param) async {
+  Future<Either<Failure, ShowMore>> getPaginationData(List<String> param) async {
     try {
       final showMoreData = await showDataDataSource.getPaginationData(param);
       return Right(showMoreData);

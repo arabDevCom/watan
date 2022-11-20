@@ -83,21 +83,6 @@ class AgencyItem extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(ImageAssets.propertyIcon),
-                            const SizedBox(width: 8),
-                            const Text(
-                              textAlign: TextAlign.center,
-                              "Properties : 8",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 12),
                         child: Row(
@@ -120,10 +105,7 @@ class AgencyItem extends StatelessWidget {
                                 label: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 14),
-                                  child: Text(
-                                    translateText(AppStrings.callText, context),
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
+                                  child: SizedBox(),
                                 ),
                               ),
                             ),
@@ -150,11 +132,7 @@ class AgencyItem extends StatelessWidget {
                                 label: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 14),
-                                  child: Text(
-                                    translateText(
-                                        AppStrings.whatsAppText, context),
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
+                                  child: SizedBox(),
                                 ),
                               ),
                             ),

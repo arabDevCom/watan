@@ -27,6 +27,7 @@ class MainItem extends Equatable {
     this.receptionRoom,
     this.diningRoom,
     this.bathRoom,
+    this.livingRoom,
     this.advertizerNameAr,
     this.advertizerNameEn,
     this.advertizerNameKu,
@@ -54,6 +55,7 @@ class MainItem extends Equatable {
     this.company,
     this.services,
     this.userModel,
+    this.isFavourite,
   });
 
   final int? id;
@@ -75,6 +77,7 @@ class MainItem extends Equatable {
   final int? bathRoom;
   final int? babyRoom;
   final int? kitchen;
+  final int? livingRoom;
   final int? receptionRoom;
   final int? diningRoom;
   final String? type;
@@ -105,6 +108,7 @@ class MainItem extends Equatable {
   final CompanyModel? company;
   final List<ServiceItemsModel>? services;
   final MainItemUserModel? userModel;
+  final bool? isFavourite;
 
   @override
   List<Object?> get props => [
@@ -150,6 +154,7 @@ class MainItem extends Equatable {
         agent,
         company,
     userModel,
+    isFavourite,
       ];
 }
 

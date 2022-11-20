@@ -13,6 +13,7 @@ import 'features/bloggs/presentation/cubit/bloggs_cubit.dart';
 import 'features/chat/presentation/screens/conversation_screen/cubit/conversation_page_cubit.dart';
 import 'features/contact_us/presentation/cubit/contact_us_cubit.dart';
 import 'features/details/presentation/cubit/details_cubit.dart';
+import 'features/favorite/presentation/cubit/favourites_cubit.dart';
 import 'features/filter/presentation/cubit/filter_cubit.dart';
 import 'features/home_page/presentation/cubit/home_page_cubit.dart';
 import 'features/language/presentation/cubit/locale_cubit.dart';
@@ -33,6 +34,7 @@ class Watan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -95,6 +97,9 @@ class Watan extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => injector.serviceLocator<AddProjectCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injector.serviceLocator<FavouritesCubit>(),
         ),
       ],
       child: BlocBuilder<LocaleCubit, LocaleState>(

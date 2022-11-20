@@ -38,6 +38,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  // getStoredate(){}
+
   changeStatus(int code) {
     Future.delayed(const Duration(seconds: 3), () {
       statusCode = code;

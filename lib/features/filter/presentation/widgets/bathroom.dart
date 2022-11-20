@@ -1,3 +1,5 @@
+import 'package:elwatn/core/utils/convert_numbers_method.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:elwatn/features/add/presentation/cubit/add_ads_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,7 +126,7 @@ class _ListNumbersWidgetState extends State<ListNumbersWidget> {
                             ),
                             child: Center(
                                 child: Text(
-                              (index + 1).toString(),
+                             IsLanguage.isEnLanguage(context)? (index + 1).toString():replaceToArabicNumber( (index + 1).toString()),
                               style: const TextStyle(fontSize: 12),
                             )),
                           ),

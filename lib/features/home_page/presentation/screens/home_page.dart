@@ -17,12 +17,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<DatumModel> sliders = [];
     return BlocConsumer<HomePageCubit, HomePageState>(
       listener: (BuildContext context, Object? state) {},
       builder: (BuildContext context, state) {
         if (state is HomePageLoading) {
-          print('wwwwwww');
           return RefreshIndicator(
               onRefresh: () async {
                 await context.read<HomePageCubit>().getAllDataOfHomePage();

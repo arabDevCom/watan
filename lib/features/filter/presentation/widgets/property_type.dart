@@ -1,4 +1,5 @@
 import 'package:elwatn/core/utils/app_colors.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/features/add/presentation/cubit/add_ads_cubit.dart';
 import 'package:elwatn/features/filter/presentation/widgets/property_choose.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../add_project/presentation/cubit/add_project_cubit.dart';
 import '../cubit/filter_cubit.dart';
 
@@ -18,18 +20,6 @@ class PropertyTypeWidget extends StatefulWidget {
 }
 
 class _PropertyTypeWidgetState extends State<PropertyTypeWidget> {
-  List<String> list = [
-    'Residential',
-    'Plot',
-    'Commercial',
-  ];
-
-  List<List<String>> titles = [
-    ["Apartment", "Villa"],
-    ["Industrial Land", "Commercial Plot"],
-    ["Shop", "Office"],
-  ];
-
   List<List<String>> images = [
     [(ImageAssets.apartmentIcon), (ImageAssets.villaIcon)],
     [(ImageAssets.industrialLandIcon), (ImageAssets.commercialPlotIcon)],
@@ -72,6 +62,25 @@ class _PropertyTypeWidgetState extends State<PropertyTypeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> list = [
+      translateText(AppStrings.residentialText, context),
+      translateText(AppStrings.plotText, context),
+      translateText(AppStrings.commercialText, context),
+    ];
+    List<List<String>> titles = [
+      [
+        translateText(AppStrings.apartmentText, context),
+        translateText(AppStrings.villaText, context),
+      ],
+      [
+        translateText(AppStrings.industrialLandText, context),
+        translateText(AppStrings.commercialPlotText, context),
+      ],
+      [
+        translateText(AppStrings.shopText, context),
+        translateText(AppStrings.officeText, context),
+      ],
+    ];
     return Column(
       children: [
         Row(
@@ -82,8 +91,8 @@ class _PropertyTypeWidgetState extends State<PropertyTypeWidget> {
               height: 20,
             ),
             const SizedBox(width: 10),
-            const Text(
-              "Property Type",
+             Text(
+              translateText(AppStrings.propertyTypeText, context),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             )
           ],

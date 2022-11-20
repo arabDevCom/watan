@@ -12,7 +12,7 @@ abstract class BaseHomePageDataSource {
 
   Future<Categories> getCategories();
 
-  Future<NewPopularItems> getNewPopularItems();
+  Future<NewPopularItems> getNewPopularItems(String userId);
 }
 
 class HomePageDataSource implements BaseHomePageDataSource {
@@ -33,13 +33,9 @@ class HomePageDataSource implements BaseHomePageDataSource {
   }
 
   @override
-  Future<NewPopularItems> getNewPopularItems() async {
-    print("ooooo");
-    final response = await apiConsumer.get(EndPoints.newPopularUrl);
-    print("response");
-    print(response);
-    print("NewPopularItemsModel.fromJson(response)");
-    // print(NewPopularItemsModel.fromJson(response).data!.dataNew);
+  Future<NewPopularItems> getNewPopularItems(String userId) async {
+    final response = await apiConsumer
+        .get(EndPoints.newPopularUrl, queryParameters: {'user_id': userId});
     return NewPopularItemsModel.fromJson(response);
   }
 }

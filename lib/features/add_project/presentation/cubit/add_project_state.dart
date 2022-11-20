@@ -82,6 +82,34 @@ class ProjectAmenitiesSelected extends AddProjectState {}
 class ProjectNewImagePicked extends AddProjectState {}
 
 class ProjectChangeState extends AddProjectState {}
+class UpdateAdsPostLoaded extends AddProjectState {
+  final StatusResponse statusResponse;
+
+  UpdateAdsPostLoaded(this.statusResponse);
+
+  @override
+  List<Object?> get props => [statusResponse];
+}
+class UpdateAdsPostLoading extends AddProjectState {}
+
+class UpdateAdsPostError extends AddProjectState {
+  final String message;
+
+  UpdateAdsPostError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class UpdateAdsPostErrorResponse extends AddProjectState {
+  final StatusResponse statusResponse;
+
+  UpdateAdsPostErrorResponse(this.statusResponse);
+
+  @override
+  List<Object?> get props => [statusResponse];
+}
+
 
 class ChangePaymentState extends AddProjectState {}
 class ChangeUnitPlanState extends AddProjectState {}

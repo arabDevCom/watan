@@ -1,4 +1,6 @@
 import 'package:elwatn/core/utils/app_colors.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -36,7 +38,7 @@ class CustomAppBar extends StatelessWidget {
             child: Row(
               children: [
                  Text(
-                  "Map",
+                  translateText(AppStrings.mapText, context),
                   style: TextStyle(fontSize: 14,color:AppColors.primary),
                 ),
                 const SizedBox(width: 8),

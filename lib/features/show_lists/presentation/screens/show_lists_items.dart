@@ -8,6 +8,7 @@ import '../../../../core/utils/snackbar_method.dart';
 import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/show_loading_indicator.dart';
 import 'package:elwatn/core/widgets/error_widget.dart' as error_widget;
+import '../../../language/presentation/cubit/locale_cubit.dart';
 import '../cubit/show_lists_cubit.dart';
 import '../widgets/show_list_body_widget.dart';
 import '../widgets/show_project_list_body_widget.dart';
@@ -26,11 +27,21 @@ class _ShowListsState extends State<ShowLists> {
   @override
   void initState() {
     super.initState();
+    getPosts();
+  }
+
+  getPosts() {
     if (widget.index == 0) {
+      context.read<ShowListsCubit>().loginDataModel =
+          context.read<LocaleCubit>().loginDataModel;
       context.read<ShowListsCubit>().getShowListsData(pram: "clients");
     } else if (widget.index == 1) {
+      context.read<ShowListsCubit>().loginDataModel =
+          context.read<LocaleCubit>().loginDataModel;
       context.read<ShowListsCubit>().getShowListsData(pram: 'companies');
     } else {
+      context.read<ShowListsCubit>().loginDataModel =
+          context.read<LocaleCubit>().loginDataModel;
       context.read<ShowListsCubit>().getShowProjectListsData(pram: 'projects');
     }
   }
@@ -48,16 +59,15 @@ class _ShowListsState extends State<ShowLists> {
             return const ShowLoadingIndicator();
           } else if (state is ShowListsLoadedError) {
             return error_widget.ErrorWidget(
-              onPressed: () => context.read<ShowListsCubit>().getShowListsData(
-                    pram: widget.kind.toLowerCase(),
-                  ),
+              onPressed: () => getPosts(),
             );
           }
           return LazyLoadScrollView(
             isLoading: context.read<ShowListsCubit>().isLoadingVertical,
             onEndOfPage: () {
               if (widget.index == 0 || widget.index == 1) {
-                if (context.read<ShowListsCubit>().showLists.links!.next == null) {
+                if (context.read<ShowListsCubit>().showLists.links!.next ==
+                    null) {
                   snackBar(
                     translateText(AppStrings.noDataMessage, context),
                     context,
@@ -75,9 +85,10 @@ class _ShowListsState extends State<ShowLists> {
                 }
               } else {
                 if (context
-                        .read<ShowListsCubit>()
-                        .showProjectLists
-                        .nextPageUrl.isEmpty) {
+                    .read<ShowListsCubit>()
+                    .showProjectLists
+                    .nextPageUrl
+                    .isEmpty) {
                   snackBar(
                     translateText(AppStrings.noDataMessage, context),
                     context,
@@ -97,12 +108,19 @@ class _ShowListsState extends State<ShowLists> {
               }
             },
             child: widget.index == 0 || widget.index == 1
-                ? ShowListBodyWidget(
-                    mainItemModel: context.read<ShowListsCubit>().mainItemsList,
+                ? RefreshIndicator(
+                    onRefresh: () => getPosts(),
+                    child: ShowListBodyWidget(
+                      mainItemModel:
+                          context.read<ShowListsCubit>().mainItemsList,
+                    ),
                   )
-                : ShowProjectListBodyWidget(
-                    mainProjectItemModel:
-                        context.read<ShowListsCubit>().mainProjectItemsList,
+                : RefreshIndicator(
+                    onRefresh: () => getPosts(),
+                    child: ShowProjectListBodyWidget(
+                      mainProjectItemModel:
+                          context.read<ShowListsCubit>().mainProjectItemsList,
+                    ),
                   ),
           );
         },

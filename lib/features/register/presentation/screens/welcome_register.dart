@@ -28,10 +28,9 @@ class WelcomeRegister extends StatelessWidget {
       ),
       body: BlocBuilder<RegisterCubit, RegisterState>(
         builder: (BuildContext context, state) {
-          return SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -47,7 +46,7 @@ class WelcomeRegister extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                    const WelcomeChoose(),
-                  const Spacer(),
+                  // const Spacer(),
                   CustomButton(
                     text: translateText(AppStrings.nextBtnText, context),
                     color: AppColors.primary,
@@ -105,7 +104,7 @@ class WelcomeRegister extends StatelessWidget {
                       }
                     },
                   ),
-                  const Spacer(),
+                  // const Spacer(),
                 ],
               ),
             ),

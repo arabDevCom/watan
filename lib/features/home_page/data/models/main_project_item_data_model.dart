@@ -49,6 +49,7 @@ class MainProjectItemModel extends MainProjectItem {
     required super.paymentPlans,
     required super.unitDetails,
     required super.user,
+    required super.isFavourite,
   });
 
   factory MainProjectItemModel.fromJson(Map<String, dynamic> json) =>
@@ -84,12 +85,15 @@ class MainProjectItemModel extends MainProjectItem {
         minPriceOfMeter: json["min_price_of_meter"],
         maxPriceOfMeter: json["max_price_of_meter"],
         desc: json["desc"],
-        user:json["user"]!=null? MainItemUserModel.fromJson(json["user"]):MainItemUserModel(),
+        user: json["user"] != null
+            ? MainItemUserModel.fromJson(json["user"])
+            : MainItemUserModel(),
         paymentTerms: json["payment_terms"],
         paymentDetails: json["payment_details"],
         isInvested: json["is_invested"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        isFavourite: json["is_favourite"],
         images: List<FloorPlan>.from(
             json["images"].map((x) => FloorPlan.fromJson(x))),
         floorPlans: json["floor_plans"] != null
@@ -155,6 +159,7 @@ class MainProjectItemModel extends MainProjectItem {
         "payment_details": paymentDetails,
         "is_invested": isInvested,
         "user": user.toJson(),
+        "is_favourite": isFavourite,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
         "images": List<dynamic>.from(images!.map((x) => x)),

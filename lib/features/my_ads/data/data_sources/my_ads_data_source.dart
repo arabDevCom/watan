@@ -26,13 +26,17 @@ class MyAdsDataSource implements BaseMyAdsDataSource {
         headers: {"Authorization": token[0]},
       ),
     );
-    return ProfileAdsModel.fromJson(response);
+    return token[2] != '3'
+        ? ProfileAdsModel.fromJson(response)
+        : ProfileAdsModel.fromJsonProject(response);
   }
 
   @override
   Future<StatusResponse> deleteMyAds(List<String> token) async {
     final response = await apiConsumer.post(
-      EndPoints.deleteAdsUrl + token[0],
+      token[2] != '3'
+          ? EndPoints.deleteAdsUrl + token[0]
+          : EndPoints.deleteProjectUrl + token[0],
       body: {"_method": "delete"},
       options: Options(
         headers: {"Authorization": token[1]},

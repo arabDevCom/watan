@@ -115,7 +115,6 @@ class SelectCityWidget extends StatelessWidget {
         : kind == 'addProject'
             ? BlocBuilder<AddProjectCubit, AddProjectState>(
                 builder: (BuildContext context, state) {
-                  print('666666666666666666');
                   if (state is AddProjectCitiesLoading) {
                     return Stack(
                       children: [

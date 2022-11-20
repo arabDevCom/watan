@@ -21,7 +21,7 @@ class ContactWidget extends StatelessWidget {
       children: [
         ListTileAllDetailsWidget(
             image: ImageAssets.callIcon,
-            text: "Contact Details",
+            text: translateText(AppStrings.contactDetailsText, context),
             iconColor: AppColors.primary),
         CustomTextField(
           imageColor:  AppColors.primary,
@@ -29,7 +29,7 @@ class ContactWidget extends StatelessWidget {
               ? context.read<AddProjectCubit>().nameController
               : context.read<AddAdsCubit>().nameController,
           image: ImageAssets.idNameGoldIcon,
-          title: "Name",
+          title: translateText(AppStrings.nameHint, context),
           textInputType: TextInputType.text,
           validatorMessage:
               translateText(AppStrings.nameValidatorMessage, context),
@@ -41,7 +41,7 @@ class ContactWidget extends StatelessWidget {
               ? context.read<AddProjectCubit>().phoneController
               : context.read<AddAdsCubit>().phoneController,
           image: ImageAssets.mobileGoldIcon,
-          title: "Mobile Number",
+          title: translateText(AppStrings.phoneHint, context),
           textInputType: TextInputType.number,
           validatorMessage:
               translateText(AppStrings.phoneValidatorMessage, context),
@@ -53,7 +53,7 @@ class ContactWidget extends StatelessWidget {
               ? context.read<AddProjectCubit>().whatsappController
               : context.read<AddAdsCubit>().whatsappController,
           image: ImageAssets.whatsappGoldIcon,
-          title: "Whatsapp",
+          title: translateText(AppStrings.whatsappHint, context),
           textInputType: TextInputType.number,
           validatorMessage:
               translateText(AppStrings.whatsappValidatorMessage, context),

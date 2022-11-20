@@ -1,8 +1,10 @@
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/custom_textfield.dart';
 import '../../../add_project/presentation/cubit/add_project_cubit.dart';
 import '../../../details/presentation/widgets/list_tile_all_details.dart';
@@ -18,28 +20,28 @@ class PropertyDetailsWidget extends StatelessWidget {
       children: [
         ListTileAllDetailsWidget(
           image: ImageAssets.areaIcon,
-          text: "Property Details",
+          text: translateText(AppStrings.propertyDetailsText,context),
           iconColor: AppColors.primary,
         ),
         const SizedBox(height: 6),
         CustomTextField(
           image: "null",
-          title: "Title",
+          title: translateText(AppStrings.titleHint,context),
           controller: kind == 'addProject'
               ? context.read<AddProjectCubit>().titleController
               : context.read<AddAdsCubit>().titleController,
           textInputType: TextInputType.text,
-          validatorMessage: "Please Inter The Title",
+          validatorMessage: translateText(AppStrings.titleValidator,context),
         ),
         CustomTextField(
           image: "null",
-          title: "Description",
+          title: translateText(AppStrings.descHint,context),
           textInputType: TextInputType.text,
           minLine: 5,
           controller: kind == 'addProject'
               ? context.read<AddProjectCubit>().descController
               : context.read<AddAdsCubit>().descController,
-          validatorMessage: "Please Inter The Description",
+          validatorMessage: translateText(AppStrings.descValidator,context),
         ),
       ],
     );

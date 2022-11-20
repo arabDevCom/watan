@@ -1,9 +1,12 @@
 import 'package:elwatn/core/utils/app_colors.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:elwatn/core/utils/assets_manager.dart';
 import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
+
+import '../utils/translate_text_method.dart';
 
 // ignore: must_be_immutable
 class SocialMediaWidget extends StatefulWidget {
@@ -31,15 +34,20 @@ class SocialMediaWidget extends StatefulWidget {
 }
 
 class _SocialMediaWidgetState extends State<SocialMediaWidget> {
-  String hint = "Facebook";
+  late String hint;
+
   int controllerIndex = 0;
   TextEditingController facebookController = TextEditingController();
   TextEditingController instaController = TextEditingController();
   TextEditingController twitterController = TextEditingController();
   TextEditingController snapController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    if(controllerIndex==0){
+      hint = translateText(AppStrings.facebookText, context);
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Padding(
@@ -62,21 +70,21 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
                         IsLanguage.isEnLanguage(context)
                             ? widget.topLeft = 0
                             : widget.topLeft = 10;
-                        hint = "FaceBook";
+                        hint = translateText(AppStrings.facebookText, context);
                         controllerIndex = index;
                       });
                     } else if (index == 1) {
                       setState(() {
                         widget.topRight = 10;
                         widget.topLeft = 10;
-                        hint = "Instagram";
+                        hint = translateText(AppStrings.instagramText, context);
                         controllerIndex = index;
                       });
                     } else if (index == 2) {
                       setState(() {
                         widget.topRight = 10;
                         widget.topLeft = 10;
-                        hint = "Twitter";
+                        hint = translateText(AppStrings.twitterText, context);
                         controllerIndex = index;
                       });
                     } else if (index == 3) {
@@ -87,7 +95,7 @@ class _SocialMediaWidgetState extends State<SocialMediaWidget> {
                         IsLanguage.isEnLanguage(context)
                             ? widget.topLeft = 10
                             : widget.topLeft = 0;
-                        hint = "Snap Chat";
+                        hint = translateText(AppStrings.snapText, context);
                         controllerIndex = index;
                       });
                     }

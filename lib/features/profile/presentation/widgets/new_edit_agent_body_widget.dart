@@ -41,6 +41,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().nameController,
               image: ImageAssets.idNameGoldIcon,
               title: translateText(AppStrings.nameHint, context),
@@ -83,6 +84,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().emailController,
               image: ImageAssets.emailRegisterIcon,
               title: translateText(AppStrings.emailHint, context),
@@ -97,6 +99,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().phoneController,
               image: ImageAssets.mobileGoldIcon,
               title: translateText(AppStrings.phoneHint, context),
@@ -111,6 +114,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().whatsappController,
               image: ImageAssets.whatsappGoldIcon,
               validatorMessage: context.read<ProfileCubit>().statusCode != 422
@@ -125,6 +129,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().aboutController,
               image: ImageAssets.aboutIcon,
               validatorMessage: context.read<ProfileCubit>().statusCode != 422
@@ -140,6 +145,7 @@ class NewEditAgentBodyWidget extends StatelessWidget {
             const SizedBox(height: 12),
             CustomTextField(
               isAgent: true,
+              imageColor: AppColors.primary,
               controller: context.read<ProfileCubit>().passwordController,
               image: ImageAssets.lockGoldIcon,
               title: translateText(AppStrings.passwordHint, context),

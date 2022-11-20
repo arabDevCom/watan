@@ -66,7 +66,9 @@ class _ShowMoreScreenState extends State<ShowMoreScreen> {
                 } else {
                   snackBar("loading", context);
                   context.read<ShowMoreCubit>().getPaginationData(
-                      pram: context.read<ShowMoreCubit>().showMore.data!.links!.next!);
+                      link: context.read<ShowMoreCubit>().showMore.data!.links!.next!,
+                      pram: widget.kind.toLowerCase()=='popular'?"popular":"new"
+                  );
                 }
               },
               child: BodyWidget(

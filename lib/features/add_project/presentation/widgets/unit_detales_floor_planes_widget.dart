@@ -27,7 +27,6 @@ class _UnitDetailsFloorPlanesWidgetState
       listener: (context, state) {
         if (state is ChangePaymentState) {
           // setState(() {});
-          print('fffff');
         }
       },
       builder: (context, state) {

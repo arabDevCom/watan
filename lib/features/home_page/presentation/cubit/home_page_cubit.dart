@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/map_failure_message.dart';
+import '../../../login/data/models/login_data_model.dart';
 import '../../domain/entities/categories_domain_model.dart';
 import '../../domain/entities/new_popular_domain_model.dart';
 import '../../domain/entities/slider_domain_model.dart';
@@ -32,14 +36,33 @@ class HomePageCubit extends Cubit<HomePageState> {
   NewPopularItems? newPopularItems;
 
   getAllDataOfHomePage() {
-    getSliderData().whenComplete(
-      () => getCategoriesData().whenComplete(
-        () => getNewPopularItemsData().whenComplete(
-          () => emit(
-              HomePageGetAllDataFinish(slider!, categories!, newPopularItems!)),
+    getStoreUser().whenComplete(
+      () => getSliderData().whenComplete(
+        () => getCategoriesData().whenComplete(
+          () => getNewPopularItemsData().whenComplete(
+            () =>
+            emit(
+              HomePageGetAllDataFinish(
+                slider!,
+                categories!,
+                newPopularItems!,
+              ),
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  LoginDataModel? loginDataModel;
+
+  Future<void> getStoreUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user') != null) {
+      Map<String, dynamic> userMap = jsonDecode(prefs.getString('user')!);
+      LoginDataModel loginDataModel = LoginDataModel.fromJson(userMap);
+      this.loginDataModel = loginDataModel;
+    }
   }
 
   Future<void> getSliderData() async {
@@ -75,17 +98,15 @@ class HomePageCubit extends Cubit<HomePageState> {
   }
 
   Future<void> getNewPopularItemsData() async {
-    print("5555555");
     emit(HomePageLoading());
     Either<Failure, NewPopularItems> response =
-        await getNewAndPopularItemsUseCase(NoParams());
+        await getNewAndPopularItemsUseCase(
+            loginDataModel==null?'null':loginDataModel!.data!.user!.id.toString());
     emit(
       response.fold(
         (failure) => HomePageError(
             message: MapFailureMessage.mapFailureToMessage(failure)),
         (newPopularItems) {
-          print("ufufuufuwy");
-          print(newPopularItems);
           this.newPopularItems = newPopularItems;
           return HomePageNewsPopularItemsLoaded(
               newPopularItems: newPopularItems);

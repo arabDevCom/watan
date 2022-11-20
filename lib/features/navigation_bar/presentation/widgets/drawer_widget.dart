@@ -140,11 +140,8 @@ class DrawerWidget extends StatelessWidget {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   bool result = await prefs.remove('user');
                   if(result){
-                    print('staaaaart');
                     Navigator.pushReplacementNamed(context,Routes.initialRoute);
-                    context.read<LocaleCubit>();
-                  }else{
-                    print("يا دى النيله المنيله بسواد ");
+                    context.read<LocaleCubit>().loginDataModel=null;
                   }
                 },
               ):MyListTile(

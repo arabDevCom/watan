@@ -29,8 +29,8 @@ class _PropertyChooseWidgetState extends State<PropertyChooseWidget> {
   void initState() {
     super.initState();
 
-    if(widget.kind=='addAds'){
-      if(context.read<AddAdsCubit>().btnText=='update'){
+    if (widget.kind == 'addAds') {
+      if (context.read<AddAdsCubit>().btnText == 'update') {
         if (context.read<AddAdsCubit>().type == 1 ||
             context.read<AddAdsCubit>().type == 3 ||
             context.read<AddAdsCubit>().type == 5) {
@@ -38,7 +38,9 @@ class _PropertyChooseWidgetState extends State<PropertyChooseWidget> {
         } else {
           context.read<AddAdsCubit>().propertySelected = 1;
         }
-      }else if(widget.kind=='addProject'){
+      }
+    } else if (widget.kind == 'addProject') {
+      if (context.read<AddProjectCubit>().btnText == 'update') {
         if (context.read<AddProjectCubit>().type == 1 ||
             context.read<AddProjectCubit>().type == 3 ||
             context.read<AddProjectCubit>().type == 5) {
@@ -47,9 +49,7 @@ class _PropertyChooseWidgetState extends State<PropertyChooseWidget> {
           context.read<AddProjectCubit>().propertySelected = 1;
         }
       }
-      }
-
-
+    }
   }
 
   @override

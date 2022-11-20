@@ -7,6 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/snackbar_method.dart';
 import '../../../../core/widgets/show_loading_indicator.dart';
+import '../../../language/presentation/cubit/locale_cubit.dart';
 import '../../../navigation_bar/presentation/screens/navigator_bar.dart';
 import '../../../register/presentation/screens/welcome_register.dart';
 import '../cubit/login_cubit.dart';
@@ -44,6 +45,7 @@ class LoginScreen extends StatelessWidget {
                 Future.delayed(
                   const Duration(milliseconds: 400),
                   () {
+                    context.read<LocaleCubit>().getStoreUser();
                     Navigator.pushReplacement(
                       context,
                       PageTransition(
@@ -68,6 +70,7 @@ class LoginScreen extends StatelessWidget {
                 Future.delayed(
                   const Duration(milliseconds: 400),
                   () {
+                    context.read<LocaleCubit>().getStoreUser();
                     Navigator.pushReplacement(
                       context,
                       PageTransition(
@@ -81,6 +84,7 @@ class LoginScreen extends StatelessWidget {
                       const Duration(milliseconds: 700),
                       () {
                         context.read<LoginCubit>().loginSuccessfully();
+
                       },
                     );
                   },

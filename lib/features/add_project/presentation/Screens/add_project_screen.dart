@@ -3,7 +3,6 @@ import 'package:elwatn/core/widgets/custom_button.dart';
 import 'package:elwatn/core/widgets/show_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:elwatn/core/widgets/error_widget.dart' as error_widget;
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 import '../../../../core/utils/app_colors.dart';
@@ -17,41 +16,78 @@ import '../../../add/presentation/widgets/container_dots_pick_videos.dart';
 import '../../../add/presentation/widgets/property_details_widget.dart';
 import '../../../add/presentation/widgets/select_your_location.dart';
 import '../../../filter/presentation/widgets/property_type.dart';
-import '../../../login/data/models/login_data_model.dart';
+import '../../../home_page/domain/entities/main_project_item_domain_model.dart';
+import '../../../my_ads/presentation/cubit/my_ads_cubit.dart';
 import '../cubit/add_project_cubit.dart';
 import '../widgets/payment_planes_widget.dart';
 import '../widgets/unit_detales_floor_planes_widget.dart';
 
-class AddProjectScreen extends StatelessWidget {
-  AddProjectScreen({Key? key, required this.loginModel}) : super(key: key);
+class AddProjectScreen extends StatefulWidget {
+  AddProjectScreen({
+    Key? key,
+    this.isUpdate = false,
+    this.mainProjectItem,
+  }) : super(key: key);
 
-  final LoginDataModel loginModel;
+  final bool isUpdate;
+  final MainProjectItem? mainProjectItem;
+
+  @override
+  State<AddProjectScreen> createState() => _AddProjectScreenState();
+}
+
+class _AddProjectScreenState extends State<AddProjectScreen> {
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    if (!widget.isUpdate) {
+      context.read<AddProjectCubit>().btnText = '';
+    }
+    if (context.read<AddProjectCubit>().btnText != 'update') {
+      context.read<AddProjectCubit>().clearData();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddProjectCubit, AddProjectState>(
       builder: (context, state) {
         AddProjectCubit addProjectCubit = context.read<AddProjectCubit>();
+        if (state is UpdateAdsPostLoaded) {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            snackBar("SuccessFully Updated", context, color: AppColors.success);
+            context.read<MyAdsCubit>().getMyProfileAds(
+                  context
+                      .read<AddProjectCubit>()
+                      .loginDataModel!
+                      .data!
+                      .accessToken!,
+                  'myAds',
+                  '3',
+                );
+            Future.delayed(Duration(milliseconds: 500), () {
+              Navigator.pop(context);
+            });
+          });
+          return const ShowLoadingIndicator();
+        }
         if (state is AddProjectPostLoaded) {
           Future.delayed(const Duration(milliseconds: 500), () {
             snackBar("SuccessFully", context, color: AppColors.success);
           });
         }
         if (state is AddProjectPostError ||
-            state is AddProjectPostErrorResponse) {
+            state is AddProjectPostErrorResponse ||
+            state is UpdateAdsPostErrorResponse ||
+            state is UpdateAdsPostError) {
           Future.delayed(const Duration(milliseconds: 500), () {
             snackBar("Error", context, color: AppColors.error);
           });
         }
-        if (state is AddProjectPostLoading) {
+        if (state is AddProjectPostLoading || state is UpdateAdsPostLoading) {
           return const ShowLoadingIndicator();
-        } else if (state is AddProjectPostError) {
-          return error_widget.ErrorWidget(
-            onPressed: () => context
-                .read<AddProjectCubit>()
-                .addProjectPost(loginModel.data!.accessToken!),
-          );
         }
         return SingleChildScrollView(
           child: Form(
@@ -64,12 +100,19 @@ class AddProjectScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: DefaultTabController(
                       length: 3,
-                      initialIndex: 0,
+                      initialIndex: widget.isUpdate
+                          ? widget.mainProjectItem!.projectStatus == 'new'
+                              ? 0
+                              : widget.mainProjectItem!.projectStatus ==
+                                      'ongoing'
+                                  ? 1
+                                  : 2
+                          : 0,
                       child: Material(
                         color: AppColors.white,
                         child: TabBar(
                           indicatorColor: AppColors.primary,
-                          tabs: const[
+                          tabs: const [
                             Tab(
                               text: 'New',
                             ),
@@ -84,11 +127,14 @@ class AddProjectScreen extends StatelessWidget {
                           unselectedLabelColor: AppColors.black,
                           onTap: (index) {
                             if (index == 0) {
-                              context.read<AddProjectCubit>().statusProject = 'new';
-                            } else if(index==1) {
-                              context.read<AddProjectCubit>().statusProject = 'ongoing';
-                            }else{
-                              context.read<AddProjectCubit>().statusProject = 'finished';
+                              context.read<AddProjectCubit>().statusProject =
+                                  'new';
+                            } else if (index == 1) {
+                              context.read<AddProjectCubit>().statusProject =
+                                  'ongoing';
+                            } else {
+                              context.read<AddProjectCubit>().statusProject =
+                                  'finished';
                             }
                           },
                           indicator: RectangularIndicator(
@@ -118,20 +164,26 @@ class AddProjectScreen extends StatelessWidget {
                   const AmenitiesAddWidget(
                       isSelected: true, kind: 'addProject'),
                   const GrayLine(),
-                  const SelectYourLocation(),
+                  const SelectYourLocation(kindOfSelected: 'addProject'),
                   const GrayLine(),
-                  const PickImagesContainerWidget(
-                      title: "Image", kind: 'addProject',isUpdate: false),
+                  PickImagesContainerWidget(
+                    title: "Image",
+                    kind: 'addProject',
+                    isUpdate: widget.isUpdate,
+                  ),
                   const GrayLine(),
-                  const PickImagesContainerWidget(
-                      title: "Floor Planes", kind: 'addProject',isUpdate: false),
+                  PickImagesContainerWidget(
+                    title: "Floor Planes",
+                    kind: 'addProject',
+                    isUpdate: widget.isUpdate,
+                  ),
                   const GrayLine(),
                   const PickVideosContainerWidget(
                       title: "Video", kind: 'addProject'),
                   const GrayLine(),
                   const ContactWidget(kind: 'addProject'),
                   CustomButton(
-                    text: "Add Property",
+                    text: widget.isUpdate ? 'Update' : "Add Property",
                     color: AppColors.primary,
                     paddingHorizontal: 60,
                     onClick: () {
@@ -145,27 +197,32 @@ class AddProjectScreen extends StatelessWidget {
                         } else if (addProjectCubit.type == -1) {
                           snackBar("Please Select Your Property Type", context,
                               color: AppColors.primary);
-                        } else if (addProjectCubit.images.isEmpty) {
+                        } else if (addProjectCubit.image.isEmpty) {
                           snackBar("Please Select Your Image ", context,
                               color: AppColors.primary);
-                        }else if (addProjectCubit.floorPlans.isEmpty) {
+                        } else if (addProjectCubit.floorPlan.isEmpty) {
                           snackBar("Please Select Your Floor Plans ", context,
                               color: AppColors.primary);
-                        }else if (addProjectCubit.unitPlanArea.isEmpty) {
+                        } else if (addProjectCubit.unitPlanArea.isEmpty) {
                           snackBar("Please inter Some Units ", context,
                               color: AppColors.primary);
-                        }else if (addProjectCubit.unitPlanArea.length<2) {
+                        } else if (addProjectCubit.unitPlanArea.length < 2) {
                           snackBar("Your Should Insert more units ", context,
                               color: AppColors.primary);
-                        }else if (addProjectCubit.paymentPlanPresent.isEmpty) {
+                        } else if (addProjectCubit.paymentPlanPresent.isEmpty) {
                           snackBar("Please inter Some Payment Plans ", context,
                               color: AppColors.primary);
-                        }else if (addProjectCubit.paymentPlanPresent.length<2) {
-                          snackBar("Your Should Insert more Payment Plans ", context,
+                        } else if (addProjectCubit.paymentPlanPresent.length <
+                            2) {
+                          snackBar(
+                              "Your Should Insert more Payment Plans ", context,
                               color: AppColors.primary);
                         } else {
-                          print("all is done");
-                          // context.read<AddProjectCubit>().addProjectPost(loginModel.data!.accessToken!);
+                          widget.isUpdate
+                              ? context.read<AddProjectCubit>().updateAdsPost()
+                              : context
+                                  .read<AddProjectCubit>()
+                                  .addProjectPost();
                         }
                       }
                     },
@@ -180,37 +237,3 @@ class AddProjectScreen extends StatelessWidget {
     );
   }
 }
-
-// // context.read<AddAdsCubit>().translateText();
-// print(
-//     'furnished : ${context.read<AddAdsCubit>().furnished}');
-// print('status : ${context.read<AddAdsCubit>().status}');
-// print('currency : ${context.read<AddAdsCubit>().currency}');
-// print(
-//     'title : ${context.read<AddAdsCubit>().titleController.text}');
-// print(
-//     'desc : ${context.read<AddAdsCubit>().descController.text}');
-// print(
-//     'price : ${context.read<AddAdsCubit>().priceController.text}');
-// print(
-//     'area :${context.read<AddAdsCubit>().areaController.text}');
-// print(
-//     'name : ${context.read<AddAdsCubit>().nameController.text}');
-// print(
-//     'phone : ${context.read<AddAdsCubit>().phoneController.text}');
-// print(
-//     'whatsapp : ${context.read<AddAdsCubit>().whatsappController.text}');
-// print('bathroom : ${context.read<AddAdsCubit>().bathroom}');
-// print(
-//     'livingRoom : ${context.read<AddAdsCubit>().livingRoom}');
-// print(
-//     'diningRoom : ${context.read<AddAdsCubit>().diningRoom}');
-// print('kitchen : ${context.read<AddAdsCubit>().kitchen}');
-// print('cityId : ${context.read<AddAdsCubit>().cityId}');
-// print(
-//     'locationId : ${context.read<AddAdsCubit>().locationId}');
-// print('type : ${context.read<AddAdsCubit>().type}');
-// print(
-//     'amenitiesId : ${context.read<AddAdsCubit>().amenitiesId}');
-// print('images : ${context.read<AddAdsCubit>().image}');
-// print('----------------------------------------');

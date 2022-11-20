@@ -8,6 +8,6 @@ import '../entities/slider_domain_model.dart';
 abstract class BaseHomeRepositories{
   Future<Either<Failure, HomeSlider>> getSliderData();
   Future<Either<Failure, Categories>> getCategoriesData();
-  Future<Either<Failure, NewPopularItems>> getNewPopularItems();
+  Future<Either<Failure, NewPopularItems>> getNewPopularItems(String userId);
 
 }

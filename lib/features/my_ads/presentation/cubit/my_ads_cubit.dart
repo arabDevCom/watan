@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/map_failure_message.dart';
 import '../../../home_page/data/models/main_item_data_model.dart';
+import '../../../home_page/data/models/main_project_item_data_model.dart';
 import '../../../login/data/models/login_data_model.dart';
 import '../../data/models/my_ads_data_model.dart';
 import '../../domain/use_cases/change_status_use_case.dart';
@@ -23,6 +24,7 @@ class MyAdsCubit extends Cubit<MyAdsState> {
 
   List<MainItemModel> forSaleList = [];
   List<MainItemModel> forRentList = [];
+  List<MainProjectItemModel> forSaleProjectList = [];
   late LoginDataModel loginDataModel;
 
   final GetMyAdsUseCase getMyAdsUseCase;
@@ -42,27 +44,31 @@ class MyAdsCubit extends Cubit<MyAdsState> {
     return loginDataModel;
   }
 
-  getMyProfileAds(String token,String kind) async {
+  getMyProfileAds(String token, String kind, String userType) async {
     emit(MyAdsLoading());
-    final response = await getMyAdsUseCase([token,kind]);
+    final response = await getMyAdsUseCase([token, kind, userType]);
     emit(
       response.fold(
         (failure) => MyAdsError(
           MapFailureMessage.mapFailureToMessage(failure),
         ),
         (profileAdsModel) {
-          forSaleList = profileAdsModel.data!.forSale!;
-          forRentList = profileAdsModel.data!.forRent!;
+          if (userType != '3') {
+            forSaleList = profileAdsModel.data!.forSale!;
+            forRentList = profileAdsModel.data!.forRent!;
+          } else {
+            forSaleProjectList = profileAdsModel.data!.forSaleProject!;
+          }
           return MyAdsLoaded(profileAdsModel);
         },
       ),
     );
   }
 
-  deleteMyProfileAds(String id,String kind) async {
+  deleteMyProfileAds(String id, String kind, String userType) async {
     emit(MyAdsLoading());
-    final response =
-        await deleteMyAdsUseCase([id, loginDataModel.data!.accessToken!]);
+    final response = await deleteMyAdsUseCase(
+        [id, loginDataModel.data!.accessToken!, userType]);
 
     response.fold(
       (failure) =>
@@ -71,14 +77,14 @@ class MyAdsCubit extends Cubit<MyAdsState> {
         if (response.code == 200) {
           emit(MyAdsDeletedSuccessfully());
           Future.delayed(const Duration(milliseconds: 700), () {
-            getMyProfileAds(loginDataModel.data!.accessToken!,kind);
+            getMyProfileAds(loginDataModel.data!.accessToken!, kind, userType);
           });
         }
       },
     );
   }
 
-  changeStatusMyProfileAds(String id,String kind) async {
+  changeStatusMyProfileAds(String id, String kind, String userType) async {
     emit(MyAdsLoading());
     final response =
         await changeStatusMyAdsUseCase([id, loginDataModel.data!.accessToken!]);
@@ -90,7 +96,7 @@ class MyAdsCubit extends Cubit<MyAdsState> {
         if (response.code == 200) {
           emit(MyAdsChangeStatusSuccessfully());
           Future.delayed(const Duration(milliseconds: 700), () {
-            getMyProfileAds(loginDataModel.data!.accessToken!,kind);
+            getMyProfileAds(loginDataModel.data!.accessToken!, kind, userType);
           });
         }
       },

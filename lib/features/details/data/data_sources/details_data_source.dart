@@ -23,7 +23,9 @@ class DetailsDataSource extends BaseDetailsDataSource {
 
   @override
   Future<MorePostsDetails> morePosts(String id) async {
-    final response = await apiConsumer.get("${EndPoints.morePostsUrl}/$id");
+    final response = await apiConsumer.get(
+        "${EndPoints.morePostsUrl}/${id.split('@')[0]}",
+        queryParameters: {'user_id': id.split('@')[1]});
     return MorePostsDetails.fromJson(response);
   }
 

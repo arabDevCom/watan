@@ -1,3 +1,6 @@
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/core/utils/is_language_methods.dart';
+import 'package:elwatn/core/widgets/scound_main_project_item.dart';
 import 'package:elwatn/core/widgets/show_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +9,7 @@ import 'package:scroll_navigation/navigation/title_scroll_navigation.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/snackbar_method.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/scound_main_item.dart';
 import '../../../login/domain/entities/login_domain_model.dart';
 import '../cubit/my_ads_cubit.dart';
@@ -33,6 +37,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           (value) => context.read<MyAdsCubit>().getMyProfileAds(
                 value.data!.accessToken!,
                 widget.kindOfClass,
+                value.data!.user!.userType.toString(),
               ),
         );
   }
@@ -43,7 +48,9 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: Text(
-          widget.kindOfClass == 'myAds' ? "My Ads" : "My Solid",
+          widget.kindOfClass == 'myAds'
+              ? translateText(AppStrings.myAdsText, context)
+              : translateText(AppStrings.mySolidText, context),
           style: TextStyle(color: AppColors.black),
         ),
         iconTheme: IconThemeData(
@@ -56,16 +63,17 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           if (state is MyAdsDeletedSuccessfully) {
             Future.delayed(const Duration(seconds: 2), () {
               snackBar(
-                "Delete Successfully",
+                translateText(AppStrings.deleteSuccessfullyMessage, context),
                 context,
                 color: AppColors.success,
               );
             });
+            return const ShowLoadingIndicator();
           }
           if (state is MyAdsChangeStatusSuccessfully) {
             Future.delayed(const Duration(seconds: 2), () {
               snackBar(
-                "Moved To your Solid Successfully",
+                translateText(AppStrings.moveToSoldMessage, context),
                 context,
                 color: AppColors.success,
               );
@@ -76,68 +84,147 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           } else if (state is MyAdsError) {
             return error_widget.ErrorWidget(
               onPressed: () => context.read<MyAdsCubit>().getMyProfileAds(
-                  widget.loginModel.data!.accessToken!, widget.kindOfClass),
+                    widget.loginModel.data!.accessToken!,
+                    widget.kindOfClass,
+                    widget.loginModel.data!.user!.userType.toString(),
+                  ),
             );
           } else {
-            return TitleScrollNavigation(
-              showIdentifier: false,
-              barStyle: TitleNavigationBarStyle(
-                style: const TextStyle(fontWeight: FontWeight.bold),
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width / 6,
-                  vertical: 12,
-                ),
-                spaceBetween: MediaQuery.of(context).size.width / 3,
-                activeColor: AppColors.primary,
-                background: AppColors.buttonBackground,
-              ),
-              titles: const [
-                "For Sale",
-                "For Rent",
-              ],
-              pages: [
-                RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<MyAdsCubit>().getMyProfileAds(
-                        widget.loginModel.data!.accessToken!,
-                        widget.kindOfClass);
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...List.generate(
-                          context.read<MyAdsCubit>().forSaleList.length,
-                          (index) => SecondMainItemWidget(
-                            mainItemModel:
-                                context.read<MyAdsCubit>().forSaleList[index],
-                            isMyAdds:
-                                widget.kindOfClass == 'myAds' ? true : false,
+            return widget.loginModel.data!.user!.userType != 3
+                ? TitleScrollNavigation(
+                    showIdentifier: false,
+                    barStyle: TitleNavigationBarStyle(
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: IsLanguage.isEnLanguage(context)
+                            ? MediaQuery.of(context).size.width / 6
+                            : MediaQuery.of(context).size.width / 4,
+                        vertical: 12,
+                      ),
+                      spaceBetween: MediaQuery.of(context).size.width / 3,
+                      activeColor: AppColors.primary,
+                      background: AppColors.buttonBackground,
+                    ),
+                    titles: [
+                      translateText(AppStrings.statusSaleText, context),
+                      translateText(AppStrings.statusRentText, context),
+                    ],
+                    pages: [
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          context.read<MyAdsCubit>().getMyProfileAds(
+                                widget.loginModel.data!.accessToken!,
+                                widget.kindOfClass,
+                                widget.loginModel.data!.user!.userType
+                                    .toString(),
+                              );
+                        },
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                context.read<MyAdsCubit>().forSaleList.length,
+                                (index) => SecondMainItemWidget(
+                                  mainItemModel: context
+                                      .read<MyAdsCubit>()
+                                      .forSaleList[index],
+                                  isMyAdds: widget.kindOfClass == 'myAds'
+                                      ? true
+                                      : false,
+                                ),
+                              ),
+                              Container(
+                                height: 800,
+                              )
+                            ],
                           ),
                         ),
-                        Container(
-                          height: 800,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...List.generate(
-                        context.read<MyAdsCubit>().forRentList.length,
-                        (index) => SecondMainItemWidget(
-                          mainItemModel:
-                              context.read<MyAdsCubit>().forRentList[index],
-                          isMyAdds:
-                              widget.kindOfClass == 'myAds' ? true : false,
+                      ),
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          context.read<MyAdsCubit>().getMyProfileAds(
+                                widget.loginModel.data!.accessToken!,
+                                widget.kindOfClass,
+                                widget.loginModel.data!.user!.userType
+                                    .toString(),
+                              );
+                        },
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                context.read<MyAdsCubit>().forRentList.length,
+                                (index) => SecondMainItemWidget(
+                                  mainItemModel: context
+                                      .read<MyAdsCubit>()
+                                      .forRentList[index],
+                                  isMyAdds: widget.kindOfClass == 'myAds'
+                                      ? true
+                                      : false,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ],
-            );
+                  )
+                : TitleScrollNavigation(
+                    showIdentifier: false,
+                    barStyle: TitleNavigationBarStyle(
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width / 2 - 40,
+                        vertical: 12,
+                      ),
+                      activeColor: AppColors.primary,
+                      background: AppColors.buttonBackground,
+                    ),
+                    titles: [
+                      translateText(AppStrings.statusSaleText, context),
+                    ],
+                    pages: [
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          context.read<MyAdsCubit>().getMyProfileAds(
+                                widget.loginModel.data!.accessToken!,
+                                widget.kindOfClass,
+                                widget.loginModel.data!.user!.userType
+                                    .toString(),
+                              );
+                        },
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                context
+                                    .read<MyAdsCubit>()
+                                    .forSaleProjectList
+                                    .length,
+                                (index) => SecondMainProjectItemWidget(
+                                  mainProjectItemModel: context
+                                      .read<MyAdsCubit>()
+                                      .forSaleProjectList[index],
+                                  isMyAdds: widget.kindOfClass == 'myAds'
+                                      ? true
+                                      : false,
+                                ),
+                              ),
+                              context
+                                          .read<MyAdsCubit>()
+                                          .forSaleProjectList
+                                          .length <
+                                      3
+                                  ? Container(
+                                      height: 500,
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
           }
         },
       ),

@@ -1,3 +1,4 @@
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/is_language_methods.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../cubit/filter_cubit.dart';
 import 'dropdown_search.dart';
 
@@ -14,13 +16,7 @@ class AgencyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> getAgentList() {
-      if (IsLanguage.isEnLanguage(context)) {
-        return context.read<FilterCubit>().agentNameEn;
-      } else if (IsLanguage.isArLanguage(context)) {
-        return context.read<FilterCubit>().agentNameAr;
-      } else {
-        return context.read<FilterCubit>().agentNameKu;
-      }
+        return context.read<FilterCubit>().agentName;
     }
     return Column(
       children: [
@@ -32,8 +28,8 @@ class AgencyWidget extends StatelessWidget {
               height: 20,
             ),
             const SizedBox(width: 10),
-            const Text(
-              "Agency",
+             Text(
+              translateText(AppStrings.agencyText,context),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             )
           ],
@@ -47,7 +43,7 @@ class AgencyWidget extends StatelessWidget {
                   DropdownSearchWidget(
                     isEnable:
                     context.read<FilterCubit>().isAgentDropdown,
-                    labelText: "Select Agent",
+                    labelText: translateText(AppStrings.selectAgentText,context),
                     icon: Icons.search,
                     dropdownList: getAgentList(),
                   ),
@@ -61,7 +57,7 @@ class AgencyWidget extends StatelessWidget {
             } else if (state is FilterAgentsLoaded) {
               return DropdownSearchWidget(
                 isEnable: context.read<FilterCubit>().isAgentDropdown,
-                labelText: "Select Agent",
+                labelText: translateText(AppStrings.selectAgentText,context),
                 icon: Icons.search,
                 dropdownList: getAgentList(),
               );
@@ -73,7 +69,7 @@ class AgencyWidget extends StatelessWidget {
                     child: DropdownSearchWidget(
                       isEnable:
                       context.read<FilterCubit>().isAgentDropdown,
-                      labelText: "Select Agent",
+                      labelText: translateText(AppStrings.selectAgentText,context),
                       icon: Icons.search,
                       dropdownList: getAgentList(),
                     ),
@@ -96,7 +92,7 @@ class AgencyWidget extends StatelessWidget {
             } else {
               return DropdownSearchWidget(
                 isEnable: context.read<FilterCubit>().isAgentDropdown,
-                labelText: "Select Agent",
+                labelText: translateText(AppStrings.selectAgentText,context),
                 icon: Icons.search,
                 dropdownList: getAgentList(),
               );

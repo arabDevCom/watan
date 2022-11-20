@@ -7,6 +7,7 @@ import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/convert_numbers_method.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../../core/widgets/network_image.dart';
 import '../../../../core/widgets/views.dart';
 import '../../../details/presentation/screens/details.dart';
@@ -18,6 +19,23 @@ class HomeItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String type = '';
+    if (mainItem.type == '1') {
+      type = translateText(AppStrings.apartmentText, context);
+    } else if (mainItem.type == '2') {
+      type = translateText(AppStrings.villaText, context);
+    } else if (mainItem.type == '3') {
+      type = translateText(AppStrings.industrialLandText, context);
+    } else if (mainItem.type == '4') {
+      type = translateText(AppStrings.commercialPlotText, context);
+    } else if (mainItem.type == '5') {
+      type = translateText(AppStrings.shopText, context);
+    } else if (mainItem.type == '6') {
+      type = translateText(AppStrings.officeText, context);
+    } else {
+      type = mainItem.type!;
+    }
+
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -41,14 +59,6 @@ class HomeItemWidget extends StatelessWidget {
                           width: double.infinity,
                         )
                       : Image.asset(ImageAssets.watanLogo),
-                  Positioned(
-                    top: 16,
-                    left: 9,
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: AppColors.white,
-                    ),
-                  ),
                   Positioned(
                     top: 8,
                     right: 4,
@@ -97,7 +107,7 @@ class HomeItemWidget extends StatelessWidget {
                         ),
                         //ToDo Categories Language
                         Text(
-                          mainItem.type ?? "No Type",
+                          type,
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -140,7 +150,7 @@ class HomeItemWidget extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(right: 8, left: 8),
                               child: Text(
-                                "${AppLocalizations.of(context)!.isEnLocale ? mainItem.bedroom ?? "0" : replaceToArabicNumber(mainItem.bedroom.toString())}",
+                                "${mainItem.bedroom == 0 ? translateText(AppStrings.studioText, context) : IsLanguage.isEnLanguage(context) ? mainItem.bedroom ?? "0" : replaceToArabicNumber(mainItem.bedroom.toString())}",
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),

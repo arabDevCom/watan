@@ -12,7 +12,6 @@ import '../../../login/data/models/login_data_model.dart';
 import '../../../my_ads/presentation/screens/my_ads.dart';
 import '../../../packages/presentation/screens/package_screen.dart';
 import '../../../register/presentation/cubit/register_cubit.dart';
-import '../../../register/presentation/screens/register_company.dart';
 import '../../../register/presentation/screens/register_screen.dart';
 import '../cubit/profile_cubit.dart';
 
@@ -93,12 +92,11 @@ class BodyProfileWidget extends StatelessWidget {
                   context.read<RegisterCubit>().putDataToEdit(loginDataModel);
                   print(loginDataModel.data!.user!.userType);
                   if (loginDataModel.data!.user!.userType == 1) {
-                    print("if");
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return RegisterScreen(
-                            title: 'Update Profile',
+                            title: translateText(AppStrings.updateProfileTitle, context),
                             isUser: true,
                           );
                         },
@@ -110,7 +108,7 @@ class BodyProfileWidget extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) {
                           return RegisterScreen(
-                            title: 'Update Profile',
+                            title: translateText(AppStrings.updateProfileTitle, context),
                             isUser: false,
                           );
                         },
@@ -129,13 +127,13 @@ class BodyProfileWidget extends StatelessWidget {
                     title:
                         "\n${translateText(AppStrings.deleteAccountText, context)}",
                     desc:
-                        "\n\nNote that , When you Delete your Account your Ads will Delete\n\n",
+                        "\n\n${translateText(AppStrings.waringDeleteAccountMessage, context)}\n\n",
                     buttons: [
                       DialogButton(
                         onPressed: () => Navigator.pop(context),
                         color: AppColors.buttonBackground,
-                        child: const Text(
-                          "Cancel",
+                        child: Text(
+                          translateText(AppStrings.cancelBtn, context),
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
@@ -145,8 +143,8 @@ class BodyProfileWidget extends StatelessWidget {
                                   loginDataModel.data!.accessToken!,
                                 ),
                         color: AppColors.error,
-                        child: const Text(
-                          "Confirm",
+                        child: Text(
+                          translateText(AppStrings.confirmBtn, context),
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )

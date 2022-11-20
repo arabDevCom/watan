@@ -43,19 +43,14 @@ class RegistrationDataSource implements BaseRegistrationDataSource {
   @override
   Future<RegistrationDataModel> postRegisterData(
       RegistrationUserModel user) async {
-    var fields = FormData.fromMap(
-      {
-        "email": user.email,
-        "password": user.password,
-        "phone": user.phone,
-        "whatsapp": user.whatsapp,
-        "name": user.name,
-        "user_type": user.userType.toString(),
-        "image": await MultipartFile.fromFile(user.imagePath!)
-      },
+    final response = await apiConsumer.newPost(
+      EndPoints.registerUrl,
+      body: user.userType == '1'
+          ? user.toJsonRegisterUser()
+          : user.toJsonRegisterProject(),
+      formDataIsEnabled: true,
     );
-    Response response = await dio.post(EndPoints.registerUrl, data: fields);
-    return RegistrationDataModel.fromJson(response.data);
+    return RegistrationDataModel.fromJson(jsonDecode(response.data));
   }
 
   @override
@@ -104,8 +99,8 @@ class RegistrationDataSource implements BaseRegistrationDataSource {
       EndPoints.resetPasswordUrl,
       body: {
         "code": passwords[0],
-        'password':passwords[1],
-        'password_confirmation':passwords[1],
+        'password': passwords[1],
+        'password_confirmation': passwords[1],
       },
     );
     return StatusResponse.fromJson(response);

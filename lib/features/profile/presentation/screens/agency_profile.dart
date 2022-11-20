@@ -80,8 +80,11 @@ class AgencyProfileScreen extends StatelessWidget {
                             text: "null",
                             icon: Icons.edit,
                             onClick: () {
-                              context.read<ProfileCubit>().agentBtnText = "update";
-                              context.read<ProfileCubit>().putDataToEdit(agentModel);
+                              context.read<ProfileCubit>().agentBtnText =
+                                  "update";
+                              context
+                                  .read<ProfileCubit>()
+                                  .putDataToEdit(agentModel);
                               Navigator.pushNamed(
                                 context,
                                 Routes.newAndEditAgencyScreenRoute,
@@ -102,7 +105,7 @@ class AgencyProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               ListTileAllDetailsWidget(
                 image: ImageAssets.propertyIcon,
-                text: "properties : 8",
+                text: agentModel.name!,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -142,7 +145,9 @@ class AgencyProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Align(
-                      alignment: Alignment.bottomLeft,
+                      alignment: IsLanguage.isEnLanguage(context)
+                          ? Alignment.bottomLeft
+                          : Alignment.bottomRight,
                       child:
                           Text(translateText(AppStrings.aboutUsText, context)),
                     ),
@@ -159,9 +164,12 @@ class AgencyProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   children: [
-                    const Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text("S"),
+                    Align(
+                      alignment: IsLanguage.isEnLanguage(context)
+                          ? Alignment.bottomLeft
+                          : Alignment.bottomRight,
+                      child: Text(
+                          translateText(AppStrings.socialMediaTitle, context,),),
                     ),
                     const SizedBox(height: 12),
                     SocialMediaWidget(
@@ -184,7 +192,7 @@ class AgencyProfileScreen extends StatelessWidget {
                 whatsapp: agentModel.phoneCode! + agentModel.whatsapp!,
                 phone: agentModel.phone!,
                 type: 'agent',
-                userId:0,
+                userId: 0,
                 postId: 0,
               ),
               const Divider(thickness: 1),

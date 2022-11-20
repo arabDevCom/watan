@@ -29,9 +29,7 @@ class FilterAgentList extends Equatable{
 class FilterAgentListDatum extends Equatable{
   const FilterAgentListDatum({
     required this.id,
-    required this.nameAr,
-    required this.nameEn,
-    required this.nameKu,
+    required this.name,
     required this.image,
     required this.about,
     required this.phone,
@@ -51,14 +49,12 @@ class FilterAgentListDatum extends Equatable{
   });
 
   final int? id;
-  final String? nameAr;
-  final String? nameEn;
-  final String? nameKu;
+  final String? name;
   final String? image;
   final String? about;
   final String? phone;
   final String? email;
-  final String? languages;
+  final List<String>? languages;
   final String? password;
   final String? facebook;
   final String? instagram;
@@ -75,9 +71,7 @@ class FilterAgentListDatum extends Equatable{
   @override
   List<Object?> get props => [
     id,
-    nameAr,
-    nameEn,
-    nameKu,
+    name,
     image,
     about,
     phone,

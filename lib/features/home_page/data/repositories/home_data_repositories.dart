@@ -38,14 +38,12 @@ class HomePageRepositories implements BaseHomeRepositories {
   }
 
   @override
-  Future<Either<Failure, NewPopularItems>> getNewPopularItems() async {
+  Future<Either<Failure, NewPopularItems>> getNewPopularItems(String userId) async {
     try {
-      final newPopularData = await homePageDataSource.getNewPopularItems();
-      print("1111111");
+      final newPopularData = await homePageDataSource.getNewPopularItems(userId);
       print(newPopularData);
       return Right(newPopularData);
     } on ServerException {
-      print("9999999");
       return Left(ServerFailure());
     }
   }

@@ -12,7 +12,7 @@ class ImageAssets {
   static const String itemImage3 = '$imagePath/item_image3.png';
   static const String itemImage4 = '$imagePath/item_image4.png';
   static const String companyLogo = '$imagePath/company_logo.png';
-  static const String watanLogo = '$imagePath/watan_logo.png';
+  static const String watanLogo = '$imagePath/watanLogo.png';
   static const String logoIcon = '$imagePath/logo.png';
   static const String bloggsImage = '$imagePath/bloggs_image.png';
   static const String mapImage = '$imagePath/map.png';

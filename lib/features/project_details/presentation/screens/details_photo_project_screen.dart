@@ -28,7 +28,6 @@ class _DetailsPhotoProjectScreenState extends State<DetailsPhotoProjectScreen> {
   void initState() {
     super.initState();
     if (widget.mainProjectItemModel.videos.isNotEmpty) {
-      print("+++++++++++++++++ ${widget.mainProjectItemModel.videos[0].attachment!}");
       _controller = VideoPlayerController.network(
           widget.mainProjectItemModel.videos[0].attachment!);
       _initializeVideoPlayerFuture = _controller.initialize();

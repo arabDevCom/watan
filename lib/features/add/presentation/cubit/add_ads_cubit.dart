@@ -22,6 +22,7 @@ import '../../../home_page/domain/entities/main_item_domain_model.dart';
 import '../../../login/data/models/login_data_model.dart';
 import '../../domain/entities/add_ads_model.dart';
 import '../../domain/use_cases/add_ads_use_case.dart';
+import '../../domain/use_cases/update_ads_use_case.dart';
 
 part 'add_ads_state.dart';
 
@@ -31,16 +32,16 @@ class AddAdsCubit extends Cubit<AddAdsState> {
     this.getAmenitiesUseCase,
     this.getCitiesLocationUseCase,
     this.addAdsUseCase,
+    this.updateAdsUseCase,
   ) : super(AddAdsInitial()) {
     getStoreUser();
-    getAllFilterCities();
-    getAllFilterAmenities();
   }
 
   final GetCitiesUseCase getCitiesUseCase;
   final GetAmenitiesUseCase getAmenitiesUseCase;
   final GetCitiesLocationUseCase getCitiesLocationUseCase;
   final AddAdsUseCase addAdsUseCase;
+  final UpdateAdsUseCase updateAdsUseCase;
 
   late CitiesFilterModel citiesFilterModel;
   late CitiesLocationsModel citiesLocationsModel;
@@ -61,6 +62,7 @@ class AddAdsCubit extends Cubit<AddAdsState> {
   List<int> amenitiesId = [];
   List<MultipartFile> images = [];
   List<String> removedImages = [];
+  List<String> removedVideos = [];
 
   List<String> image = [];
   XFile? video;
@@ -80,6 +82,9 @@ class AddAdsCubit extends Cubit<AddAdsState> {
   int diningRoom = 0;
   int size = 0;
   int propertySelected = -1;
+  int postId = 0;
+  double longitude = 0;
+  double latitude = 0;
 
   String btnText = '';
   int selectedCityIndex = 0;
@@ -101,6 +106,10 @@ class AddAdsCubit extends Cubit<AddAdsState> {
       Map<String, dynamic> userMap = jsonDecode(prefs.getString('user')!);
       loginDataModel = LoginDataModel.fromJson(userMap);
       this.loginDataModel = loginDataModel;
+    }
+    if(btnText!='update'){
+      getAllFilterCities();
+      getAllFilterAmenities();
     }
   }
 
@@ -129,20 +138,26 @@ class AddAdsCubit extends Cubit<AddAdsState> {
     bedroom = mainItem.bedroom!;
     bathroom = mainItem.bathRoom!;
     kitchen = mainItem.kitchen!;
+    livingRoom = mainItem.livingRoom!;
+    postId = mainItem.id!;
     diningRoom = mainItem.diningRoom!;
     nameController.text = mainItem.advertizerNameEn!;
     phoneController.text = mainItem.phone!;
     whatsappController.text = mainItem.whatsapp!;
-    videoLink =
-        mainItem.videos!.isNotEmpty ? mainItem.videos!.first.attachment! : '';
+    videoLink = mainItem.videos!.isNotEmpty
+        ? mainItem.videos!.first.attachment! +
+            '@' +
+            '${mainItem.videos!.first.id}'
+        : '';
     for (var element in mainItem.services!) {
       amenitiesId.add(element.service!.id!);
     }
     for (var element in mainItem.images!) {
-      image.add(element.attachment!);
+      image.add('${element.attachment!}@${element.id}');
     }
+
     await getAllFilterCities().then(
-        (value) => getAllLocationOfCitiesById(mainItem.subAreaId.toString()));
+        (value) => getAllLocationOfCitiesById(mainItem.areaId.toString()));
   }
 
   convertImage(String path) async {
@@ -247,8 +262,8 @@ class AddAdsCubit extends Cubit<AddAdsState> {
         diningRoom: diningRoom.toString(),
         images: images,
         videos: video != null ? [video!.path] : [],
-        longitude: 30.123,
-        latitude: 20.123,
+        longitude: longitude,
+        latitude: latitude,
         advertizerNameAr: nameController.text,
         advertizerNameEn: nameController.text,
         advertizerNameKu: nameController.text,
@@ -295,8 +310,9 @@ class AddAdsCubit extends Cubit<AddAdsState> {
 
   updateAdsPost() async {
     emit(UpdateAdsPostLoading());
-    final response = await addAdsUseCase(
+    final response = await updateAdsUseCase(
       AddAdsModel(
+        id: postId,
         status: status,
         areaId: cityId,
         subAreaId: locationId,
@@ -319,18 +335,20 @@ class AddAdsCubit extends Cubit<AddAdsState> {
         diningRoom: diningRoom.toString(),
         images: images,
         videos: video != null ? [video!.path] : [],
-        longitude: 30.123,
-        latitude: 20.123,
+        longitude: longitude,
+        latitude: latitude,
         advertizerNameAr: nameController.text,
         advertizerNameEn: nameController.text,
         advertizerNameKu: nameController.text,
         phone: phoneController.text,
         whatsapp: whatsappController.text,
         token: loginDataModel!.data!.accessToken,
+        removedImage: removedImages,
+        removedVideo: removedVideos,
       ),
     );
     response.fold(
-          (failure) {
+      (failure) {
         emit(
           UpdateAdsPostError(
             MapFailureMessage.mapFailureToMessage(failure),
@@ -338,17 +356,17 @@ class AddAdsCubit extends Cubit<AddAdsState> {
         );
         Future.delayed(
           const Duration(seconds: 2),
-              () {
+          () {
             changeState();
           },
         );
       },
-          (status) {
+      (status) {
         if (status.code == 200) {
           emit(UpdateAdsPostLoaded(status));
           Future.delayed(
             const Duration(seconds: 2),
-                () {
+            () {
               changeState();
             },
           );
@@ -356,7 +374,7 @@ class AddAdsCubit extends Cubit<AddAdsState> {
           emit(UpdateAdsPostErrorResponse(status));
           Future.delayed(
             const Duration(seconds: 2),
-                () {
+            () {
               changeState();
             },
           );
@@ -364,7 +382,6 @@ class AddAdsCubit extends Cubit<AddAdsState> {
       },
     );
   }
-
 
   changeState() {
     titleController.clear();
@@ -389,10 +406,12 @@ class AddAdsCubit extends Cubit<AddAdsState> {
     propertySelected = -1;
     status = 'sale';
     currency = '';
+    latitude=0;
+    longitude=0;
     emit(changeState());
   }
 
-  clearData(){
+  clearData() {
     titleController.clear();
     descController.clear();
     priceController.clear();
@@ -413,9 +432,12 @@ class AddAdsCubit extends Cubit<AddAdsState> {
     livingRoom = 0;
     diningRoom = 0;
     size = 0;
-    type=0;
+    type = 0;
     propertySelected = -1;
     status = 'sale';
     currency = '';
+    videoLink = '';
+    latitude=0;
+    longitude=0;
   }
 }

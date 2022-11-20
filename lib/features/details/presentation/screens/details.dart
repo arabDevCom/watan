@@ -1,8 +1,11 @@
+import 'dart:convert';
 
 import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../login/data/models/login_data_model.dart';
 import '../cubit/details_cubit.dart';
 import '../widgets/all_details.dart';
 import '../widgets/amenities.dart';
@@ -25,13 +28,27 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  LoginDataModel? loginDataModel;
 
   @override
   void initState() {
     super.initState();
-    context
-        .read<DetailsCubit>()
-        .morePostsDetails(widget.mainItemModel!.id.toString());  }
+    getStoreUser().whenComplete(() {
+      context.read<DetailsCubit>().morePostsDetails(
+            widget.mainItemModel!.id.toString() +
+                '@${loginDataModel != null ? loginDataModel!.data!.user!.id : null}',
+          );
+    });
+  }
+
+  Future<void> getStoreUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user') != null) {
+      Map<String, dynamic> userMap = jsonDecode(prefs.getString('user')!);
+      LoginDataModel loginDataModel = LoginDataModel.fromJson(userMap);
+      this.loginDataModel = loginDataModel;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +71,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
               const Divider(thickness: 1),
               ProvidedByWidget(mainItemModel: widget.mainItemModel),
               const Divider(thickness: 1),
-              BottomWidget(mainProjectItemModel: null,mainItemModel: widget.mainItemModel,type: "ads"),
+              BottomWidget(
+                  mainProjectItemModel: null,
+                  mainItemModel: widget.mainItemModel,
+                  type: "ads"),
               const Divider(thickness: 1),
               PropertyWidget(
                 mainItemModel: widget.mainItemModel ?? const MainItem(),

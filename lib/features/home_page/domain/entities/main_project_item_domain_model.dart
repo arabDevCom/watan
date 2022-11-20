@@ -59,6 +59,7 @@ class MainProjectItem extends Equatable {
     required this.paymentPlans,
     required this.unitDetails,
     required this.user,
+    required this.isFavourite,
   });
 
   final int? id;
@@ -106,6 +107,7 @@ class MainProjectItem extends Equatable {
   final List<PaymentPlan> paymentPlans;
   final List<List<UnitDetail>> unitDetails;
   final MainItemUserModel user;
+  final bool? isFavourite;
 
   @override
   List<Object?> get props => [
@@ -154,6 +156,7 @@ class MainProjectItem extends Equatable {
         paymentPlans,
         unitDetails,
         user,
+        isFavourite,
       ];
 }
 
@@ -250,18 +253,21 @@ class PaymentPlan extends Equatable {
 
 class UnitDetail extends Equatable {
   UnitDetail({
+    required this.id,
     required this.price,
     required this.area,
     required this.bedrooms,
     required this.bathrooms,
   });
 
+  int? id;
   int? price;
   String? area;
   String? bedrooms;
   String? bathrooms;
 
   factory UnitDetail.fromJson(Map<String, dynamic> json) => UnitDetail(
+        id: json["id"],
         price: json["price"],
         area: json["area"],
         bedrooms: json["bedrooms"],
@@ -269,6 +275,7 @@ class UnitDetail extends Equatable {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "price": price,
         "area": area,
         "bedrooms": bedrooms,
@@ -277,6 +284,7 @@ class UnitDetail extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         price,
         area,
         bedrooms,

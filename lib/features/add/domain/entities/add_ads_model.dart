@@ -64,6 +64,12 @@ class AddAdsModel {
     this.areaRange,
     this.maxPrice,
     this.minPrice,
+    this.removedImage,
+    this.removedFloors,
+    this.removedVideo,
+    this.removedUnitPlan,
+    this.removedPaymentPlan,
+    this.kindOfPost,
   });
 
   String? status;
@@ -116,6 +122,12 @@ class AddAdsModel {
   String? areaRange;
   String? maxPrice;
   String? minPrice;
+  List<String>? removedImage;
+  List<String>? removedFloors;
+  List<String>? removedVideo;
+  List<int>? removedUnitPlan;
+  List<int>? removedPaymentPlan;
+  String? kindOfPost;
 
   Future<Map<String, dynamic>> toJsonWithVideo() async => {
         "status": status,
@@ -269,6 +281,96 @@ class AddAdsModel {
       };
 
 
+  Future<Map<String, dynamic>> toJsonProjectWithVideoUpdate() async => {
+    "project_status": projectStatus,
+    "area_id": areaId,
+    "sub_area_id": subAreaId,
+    "phone_code": '+20',
+    "title_ar": titleAr,
+    "title_en": titleEn,
+    "title_ku": titleKu,
+    "description_ar": descriptionAr,
+    "description_en": descriptionEn,
+    "description_ku": descriptionKu,
+    "type": type,
+    "amenities[]": amenities,
+    "images[]": images,
+    "floor_plans[]": floorPlanesImage,
+    "videos[]": await MultipartFile.fromFile(videos!.first),
+    "area_range": areaRange,
+    "min_price": minPrice,
+    "max_price": maxPrice,
+    for (int i = 0; i < paymentTitleList!.length; i++)
+      "payment_plans[$i][title]": paymentTitleList![i],
+    for (int i = 0; i < paymentPresentList!.length; i++)
+      "payment_plans[$i][percent]": paymentPresentList![i],
+    for (int i = 0; i < unitPlanPriceList!.length; i++)
+      "unit_details[$i][price]": unitPlanPriceList![i],
+    for (int i = 0; i < unitPlanAreaList!.length; i++)
+      "unit_details[$i][area]": unitPlanAreaList![i],
+    for (int i = 0; i < unitPlanBedroomList!.length; i++)
+      "unit_details[$i][bedrooms]": unitPlanBedroomList![i],
+    for (int i = 0; i < unitPlanBathroomList!.length; i++)
+      "unit_details[$i][bathrooms]": unitPlanBathroomList![i],
+    "latitude": latitude,
+    "longitude": longitude,
+    "location_name_ar": locationNameAr,
+    "location_name_en": locationNameEn,
+    "location_name_ku": locationNameKu,
+    "phone": phone,
+    "whatsapp": whatsapp,
+    "deleted_images[]": removedImage,
+    "deleted_floor_plans[]": removedFloors,
+    "deleted_videos[]": removedVideo,
+    "deleted_payment_plans[]": removedPaymentPlan,
+    "deleted_unit_details[]": removedUnitPlan,
+  };
+
+  Future<Map<String, dynamic>> toJsonProjectWithoutVideoUpdate() async => {
+    "project_status": projectStatus,
+    "area_id": areaId,
+    "sub_area_id": subAreaId,
+    "phone_code": '+20',
+    "title_ar": titleAr,
+    "title_en": titleEn,
+    "title_ku": titleKu,
+    "description_ar": descriptionAr,
+    "description_en": descriptionEn,
+    "description_ku": descriptionKu,
+    "type": type,
+    "amenities[]": amenities,
+    "images[]": images,
+    "floor_plans[]": floorPlanesImage,
+    "area_range": areaRange,
+    "min_price": minPrice,
+    "max_price": maxPrice,
+    for (int i = 0; i < paymentTitleList!.length; i++)
+      "payment_plans[$i][title]": paymentTitleList![i],
+    for (int i = 0; i < paymentPresentList!.length; i++)
+      "payment_plans[$i][percent]": paymentPresentList![i],
+    for (int i = 0; i < unitPlanPriceList!.length; i++)
+      "unit_details[$i][price]": unitPlanPriceList![i],
+    for (int i = 0; i < unitPlanAreaList!.length; i++)
+      "unit_details[$i][area]": unitPlanAreaList![i],
+    for (int i = 0; i < unitPlanBedroomList!.length; i++)
+      "unit_details[$i][bedrooms]": unitPlanBedroomList![i],
+    for (int i = 0; i < unitPlanBathroomList!.length; i++)
+      "unit_details[$i][bathrooms]": unitPlanBathroomList![i],
+    "latitude": latitude,
+    "longitude": longitude,
+    "location_name_ar": locationNameAr,
+    "location_name_en": locationNameEn,
+    "location_name_ku": locationNameKu,
+    "phone": phone,
+    "whatsapp": whatsapp,
+    "deleted_images[]": removedImage,
+    "deleted_floor_plans[]": removedFloors,
+    "deleted_videos[]": removedVideo,
+    "deleted_payment_plans[]": removedPaymentPlan,
+    "deleted_unit_details[]": removedUnitPlan,
+  };
+
+
 
   Future<Map<String, dynamic>> toJsonWithVideoUpdate() async => {
     "status": status,
@@ -301,6 +403,7 @@ class AddAdsModel {
     "advertizer_name_ku": advertizerNameKu,
     "phone": phone,
     "whatsapp": whatsapp,
+
   };
 
   Future<Map<String, dynamic>> toJsonWithoutVideoUpdate() async => {
@@ -336,7 +439,6 @@ class AddAdsModel {
     "advertizer_name_ku": advertizerNameKu,
     "phone": phone,
     "whatsapp": whatsapp,
-    // "is_favourite": isFavourite,
   };
 
 }

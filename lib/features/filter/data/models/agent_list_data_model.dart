@@ -17,9 +17,7 @@ class FilterAgentListModel extends FilterAgentList {
 class FilterAgentListDatumModel extends FilterAgentListDatum {
   const FilterAgentListDatumModel({
     required super.id,
-    required super.nameAr,
-    required super.nameEn,
-    required super.nameKu,
+    required super.name,
     required super.image,
     required super.about,
     required super.phone,
@@ -41,14 +39,12 @@ class FilterAgentListDatumModel extends FilterAgentListDatum {
   factory FilterAgentListDatumModel.fromJson(Map<String, dynamic> json) =>
       FilterAgentListDatumModel(
         id: json["id"],
-        nameAr: json["name_ar"]?? "بدون اسم",
-        nameEn: json["name_en"]?? "No Name",
-        nameKu: json["name_ku"]?? "هيچ ناو نييه‌",
+        name: json["name"]?? "بدون اسم",
         image: json["image"],
         about: json["about"],
         phone: json["phone"],
         email: json["email"],
-        languages: json["languages"],
+        languages: json["languages"] == null ? null : List<String>.from(json["languages"].map((x) => x)),
         password: json["password"],
         facebook: json["facebook"],
         instagram: json["instagram"],
@@ -64,9 +60,7 @@ class FilterAgentListDatumModel extends FilterAgentListDatum {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name_ar": nameAr,
-        "name_en": nameEn,
-        "name_ku": nameKu,
+        "name": name,
         "image": image,
         "about": about,
         "phone": phone,

@@ -9,9 +9,11 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/models/register_data_model.dart';
 
-RegistrationDomainModel registrationDomainModelFromJson(String str) => RegistrationDataModel.fromJson(json.decode(str));
+RegistrationDomainModel registrationDomainModelFromJson(String str) =>
+    RegistrationDataModel.fromJson(json.decode(str));
 
-String registrationDomainModelToJson(RegistrationDataModel data) => json.encode(data.toJson());
+String registrationDomainModelToJson(RegistrationDataModel data) =>
+    json.encode(data.toJson());
 
 class RegistrationDomainModel extends Equatable {
   const RegistrationDomainModel({
@@ -23,15 +25,16 @@ class RegistrationDomainModel extends Equatable {
   final RegistrationDataData? data;
   final String? message;
   final int? code;
+
   @override
   List<Object?> get props => [
-    data,
-    message,
-    code,
-  ];
+        data,
+        message,
+        code,
+      ];
 }
 
-class RegistrationDomainData extends Equatable{
+class RegistrationDomainData extends Equatable {
   const RegistrationDomainData({
     required this.user,
     required this.accessToken,
@@ -42,34 +45,33 @@ class RegistrationDomainData extends Equatable{
   final String? accessToken;
   final String? tokenType;
 
-
   @override
   List<Object?> get props => [
-    user,
-    accessToken,
-    tokenType,
-  ];
+        user,
+        accessToken,
+        tokenType,
+      ];
 }
 
-class RegistrationUser extends Equatable{
-  const RegistrationUser({
-     this.id,
-     this.name,
-     this.phone,
-     this.email,
-     this.password,
-     this.whatsapp,
-     this.status,
-     this.imagePath,
-     this.image,
-     this.userType,
-     this.facebook,
-     this.instagram,
-     this.twitter,
-     this.snapchat,
-     this.latitude,
-     this.longitude,
-     this.token,
+class RegistrationUser extends Equatable {
+   RegistrationUser({
+    this.id,
+    this.name,
+    this.phone,
+    this.email,
+    this.password,
+    this.whatsapp,
+    this.status,
+    this.imagePath,
+    this.image,
+    this.userType,
+    this.facebook,
+    this.instagram,
+    this.twitter,
+    this.snapchat,
+    this.latitude,
+    this.longitude,
+    this.token,
   });
 
   final int? id;
@@ -81,34 +83,33 @@ class RegistrationUser extends Equatable{
   final String? status;
   final String? imagePath;
   final String? image;
-  final String? userType;
+  dynamic userType;
   final String? facebook;
   final String? instagram;
   final String? twitter;
   final String? snapchat;
-  final String? latitude;
-  final String? longitude;
+  final double? latitude;
+  final double? longitude;
   final String? token;
-
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    phone,
-    email,
-    password,
-    whatsapp,
-    status,
-    image,
-    imagePath,
-    userType,
-    facebook,
-    instagram,
-    twitter,
-    snapchat,
-    latitude,
-    longitude,
-    token,
-  ];
+        id,
+        name,
+        phone,
+        email,
+        password,
+        whatsapp,
+        status,
+        image,
+        imagePath,
+        userType,
+        facebook,
+        instagram,
+        twitter,
+        snapchat,
+        latitude,
+        longitude,
+        token,
+      ];
 }

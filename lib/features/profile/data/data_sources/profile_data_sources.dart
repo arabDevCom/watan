@@ -14,7 +14,6 @@ abstract class BaseProfileDataSource {
   Future<StatusResponse> postNewAgent(AgentModel agentModel);
   Future<StatusResponse> editAgent(AgentModel agentModel);
   Future<StatusResponse> deleteAgent(AgentModel agentModel);
-
   Future<StatusResponse> deleteUserAccount(String token);
 }
 

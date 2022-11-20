@@ -58,7 +58,6 @@ class BodyWidget extends StatelessWidget {
             itemCount: showMoreList.length,
             itemBuilder: (context, position) {
               return SecondMainItemWidget(
-                isFavorite: true,
                 mainItemModel: showMoreList[position],
               );
             },

@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:elwatn/core/error/failures.dart';
 import 'package:elwatn/core/utils/map_failure_message.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/usecases/usecase.dart';
+import '../../../login/data/models/login_data_model.dart';
 import '../../data/models/agent_list_data_model.dart';
 import '../../data/models/amenities_data_model.dart';
 import '../../data/models/cities_data_model.dart';
@@ -28,6 +32,7 @@ class FilterCubit extends Cubit<FilterState> {
     this.getAgentUseCase,
     this.getFiltersResponse,
   ) : super(FilterInitial()) {
+    getStoreUser();
     getAllFilterCities();
     getAllFilterAgentList();
   }
@@ -51,9 +56,7 @@ class FilterCubit extends Cubit<FilterState> {
   List<String> citiesLocationEn = [];
   List<String> citiesLocationAr = [];
   List<String> citiesLocationKu = [];
-  List<String> agentNameEn = [];
-  List<String> agentNameAr = [];
-  List<String> agentNameKu = [];
+  List<String> agentName = [];
 
   String status = 'sale';
   String currency = '';
@@ -84,6 +87,18 @@ class FilterCubit extends Cubit<FilterState> {
 
   int propertySelected = -1;
 
+  LoginDataModel? loginDataModel;
+
+  Future<void> getStoreUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    LoginDataModel loginDataModel;
+    if (prefs.getString('user') != null) {
+      Map<String, dynamic> userMap = jsonDecode(prefs.getString('user')!);
+      loginDataModel = LoginDataModel.fromJson(userMap);
+      this.loginDataModel = loginDataModel;
+    }
+  }
+
   getCities() {
     for (var element in citiesFilterModel.data!) {
       citiesEn.add("${element.nameEn!}/${element.id}/");
@@ -102,9 +117,7 @@ class FilterCubit extends Cubit<FilterState> {
 
   getAgentList() {
     for (var element in filterAgentListModel.data!) {
-      agentNameEn.add("${element.nameEn!}/${element.id}/");
-      agentNameAr.add("${element.nameAr!}/${element.id}/");
-      agentNameKu.add("${element.nameKu!}/${element.id}/");
+      agentName.add("${element.name!}/${element.id}/");
     }
   }
 
@@ -181,7 +194,28 @@ class FilterCubit extends Cubit<FilterState> {
   getFilterResponse() async {
     emit(FilterResponseLoading());
     Either<Failure, FilterResponse> response =
-        await getFiltersResponse(FilterModel());
+        await getFiltersResponse(FilterModel(
+      status: status,
+      bathRoom: bathroom == 0 ? null : bathroom,
+      bedroom: bedroom == -1 ? null : bedroom,
+      type: type == -1 ? null : type,
+      cityId: cityId == 0 ? null : cityId,
+      currency: currency.isEmpty ? null : currency,
+      locationId: locationId == 0 ? null : locationId,
+      priceFrom: priceFromController.text.isEmpty
+          ? null
+          : int.parse(priceFromController.text),
+      priceTo: priceToController.text.isEmpty
+          ? null
+          : int.parse(priceToController.text),
+      sizeFrom: areaFromController.text.isEmpty
+          ? null
+          : int.parse(areaFromController.text),
+      sizeTo: areaToController.text.isEmpty
+          ? null
+          : int.parse(areaToController.text),
+      userId: loginDataModel!.data!.user!.id!,
+    ));
     emit(
       response.fold(
           (failure) => FilterResponseError(
@@ -195,5 +229,19 @@ class FilterCubit extends Cubit<FilterState> {
 
   pageChange() {
     emit(PageChanged());
+  }
+  clearData(){
+    status='sale';
+    cityId=0;
+    locationId=0;
+    type=-1;
+    priceFromController.clear();
+    priceToController.clear();
+    currency='';
+    bedroom=-1;
+    bathroom=0;
+    areaFromController.clear();
+    areaToController.clear();
+    agentId=0;
   }
 }

@@ -15,12 +15,14 @@ import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/map_failure_message.dart';
 import '../../../add/domain/entities/add_ads_model.dart';
 import '../../../add/domain/use_cases/add_project_use_case.dart';
+import '../../../add/domain/use_cases/update_ads_use_case.dart';
 import '../../../filter/data/models/amenities_data_model.dart';
 import '../../../filter/data/models/cities_data_model.dart';
 import '../../../filter/data/models/cities_location_data_model.dart';
 import '../../../filter/domain/use_cases/get_amenities_use_case.dart';
 import '../../../filter/domain/use_cases/get_cities_location_use_case.dart';
 import '../../../filter/domain/use_cases/get_cities_use_case.dart';
+import '../../../home_page/domain/entities/main_project_item_domain_model.dart';
 import '../../../login/data/models/login_data_model.dart';
 
 part 'add_project_state.dart';
@@ -31,15 +33,17 @@ class AddProjectCubit extends Cubit<AddProjectState> {
     this.getAmenitiesUseCase,
     this.getCitiesLocationUseCase,
     this.addProjectUseCase,
+    this.updateAdsUseCase,
   ) : super(AddProjectInitial()) {
-    getAllFilterCities();
-    getAllFilterAmenities();
+    getStoreUser();
+
   }
 
   final GetCitiesUseCase getCitiesUseCase;
   final GetAmenitiesUseCase getAmenitiesUseCase;
   final GetCitiesLocationUseCase getCitiesLocationUseCase;
   final AddProjectUseCase addProjectUseCase;
+  final UpdateAdsUseCase updateAdsUseCase;
 
   late CitiesFilterModel citiesFilterModel;
   late CitiesLocationsModel citiesLocationsModel;
@@ -63,9 +67,16 @@ class AddProjectCubit extends Cubit<AddProjectState> {
   List<int> unitPlanArea = [];
   List<String> unitPlanBedroom = [];
   List<String> unitPlanBathroom = [];
+  List<String> removedImages = [];
+  List<String> removedFloors = [];
+  List<String> removedVideos = [];
+  List<int> removedPaymentPlan = [];
+  List<int> removedUnitPlan = [];
+  List<int> tempIdPaymentPlan = [];
+  List<int> tempIdUnitPlan = [];
 
-  late List<String> image;
-  late List<String> floorPlan;
+  List<String> image = [];
+  List<String> floorPlan = [];
   XFile? video;
   LoginDataModel? loginDataModel;
 
@@ -74,12 +85,18 @@ class AddProjectCubit extends Cubit<AddProjectState> {
   int cityId = 0;
   int locationId = 0;
   int type = -1;
+  int projectId = 0;
   int propertySelected = -1;
+  double longitude = 0;
+  double latitude = 0;
+
+  int paymentPlanCount=0;
+  int unitPlanCount=0;
 
   String btnText = '';
   int selectedCityIndex = 0;
   int selectedLocationIndex = 0;
-
+  String videoLink = '';
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
@@ -101,6 +118,10 @@ class AddProjectCubit extends Cubit<AddProjectState> {
       loginDataModel = LoginDataModel.fromJson(userMap);
       this.loginDataModel = loginDataModel;
     }
+    if(btnText!='update'){
+      getAllFilterCities();
+      getAllFilterAmenities();
+    }
   }
 
   convertImage(String path) async {
@@ -111,6 +132,67 @@ class AddProjectCubit extends Cubit<AddProjectState> {
   convertFloorPlan(String path) async {
     MultipartFile floorPlan = MultipartFile.fromFileSync(path);
     floorPlans.add(floorPlan);
+  }
+
+  putDataToUpdate(MainProjectItem mainItem) async {
+    btnText='update';
+    image.clear();
+    floorPlan.clear();
+    citiesEn.clear();
+    citiesAr.clear();
+    citiesKu.clear();
+    citiesLocationEn.clear();
+    citiesLocationAr.clear();
+    citiesLocationKu.clear();
+    paymentPlanPresent.clear();
+    unitPlanArea.clear();
+    unitPlanPrice.clear();
+    unitPlanBathroom.clear();
+    unitPlanBedroom.clear();
+    paymentPlanCount=mainItem.paymentPlans.length;
+    unitPlanCount=mainItem.unitDetails.length;
+    type = int.parse(mainItem.type!);
+    propertySelected = int.parse(mainItem.type!);
+    statusProject = mainItem.projectStatus!;
+    cityId = mainItem.areaId!;
+    projectId = mainItem.id!;
+    locationId = mainItem.subAreaId!;
+    currency = mainItem.currency;
+    titleController.text = mainItem.titleEn!;
+    descController.text = mainItem.descriptionEn!;
+    phoneController.text = mainItem.phone!;
+    whatsappController.text = mainItem.whatsapp!;
+    videoLink = mainItem.videos.isNotEmpty
+        ? mainItem.videos.first.attachment! +
+            '@' +
+            '${mainItem.videos.first.id}'
+        : '';
+    for (var element in mainItem.services!) {
+      amenitiesId.add(element.service!.id!);
+    }
+    for (var element in mainItem.paymentPlans) {
+      paymentPlanTitle.add(element.title);
+      paymentPlanPresent.add(element.percent);
+      tempIdPaymentPlan.add(element.id);
+    }
+    for (var element in mainItem.unitDetails) {
+      for (var ele in element) {
+        unitPlanArea.add(int.parse(ele.area!));
+        unitPlanPrice.add(ele.price!);
+        unitPlanBathroom.add(ele.bathrooms!);
+        unitPlanBedroom.add(ele.bedrooms!);
+        tempIdUnitPlan.add(ele.id!);
+      }
+    }
+    for (var element in mainItem.images!) {
+      image.add('${element.attachment!}@${element.id}');
+    }
+    for (var element in mainItem.floorPlans!) {
+      floorPlan.add('${element.attachment!}@${element.id}');
+    }
+    await getAllFilterCities().then(
+        (value) => getAllLocationOfCitiesById(mainItem.areaId.toString()));
+    getAllFilterAmenities();
   }
 
   getCities() {
@@ -135,7 +217,7 @@ class AddProjectCubit extends Cubit<AddProjectState> {
     citiesLocationKu.clear();
   }
 
-  getAllFilterCities() async {
+  Future<void> getAllFilterCities() async {
     emit(AddProjectCitiesLoading());
     Either<Failure, CitiesFilterModel> response =
         await getCitiesUseCase(NoParams());
@@ -184,7 +266,7 @@ class AddProjectCubit extends Cubit<AddProjectState> {
     );
   }
 
-  addProjectPost(String token) async {
+  addProjectPost() async {
     emit(AddProjectPostLoading());
     final response = await addProjectUseCase(AddAdsModel(
       projectStatus: statusProject,
@@ -197,20 +279,25 @@ class AddProjectCubit extends Cubit<AddProjectState> {
       descriptionAr: descController.text,
       descriptionEn: descController.text,
       descriptionKu: descController.text,
-      areaRange:unitPlanArea.isEmpty?'0':
-          "${unitPlanArea.reduce((value, element) => min(value, element))} - ${unitPlanArea.reduce((value, element) => max(value, element))}",
+      areaRange: unitPlanArea.isEmpty
+          ? '0'
+          : "${unitPlanArea.reduce((value, element) => min(value, element))} - ${unitPlanArea.reduce((value, element) => max(value, element))}",
       paymentTitleList: paymentPlanTitle,
       paymentPresentList: paymentPlanPresent,
       unitPlanAreaList: unitPlanArea,
       unitPlanPriceList: unitPlanPrice,
       unitPlanBathroomList: unitPlanBathroom,
       unitPlanBedroomList: unitPlanBedroom,
-      minPrice: unitPlanPrice.isEmpty?'0':unitPlanPrice
-          .reduce((value, element) => min(value, element))
-          .toString(),
-      maxPrice: unitPlanPrice.isEmpty?'0':unitPlanPrice
-          .reduce((value, element) => max(value, element))
-          .toString(),
+      minPrice: unitPlanPrice.isEmpty
+          ? '0'
+          : unitPlanPrice
+              .reduce((value, element) => min(value, element))
+              .toString(),
+      maxPrice: unitPlanPrice.isEmpty
+          ? '0'
+          : unitPlanPrice
+              .reduce((value, element) => max(value, element))
+              .toString(),
       amenities: amenitiesId,
       images: images,
       floorPlans: floorPlan,
@@ -220,7 +307,7 @@ class AddProjectCubit extends Cubit<AddProjectState> {
       latitude: 20.123,
       phone: phoneController.text,
       whatsapp: whatsappController.text,
-      token: token,
+      token: loginDataModel!.data!.accessToken,
     ));
     response.fold(
       (failure) {
@@ -259,28 +346,7 @@ class AddProjectCubit extends Cubit<AddProjectState> {
   }
 
   changeState() {
-    titleController.clear();
-    descController.clear();
-    paymentTitleController.clear();
-    paymentPresentController.clear();
-    nameController.clear();
-    phoneController.clear();
-    whatsappController.clear();
-    video = null;
-    cityId = 0;
-    locationId = 0;
-    type = -1;
-    statusProject = 'new';
-    unitPlanBedroom.clear();
-    unitPlanBathroom.clear();
-    unitPlanPrice.clear();
-    unitPlanArea.clear();
-    paymentPlanTitle.clear();
-    paymentPlanPresent.clear();
-    floorPlan.clear();
-    floorPlans.clear();
-
-    propertySelected = -1;
+    clearData();
     emit(ProjectChangeState());
   }
 
@@ -294,6 +360,9 @@ class AddProjectCubit extends Cubit<AddProjectState> {
   removePaymentPlans(int index) {
     paymentPlanTitle.removeAt(index);
     paymentPlanPresent.removeAt(index);
+    removedPaymentPlan.add(tempIdPaymentPlan[index]);
+    tempIdPaymentPlan.removeAt(index);
+    paymentPlanCount--;
   }
 
   addUnitPlan() {
@@ -316,9 +385,129 @@ class AddProjectCubit extends Cubit<AddProjectState> {
     unitPlanArea.removeAt(index);
     unitPlanBedroom.removeAt(index);
     unitPlanBathroom.removeAt(index);
+    removedUnitPlan.add(tempIdUnitPlan[index]);
+    tempIdUnitPlan.removeAt(index);
+    unitPlanCount--;
     emit(ChangePaymentState());
     Future.delayed(const Duration(seconds: 1), () {
       emit(ChangeUnitPlanState());
     });
+  }
+
+  clearData() {
+    titleController.clear();
+    descController.clear();
+    priceController.clear();
+    areaController.clear();
+    nameController.clear();
+    phoneController.clear();
+    whatsappController.clear();
+    amenitiesId.clear();
+    floorPlan.clear();
+    floorPlans.clear();
+    video = null;
+    cityId = 0;
+    locationId = 0;
+    type = -1;
+    type = 0;
+    propertySelected = -1;
+    currency = '';
+    videoLink = '';
+    unitPlanBedroom.clear();
+    unitPlanBathroom.clear();
+    unitPlanPrice.clear();
+    unitPlanArea.clear();
+    paymentPlanPresent.clear();
+    paymentPlanTitle.clear();
+  }
+
+  updateAdsPost() async {
+    emit(UpdateAdsPostLoading());
+    final response = await updateAdsUseCase(
+      AddAdsModel(
+        kindOfPost: 'project',
+        id: projectId,
+        projectStatus: statusProject,
+        areaId: cityId,
+        subAreaId: locationId,
+        type: type,
+        titleAr: titleController.text,
+        titleEn: titleController.text,
+        titleKu: titleController.text,
+        descriptionAr: descController.text,
+        descriptionEn: descController.text,
+        descriptionKu: descController.text,
+
+        areaRange: unitPlanArea.isEmpty
+            ? '0'
+            : "${unitPlanArea.reduce((value, element) => min(value, element))} - ${unitPlanArea.reduce((value, element) => max(value, element))}",
+        paymentTitleList: paymentPlanTitle.sublist(paymentPlanCount),
+        paymentPresentList: paymentPlanPresent.sublist(paymentPlanCount),
+        unitPlanAreaList: unitPlanArea.sublist(unitPlanCount),
+        unitPlanPriceList: unitPlanPrice.sublist(unitPlanCount),
+        unitPlanBathroomList: unitPlanBathroom.sublist(unitPlanCount),
+        unitPlanBedroomList: unitPlanBedroom.sublist(unitPlanCount),
+        images: images,
+        floorPlans: floorPlan,
+        floorPlanesImage: floorPlans,
+        videos: video != null ? [video!.path] : [],
+        longitude: 30.123,
+        latitude: 20.123,
+        phone: phoneController.text,
+        whatsapp: whatsappController.text,
+        token: loginDataModel!.data!.accessToken,
+        amenities: amenitiesId,
+        removedImage: removedImages,
+        removedVideo: removedVideos,
+        removedFloors: removedFloors,
+        removedPaymentPlan: removedPaymentPlan,
+        removedUnitPlan: removedUnitPlan,
+        minPrice: unitPlanPrice.isEmpty
+            ? '0'
+            : unitPlanPrice
+                .reduce((value, element) => min(value, element))
+                .toString(),
+        maxPrice: unitPlanPrice.isEmpty
+            ? '0'
+            : unitPlanPrice
+                .reduce((value, element) => max(value, element))
+                .toString(),
+      ),
+    );
+    response.fold(
+      (failure) {
+        emit(
+          UpdateAdsPostError(
+            MapFailureMessage.mapFailureToMessage(failure),
+          ),
+        );
+        Future.delayed(
+          const Duration(seconds: 2),
+          () {
+            changeState();
+          },
+        );
+      },
+      (status) {
+        if (status.code == 200) {
+          emit(UpdateAdsPostLoaded(status));
+
+          Future.delayed(
+            const Duration(seconds: 2),
+            () {
+              changeState();
+            },
+          );
+        } else {
+          emit(UpdateAdsPostErrorResponse(status));
+          Future.delayed(
+            const Duration(seconds: 2),
+            () {
+              changeState();
+            },
+          );
+        }
+      },
+    );
   }
 }

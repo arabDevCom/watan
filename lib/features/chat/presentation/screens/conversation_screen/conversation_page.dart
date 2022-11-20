@@ -42,7 +42,6 @@ class _ConversationPageState extends State<ConversationPage> {
     Size size = MediaQuery.of(context).size;
     hei = size.height;
     wid = size.width;
-    if(widget.loginDataModel.message!=null){
       return Scaffold(
         backgroundColor: AppColors.grey2,
         body: RefreshIndicator(
@@ -52,31 +51,6 @@ class _ConversationPageState extends State<ConversationPage> {
           child: buildBodySection(),
         ),
       );
-    }else{
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "${translateText(AppStrings.shouldLoginText, context)} ....",
-              style: TextStyle(
-                  color: AppColors.primary, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 40),
-            Lottie.asset(ImageAssets.noLogin),
-            const SizedBox(height: 80),
-            CustomButton(
-              text: translateText(AppStrings.loginText, context),
-              paddingHorizontal: 80,
-              color: AppColors.primary,
-              onClick: () {
-                Navigator.of(context).pushNamed(Routes.loginScreenRoute);
-              },
-            ),
-          ],
-        ),
-      );
-    }
   }
 
   buildBodySection() {

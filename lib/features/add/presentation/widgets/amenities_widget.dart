@@ -15,8 +15,6 @@ class AmenitiesAddWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("kind");
-    print(kind);
     return kind == 'addProject'
         ? BlocBuilder<AddProjectCubit, AddProjectState>(
             builder: (context, state) {

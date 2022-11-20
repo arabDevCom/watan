@@ -1,4 +1,6 @@
 import 'package:elwatn/config/routes/app_routes.dart';
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/core/utils/translate_text_method.dart';
 import 'package:elwatn/core/widgets/show_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +21,7 @@ class AgencyScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: AppColors.white,
           title: Text(
-            "Agency",
+            translateText(AppStrings.agencyText, context),
             style: TextStyle(color: AppColors.black),
           ),
           iconTheme: IconThemeData(
@@ -31,7 +33,7 @@ class AgencyScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is ProfileAgentDeletedSuccessfully) {
               Future.delayed(const Duration(seconds: 2), () {
-                snackBar("Delete Successfully", context,
+                snackBar(translateText(AppStrings.deleteSuccessfullyMessage, context), context,
                     color: AppColors.success);
               });
             }
@@ -73,7 +75,7 @@ class AgencyScreen extends StatelessWidget {
                       right: 0,
                       child: CustomButton(
                         paddingHorizontal: 65,
-                        text: "Add Agency",
+                        text: translateText(AppStrings.addAgencyBtn, context),
                         color: AppColors.primary,
                         onClick: () {
                           Navigator.pushNamed(

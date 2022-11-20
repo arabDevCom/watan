@@ -1,40 +1,43 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:dartz/dartz.dart';
+import 'package:elwatn/core/error/failures.dart';
+import 'package:elwatn/core/usecases/usecase.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-import '../../../../core/helper/location_helper.dart';
+import '../../domain/entities/get_all_location_model.dart';
+import '../../domain/use_cases/get_all_location_use_case.dart';
 
 part 'map_state.dart';
 
 class MapCubit extends Cubit<MapState> {
-  MapCubit() : super(MapInitial()) {
-    getCurrantLocation().whenComplete(() {
-      cameraPosition = CameraPosition(
-        target: LatLng(position!.latitude, position!.longitude),
-        bearing: 0,
-        tilt: 0,
-        zoom: 17,
-      );
-    });
+  MapCubit(this.getAllLocationsUseCase) : super(MapInitial()){
+    getAllLocations();
   }
 
-  Position? position;
-  CameraPosition? cameraPosition;
-  Completer<GoogleMapController> mapController = Completer();
+  final GetAllLocationsUseCase getAllLocationsUseCase;
 
-  Future<void> getCurrantLocation() async {
-    position = await LocationHelper.getCurrantLocation().whenComplete(() {
-      emit(MapGetLastKnowPosition());
-    });
-  }
+  List<GeoPoint> geoPoints = [];
 
-  Future<void> goToMyCurrantLocation() async {
-    final GoogleMapController controller =
-        await mapController.future.whenComplete(() => print("hello"));
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(cameraPosition!),
-    ).whenComplete(() => emit(MapGetLastKnowPosition()));
+  getAllLocations() async {
+    emit(AllMapLocationsLoading());
+    Either<Failure, AllLocationsModel> response =
+        await getAllLocationsUseCase(NoParams());
+    emit(
+      response.fold(
+        (failure) => AllMapLocationsError(),
+        (allLocations) {
+          allLocations.data!.adsLocations!.forEach((element) {
+            geoPoints
+                .add(GeoPoint(latitude: element.latitude!, longitude: element.longitude!));
+          });
+
+          allLocations.data!.projectsLocations!.forEach((element) {
+            geoPoints
+                .add(GeoPoint(latitude: element.latitude!, longitude: element.longitude!));
+          });
+          return AllMapLocationsLoaded();
+        },
+      ),
+    );
   }
 }

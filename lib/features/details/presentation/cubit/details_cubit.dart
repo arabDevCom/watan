@@ -22,10 +22,6 @@ class DetailsCubit extends Cubit<DetailsState> {
 
   List<MainItemModel> moreAds = [];
 
-  // increaseViewsOfAds(String id) async {
-  //   await increaseViewUseCase(id).then((value) => morePostsDetails(id));
-  // }
-
   morePostsDetails(String id) async {
     emit(MorePostsDetailsLoading());
     var response = await morePostsUseCase(id);

@@ -16,6 +16,7 @@ import 'features/add/data/repositories/add_ads_repositories.dart';
 import 'features/add/domain/repositories/add_ads_base_repositories.dart';
 import 'features/add/domain/use_cases/add_ads_use_case.dart';
 import 'features/add/domain/use_cases/add_project_use_case.dart';
+import 'features/add/domain/use_cases/update_ads_use_case.dart';
 import 'features/add/presentation/cubit/add_ads_cubit.dart';
 import 'features/add_project/presentation/cubit/add_project_cubit.dart';
 import 'features/app_settings/data/data_sources/app_setting_data_source.dart';
@@ -48,6 +49,12 @@ import 'features/details/domain/use_cases/all_posts_for_user_use_case.dart';
 import 'features/details/domain/use_cases/increase_view_use_case.dart';
 import 'features/details/domain/use_cases/more_posts_use_case.dart';
 import 'features/details/presentation/cubit/details_cubit.dart';
+import 'features/favorite/data/data_sources/favourites_data_source.dart';
+import 'features/favorite/data/repositories/favourites_repositories.dart';
+import 'features/favorite/domain/repositories/base_favourites_repositories.dart';
+import 'features/favorite/domain/use_cases/change_favourite_state_use_case.dart';
+import 'features/favorite/domain/use_cases/my_favourites_use_case.dart';
+import 'features/favorite/presentation/cubit/favourites_cubit.dart';
 import 'features/filter/data/data_sources/filter_data_source.dart';
 import 'features/filter/data/repositories/filter_data_repositories.dart';
 import 'features/filter/domain/repositories/base_filter_repositories.dart';
@@ -74,6 +81,10 @@ import 'features/login/data/repositories/login_repositories.dart';
 import 'features/login/domain/repositories/base_login_repositories.dart';
 import 'features/login/domain/use_cases/login_use_case.dart';
 import 'features/login/presentation/cubit/login_cubit.dart';
+import 'features/map/data/data_sources/map_data_source.dart';
+import 'features/map/data/repositories/map_repositories.dart';
+import 'features/map/domain/repositories/base_map_repositories.dart';
+import 'features/map/domain/use_cases/get_all_location_use_case.dart';
 import 'features/map/presentation/cubit/map_cubit.dart';
 import 'features/my_ads/data/data_sources/my_ads_data_source.dart';
 import 'features/my_ads/data/repositories/my_ads_repositories.dart';
@@ -135,7 +146,8 @@ final serviceLocator = GetIt.instance;
 
 Future<void> setup() async {
   //! Features
-  // Blocs
+
+  ///////////////////////// Blocs ////////////////////////
 
   serviceLocator.registerFactory(
     () => LocaleCubit(
@@ -157,8 +169,7 @@ Future<void> setup() async {
   serviceLocator.registerFactory(
     () => LoginCubit(
       postLoginUseCase: serviceLocator(),
-        updateStoreProfileUseCase: serviceLocator(),
-
+      updateStoreProfileUseCase: serviceLocator(),
     ),
   );
   serviceLocator.registerFactory(
@@ -196,10 +207,12 @@ Future<void> setup() async {
       serviceLocator(),
       serviceLocator(),
       serviceLocator(),
+      serviceLocator(),
     ),
   );
-serviceLocator.registerFactory(
+  serviceLocator.registerFactory(
     () => AddProjectCubit(
+      serviceLocator(),
       serviceLocator(),
       serviceLocator(),
       serviceLocator(),
@@ -207,7 +220,7 @@ serviceLocator.registerFactory(
     ),
   );
   serviceLocator.registerFactory(
-    () => MapCubit(),
+    () => MapCubit(serviceLocator()),
   );
   serviceLocator.registerFactory(
     () => ShowListsCubit(
@@ -220,7 +233,7 @@ serviceLocator.registerFactory(
     () => ContactUsCubit(serviceLocator()),
   );
   serviceLocator.registerFactory(
-    () => MyAdsCubit(serviceLocator(),serviceLocator(),serviceLocator()),
+    () => MyAdsCubit(serviceLocator(), serviceLocator(), serviceLocator()),
   );
   serviceLocator.registerFactory(
     () => ProfileCubit(
@@ -238,13 +251,21 @@ serviceLocator.registerFactory(
     () => ProjectDetailsCubit(serviceLocator(), serviceLocator()),
   );
   serviceLocator.registerFactory(
-    () => PackageCubit(serviceLocator(),serviceLocator()),
+    () => PackageCubit(serviceLocator(), serviceLocator()),
   );
-serviceLocator.registerFactory(
-    () => ConversationPageCubit(serviceLocator(),serviceLocator(),serviceLocator(),serviceLocator()),
+  serviceLocator.registerFactory(
+    () => ConversationPageCubit(
+        serviceLocator(), serviceLocator(), serviceLocator(), serviceLocator()),
+  );
+  serviceLocator.registerFactory(
+    () => FavouritesCubit(
+      serviceLocator(),
+      serviceLocator(),
+    ),
   );
 
-  // Use Cases
+  ///////////////////// Use Cases ////////////////////////
+
   serviceLocator.registerLazySingleton(
       () => GetSavedLanguageUseCase(languageRepository: serviceLocator()));
   serviceLocator.registerLazySingleton(
@@ -340,83 +361,104 @@ serviceLocator.registerFactory(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => DeleteUserAccountUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => GetMyRoomsUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => GetOneRoomUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => SendMessageUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => UpdateStoreProfileUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => UpdateProfileUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => SendCodeUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => CheckCodeUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => ResetPasswordUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => AddPackageUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => OpenRoomUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => DeleteMyAdsUseCase(
       baseMyAdsRepositories: serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => ChangeStatusMyAdsUseCase(
       baseMyAdsRepositories: serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => AddAdsUseCase(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton(
+  serviceLocator.registerLazySingleton(
     () => AddProjectUseCase(
       serviceLocator(),
     ),
   );
+  serviceLocator.registerLazySingleton(
+    () => UpdateAdsUseCase(
+      serviceLocator(),
+    ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => GetMyFavouritesUseCase(
+      baseFavoritesRepositories: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => ChangeStatusFavouritesUseCase(
+      baseFavoritesRepositories: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => GetAllLocationsUseCase(
+      baseMapRepositories: serviceLocator(),
+    ),
+  );
 
-  // Repositories
+  //////////////////////// Repositories ////////////////////////
+
   serviceLocator.registerLazySingleton<BaseLanguageRepository>(
     () => LanguageRepository(
       languageLocaleDataSource: serviceLocator(),
@@ -501,18 +543,29 @@ serviceLocator.registerLazySingleton(
       serviceLocator(),
     ),
   );
- serviceLocator.registerLazySingleton<BaseChatRepositories>(
+  serviceLocator.registerLazySingleton<BaseChatRepositories>(
     () => ChatRepositories(
       serviceLocator(),
     ),
   );
-serviceLocator.registerLazySingleton<BaseAddAdsRepositories>(
+  serviceLocator.registerLazySingleton<BaseAddAdsRepositories>(
     () => AddAdsRepositories(
       serviceLocator(),
     ),
   );
+  serviceLocator.registerLazySingleton<BaseFavoritesRepositories>(
+    () => FavoritesRepositories(
+      baseFavouritesDataSource: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerLazySingleton<BaseMapRepositories>(
+    () => MapRepositories(
+      serviceLocator(),
+    ),
+  );
 
-  // Data Sources
+  //////////////////////// Data Sources ////////////////////////
+
   serviceLocator.registerLazySingleton<BaseLanguageLocaleDataSource>(
       () => LanguageLocaleDataSource(sharedPreferences: serviceLocator()));
   serviceLocator.registerLazySingleton<BaseHomePageDataSource>(
@@ -545,10 +598,14 @@ serviceLocator.registerLazySingleton<BaseAddAdsRepositories>(
       () => ProjectDetailsDataSource(serviceLocator()));
   serviceLocator.registerLazySingleton<BasePackageDataSource>(
       () => PackageDataSource(serviceLocator()));
-serviceLocator.registerLazySingleton<BaseChatDataSource>(
+  serviceLocator.registerLazySingleton<BaseChatDataSource>(
       () => ChatDataSource(serviceLocator()));
-serviceLocator.registerLazySingleton<BaseAddAdsDataSource>(
+  serviceLocator.registerLazySingleton<BaseAddAdsDataSource>(
       () => AddAdsDataSource(serviceLocator()));
+  serviceLocator.registerLazySingleton<BaseFavouritesDataSource>(
+      () => FavouritesDataSource(apiConsumer: serviceLocator()));
+ serviceLocator.registerLazySingleton<BaseMapDataSource>(
+      () => MapDataSource( serviceLocator()));
 
   //! Core
   //Network

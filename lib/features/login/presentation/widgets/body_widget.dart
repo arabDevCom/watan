@@ -22,226 +22,211 @@ class LoginBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     emailController.text = "ahmad75yehia@gmail.com";
     passwordController.text = "000000";
-    return Column(
-      children: [
-        Expanded(
-          flex: 7,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.longestSide,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 8,
+              child: Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    Expanded(
-                        child: Image.asset(
-                      ImageAssets.watanLogo,
-                      height: 150,
-                    )),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Image.asset(
+                          ImageAssets.watanLogo,
+                          height: 150,
+                        )),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: TextFormField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          label: Text(
+                            translateText(AppStrings.emailHint, context),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return translateText(
+                                AppStrings.emailValidatorMessage, context);
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: TextFormField(
+                        controller: passwordController,
+                        obscureText: true,
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(
+                          label: Text(
+                            translateText(AppStrings.passwordHint, context),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return translateText(
+                                AppStrings.passwordValidatorMessage, context);
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 60),
+                    CustomButton(
+                      text: translateText(AppStrings.loginText, context),
+                      color: AppColors.primary,
+                      paddingHorizontal: 25,
+                      onClick: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<LoginCubit>().postLoginData(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, Routes.welcomeRegisterRoute);
+                            },
+                            child: Text(
+                              translateText(AppStrings.registerText, context),
+                              style: TextStyle(color: AppColors.black),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, Routes.forgetPasswordRoute);
+                            },
+                            child: Text(
+                              translateText(AppStrings.forgetPasswordText, context),
+                              style: TextStyle(color: AppColors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      label: Text(
-                        translateText(AppStrings.emailHint, context),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return translateText(
-                            AppStrings.emailValidatorMessage, context);
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 22),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                      label: Text(
-                        translateText(AppStrings.passwordHint, context),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return translateText(
-                            AppStrings.passwordValidatorMessage, context);
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 60),
-                CustomButton(
-                  text: translateText(AppStrings.loginText, context),
-                  color: AppColors.primary,
-                  paddingHorizontal: 25,
-                  onClick: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<LoginCubit>().postLoginData(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
-                    }
-                  },
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, Routes.welcomeRegisterRoute);
-                        },
-                        child: Text(
-                          translateText(AppStrings.registerText, context),
-                          style: TextStyle(color: AppColors.black),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Divider(
+                            thickness: 1,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, Routes.forgetPasswordRoute);
-                        },
-                        child: Text(
-                          translateText(AppStrings.forgetPasswordText, context),
-                          style: TextStyle(color: AppColors.black),
+                      Text(
+                        translateText(AppStrings.orText, context),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Divider(
+                            thickness: 1,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                )
-              ],
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return   SocialMediaWebView(
+                                  url:
+                                  'https://watan.motaweron.com/api/auth/social/login/google',
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Image.asset(
+                          ImageAssets.socialGoogleImage,
+                          width: 54,
+                          height: 54,
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return   SocialMediaWebView(
+                                  url:
+                                      'https://watan.motaweron.com/api/auth/social/login/facebook',
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Image.asset(
+                          ImageAssets.socialFacebookImage,
+                          width: 54,
+                          height: 54,
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Column(
-            children: [
-              Row(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Divider(
-                        thickness: 1,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'OR',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Divider(
-                        thickness: 1,
-                        color: AppColors.primary,
-                      ),
+                    child: Image.asset(
+                      ImageAssets.cityImage,
+                      fit: BoxFit.fitWidth,
+                      height: 55,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return   SocialMediaWebView(
-                              url:
-                              'https://watan.motaweron.com/api/auth/social/login/google',
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    child: Image.asset(
-                      ImageAssets.socialGoogleImage,
-                      width: 54,
-                      height: 54,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return   SocialMediaWebView(
-                              url:
-                              'https://watan.motaweron.com/api/auth/social/login/twitter',
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    child: Image.asset(
-                      ImageAssets.socialTwitterImage,
-                      width: 54,
-                      height: 54,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return   SocialMediaWebView(
-                              url:
-                                  'https://watan.motaweron.com/api/auth/social/login/facebook',
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    child: Image.asset(
-                      ImageAssets.socialFacebookImage,
-                      width: 54,
-                      height: 54,
-                    ),
-                  ),
-                  const Spacer(),
-                ],
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            children: [
-              Expanded(
-                child: Image.asset(
-                  ImageAssets.cityImage,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
+      ),
     );
   }
 }

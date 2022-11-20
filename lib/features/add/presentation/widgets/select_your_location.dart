@@ -1,29 +1,42 @@
+import 'package:elwatn/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../details/presentation/widgets/list_tile_all_details.dart';
+import '../../../map/presentation/screens/map_select_location.dart';
 
 class SelectYourLocation extends StatelessWidget {
-  const SelectYourLocation({Key? key}) : super(key: key);
+  const SelectYourLocation({Key? key, required this.kindOfSelected})
+      : super(key: key);
+  final String kindOfSelected;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTileAllDetailsWidget(
-            image: ImageAssets.locationGoldIcon,
-            text: "Location",
-            iconColor: AppColors.primary,),
+          image: ImageAssets.locationGoldIcon,
+          text: translateText(AppStrings.locationText,context),
+          iconColor: AppColors.primary,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-          const SizedBox(width: 8),
-          const Text("Select Your Location : "),
+            const SizedBox(width: 8),
+             Text(translateText(AppStrings.selectYourLocationText, context)),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.mapScreenRoute);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return SelectMapLocationScreen(
+                        kindOfSelected: kindOfSelected,
+                      );
+                    },
+                  ),
+                );
               },
               child: Image.asset(
                 ImageAssets.mapImage,
@@ -31,8 +44,9 @@ class SelectYourLocation extends StatelessWidget {
                 width: 48,
               ),
             ),
-          const SizedBox(width: 8),
-        ],)
+            const SizedBox(width: 8),
+          ],
+        )
       ],
     );
   }

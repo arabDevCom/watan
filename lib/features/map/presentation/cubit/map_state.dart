@@ -5,5 +5,6 @@ abstract class MapState {}
 
 class MapInitial extends MapState {}
 
-class MapGetLastKnowPosition extends MapState {}
-class MapGetNewPosition extends MapState {}
+class AllMapLocationsLoading extends MapState {}
+class AllMapLocationsLoaded extends MapState {}
+class AllMapLocationsError extends MapState {}

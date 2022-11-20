@@ -36,21 +36,36 @@ class CategoriesWidget extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ShowLists(
-                          kind: categoriesDatum[index].nameEn!, index: index),
+                          kind: IsLanguage.isEnLanguage(context)
+                              ? categoriesDatum[index].nameEn!
+                              : (IsLanguage.isArLanguage(context)
+                                  ? categoriesDatum[index].nameAr!
+                                  : categoriesDatum[index].nameKo!),
+                          index: index),
                     ),
                   );
                 } else if (index == 1) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ShowLists(
-                          kind: categoriesDatum[index].nameEn!, index: index),
+                          kind: IsLanguage.isEnLanguage(context)
+                              ? categoriesDatum[index].nameEn!
+                              : (IsLanguage.isArLanguage(context)
+                                  ? categoriesDatum[index].nameAr!
+                                  : categoriesDatum[index].nameKo!),
+                          index: index),
                     ),
                   );
                 } else if (index == 2) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ShowLists(
-                          kind: categoriesDatum[index].nameEn!, index: index),
+                          kind: IsLanguage.isEnLanguage(context)
+                              ? categoriesDatum[index].nameEn!
+                              : (IsLanguage.isArLanguage(context)
+                                  ? categoriesDatum[index].nameAr!
+                                  : categoriesDatum[index].nameKo!),
+                          index: index),
                     ),
                   );
                 }

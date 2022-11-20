@@ -6,39 +6,72 @@ import 'package:elwatn/features/home_page/domain/entities/main_item_domain_model
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../config/locale/app_localizations.dart';
 import '../../features/add/presentation/screens/add_screen.dart';
 import '../../features/details/presentation/screens/details.dart';
-import '../../features/login/data/models/login_data_model.dart';
-import '../../features/login/domain/entities/login_domain_model.dart';
+import '../../features/favorite/presentation/cubit/favourites_cubit.dart';
+import '../../features/language/presentation/cubit/locale_cubit.dart';
+import '../../features/login/presentation/screens/login.dart';
 import '../../features/my_ads/presentation/cubit/my_ads_cubit.dart';
 import '../utils/app_strings.dart';
 import '../utils/convert_numbers_method.dart';
 import '../utils/is_language_methods.dart';
+import '../utils/toast_message_method.dart';
+import '../utils/translate_text_method.dart';
 import 'network_image.dart';
 
-class SecondMainItemWidget extends StatelessWidget {
-  const SecondMainItemWidget(
-      {Key? key,
-      this.isFavorite = false,
-      this.mainItemModel,
-      this.isMyAdds = false})
-      : super(key: key);
+class SecondMainItemWidget extends StatefulWidget {
+  SecondMainItemWidget({
+    Key? key,
+    this.mainItemModel,
+    this.isMyAdds = false,
+  }) : super(key: key);
 
-  final bool isFavorite;
   final bool isMyAdds;
   final MainItem? mainItemModel;
 
   @override
+  State<SecondMainItemWidget> createState() => _SecondMainItemWidgetState();
+}
+
+class _SecondMainItemWidgetState extends State<SecondMainItemWidget> {
+  bool isFavourite = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavourite = widget.mainItemModel!.isFavourite!;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String type = '';
+    if (widget.mainItemModel!.type == '1') {
+      type = translateText(AppStrings.apartmentText, context);
+    } else if (widget.mainItemModel!.type == '2') {
+      type = translateText(AppStrings.villaText, context);
+    } else if (widget.mainItemModel!.type == '3') {
+      type = translateText(AppStrings.industrialLandText, context);
+    } else if (widget.mainItemModel!.type == '4') {
+      type = translateText(AppStrings.commercialPlotText, context);
+    } else if (widget.mainItemModel!.type == '5') {
+      type = translateText(AppStrings.shopText, context);
+    } else if (widget.mainItemModel!.type == '6') {
+      type = translateText(AppStrings.officeText, context);
+    } else {
+      type = widget.mainItemModel!.type!;
+    }
+
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return DetailsScreen(mainItemModel: mainItemModel);
+              return DetailsScreen(mainItemModel: widget.mainItemModel);
             },
           ),
         );
@@ -60,10 +93,10 @@ class SecondMainItemWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      child: mainItemModel!.images!.isNotEmpty
+                      child: widget.mainItemModel!.images!.isNotEmpty
                           ? ManageNetworkImage(
-                              imageUrl:
-                                  mainItemModel!.images!.first.attachment!,
+                              imageUrl: widget
+                                  .mainItemModel!.images!.first.attachment!,
                               width: 120,
                               height: 120,
                               borderRadius: 12,
@@ -88,9 +121,9 @@ class SecondMainItemWidget extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            mainItemModel!.status == "null"
+                            widget.mainItemModel!.status == "null"
                                 ? "nooo"
-                                : mainItemModel!.status == "sale"
+                                : widget.mainItemModel!.status == "sale"
                                     ? AppLocalizations.of(context)!
                                         .translate(AppStrings.statusSaleText)!
                                     : AppLocalizations.of(context)!
@@ -118,10 +151,12 @@ class SecondMainItemWidget extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 AppLocalizations.of(context)!.isEnLocale
-                                    ? mainItemModel!.titleEn ?? "No Title"
+                                    ? widget.mainItemModel!.titleEn ??
+                                        "No Title"
                                     : (AppLocalizations.of(context)!.isArLocale
-                                        ? mainItemModel!.titleAr ?? "لا عنوان"
-                                        : mainItemModel!.titleKu ??
+                                        ? widget.mainItemModel!.titleAr ??
+                                            "لا عنوان"
+                                        : widget.mainItemModel!.titleKu ??
                                             "هیچ ناونیشانێک نییە"),
                                 style: const TextStyle(
                                   fontSize: 16,
@@ -131,34 +166,142 @@ class SecondMainItemWidget extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            //ToDo Favourite
-                            isMyAdds
+                            widget.isMyAdds
                                 ? InkWell(
                                     onTap: () {
                                       context
                                           .read<MyAdsCubit>()
                                           .deleteMyProfileAds(
-                                            mainItemModel!.id.toString(),
+                                            widget.mainItemModel!.id.toString(),
                                             'myAds',
+                                            '1',
                                           );
                                     },
                                     child: SvgPicture.asset(
                                       ImageAssets.deleteAccountIcon,
                                     ),
                                   )
-                                : Icon(
-                                    isFavorite
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: isFavorite
-                                        ? AppColors.primary
-                                        : AppColors.black,
-                                  ),
+                                : isLoading
+                                    ? SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primary,
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          if (context
+                                                  .read<LocaleCubit>()
+                                                  .loginDataModel ==
+                                              null) {
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.warning,
+                                              title:
+                                                  "\n ${translateText(AppStrings.shouldLoginText, context)} ",
+                                              buttons: [
+                                                DialogButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  color: AppColors
+                                                      .buttonBackground,
+                                                  child: Text(
+                                                    translateText(
+                                                        AppStrings.cancelBtn,
+                                                        context),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                                DialogButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return const LoginScreen();
+                                                      },
+                                                    ),
+                                                  ),
+                                                  color: AppColors.error,
+                                                  child: Text(
+                                                    translateText(
+                                                      AppStrings.loginText,
+                                                      context,
+                                                    ),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                )
+                                              ],
+                                            ).show();
+                                          } else {
+                                            context
+                                                .read<FavouritesCubit>()
+                                                .cubitKind = 'null';
+                                            context
+                                                .read<FavouritesCubit>()
+                                                .getFavourite = 'change';
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                            context
+                                                .read<FavouritesCubit>()
+                                                .changeFavouritesStatus(
+                                                  widget.mainItemModel!.id
+                                                      .toString(),
+                                                  'ads',
+                                                )
+                                                .whenComplete(
+                                                  () => Future.delayed(
+                                                    Duration(
+                                                      milliseconds: 500,
+                                                    ),
+                                                    () {
+                                                      setState(() {
+                                                        isLoading = false;
+                                                        if (context
+                                                                .read<
+                                                                    FavouritesCubit>()
+                                                                .message !=
+                                                            'There are some Errors') {
+                                                          isFavourite = context
+                                                              .read<
+                                                                  FavouritesCubit>()
+                                                              .favourite;
+                                                        }
+                                                      });
+                                                      toastMessage(
+                                                        context
+                                                            .read<
+                                                                FavouritesCubit>()
+                                                            .message,
+                                                        context,
+                                                        color:
+                                                            AppColors.primary,
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                          }
+                                        },
+                                        child: Icon(
+                                          isFavourite
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isFavourite
+                                              ? AppColors.primary
+                                              : AppColors.black,
+                                        ),
+                                      ),
                           ],
                         ),
-                        //ToDo Categories Languages
                         Text(
-                          mainItemModel!.type ?? "no title",
+                          type,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -170,18 +313,18 @@ class SecondMainItemWidget extends StatelessWidget {
                             const Icon(Icons.location_on),
                             Text(
                               IsLanguage.isEnLanguage(context)
-                                  ? mainItemModel!.locationNameEn!
+                                  ? widget.mainItemModel!.locationNameEn!
                                   : (IsLanguage.isArLanguage(context)
-                                      ? mainItemModel!.locationNameAr!
-                                      : mainItemModel!.locationNameKu!),
+                                      ? widget.mainItemModel!.locationNameAr!
+                                      : widget.mainItemModel!.locationNameKu!),
                               style: const TextStyle(fontSize: 12),
                             )
                           ],
                         ),
                         ThreeIconsDetailsWidget(
-                          area: mainItemModel!.size.toString(),
-                          bathrooms: mainItemModel!.bathRoom.toString(),
-                          bedrooms: mainItemModel!.bedroom.toString(),
+                          area: widget.mainItemModel!.size.toString(),
+                          bathrooms: widget.mainItemModel!.bathRoom.toString(),
+                          bedrooms: widget.mainItemModel!.bedroom.toString(),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,13 +334,13 @@ class SecondMainItemWidget extends StatelessWidget {
                                 children: <TextSpan>[
                                   TextSpan(
                                     text:
-                                        '${AppLocalizations.of(context)!.isEnLocale ? mainItemModel!.price ?? "0" : replaceToArabicNumber(mainItemModel!.price.toString())}',
+                                        '${AppLocalizations.of(context)!.isEnLocale ? widget.mainItemModel!.price ?? "0" : replaceToArabicNumber(widget.mainItemModel!.price.toString())}',
                                     style: TextStyle(
                                         fontSize: 16, color: AppColors.black),
                                   ),
                                   TextSpan(
                                     text:
-                                        "  ${AppLocalizations.of(context)!.isEnLocale ? mainItemModel!.currency! : "دولار"}",
+                                        "  ${AppLocalizations.of(context)!.isEnLocale ? widget.mainItemModel!.currency! : "دولار"}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
@@ -206,16 +349,17 @@ class SecondMainItemWidget extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            ViewsWidget(views: mainItemModel!.views.toString()),
-                            //ToDo Company Icon
-                            Image.asset(
-                              ImageAssets.companyLogo,
-                              width: 36,
+                            ViewsWidget(
+                                views: widget.mainItemModel!.views.toString()),
+                            ManageNetworkImage(
+                              imageUrl: widget.mainItemModel!.userModel!.image!,
+                              width: 28,
                               height: 28,
+                              borderRadius:36 ,
                             ),
                           ],
                         ),
-                        isMyAdds == true
+                        widget.isMyAdds == true
                             ? Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -225,12 +369,13 @@ class SecondMainItemWidget extends StatelessWidget {
                                       context
                                           .read<MyAdsCubit>()
                                           .changeStatusMyProfileAds(
-                                            mainItemModel!.id.toString(),
+                                            widget.mainItemModel!.id.toString(),
                                             'myAds',
+                                            '1',
                                           );
                                     },
                                     child: Text(
-                                      "Add To My Solid",
+                                      translateText(AppStrings.AddToMySolidBtn, context),
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: AppColors.primary),
@@ -240,7 +385,8 @@ class SecondMainItemWidget extends StatelessWidget {
                                     onPressed: () {
                                       context
                                           .read<AddAdsCubit>()
-                                          .putDataToUpdate(mainItemModel!);
+                                          .putDataToUpdate(
+                                              widget.mainItemModel!);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -248,7 +394,8 @@ class SecondMainItemWidget extends StatelessWidget {
                                             body: SafeArea(
                                               child: AddScreen(
                                                 isUpdate: true,
-                                                mainItemModel: mainItemModel,
+                                                mainItemModel:
+                                                    widget.mainItemModel,
                                               ),
                                             ),
                                           ),
@@ -256,7 +403,7 @@ class SecondMainItemWidget extends StatelessWidget {
                                       );
                                     },
                                     child: Text(
-                                      "Edit",
+                                      translateText(AppStrings.editBtn, context),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.black,

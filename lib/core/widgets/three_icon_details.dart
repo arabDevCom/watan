@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../config/locale/app_localizations.dart';
+import '../utils/app_strings.dart';
 import '../utils/assets_manager.dart';
 import '../utils/convert_numbers_method.dart';
+import '../utils/is_language_methods.dart';
+import '../utils/translate_text_method.dart';
 
 class ThreeIconsDetailsWidget extends StatelessWidget {
   const ThreeIconsDetailsWidget(
@@ -23,14 +26,15 @@ class ThreeIconsDetailsWidget extends StatelessWidget {
         SvgPicture.asset(ImageAssets.areaIcon),
         Padding(
           padding: const EdgeInsets.only(right: 8, left: 8),
-          child: Text(" $area", style: const TextStyle(fontSize: 12)),
+          child: Text(
+              "   ${AppLocalizations.of(context)!.isEnLocale ? area == "null" ? "0" : area : replaceToArabicNumber(area.toString())}",
+              style: const TextStyle(fontSize: 12)),
         ),
-
         SvgPicture.asset(ImageAssets.roomsIcon),
         Padding(
           padding: const EdgeInsets.only(right: 8, left: 8),
           child: Text(
-            " ${AppLocalizations.of(context)!.isEnLocale ? bedrooms == "null" ? "0" : bedrooms : replaceToArabicNumber(bedrooms.toString())}",
+            "${bedrooms == '0' ? translateText(AppStrings.studioText, context) : IsLanguage.isEnLanguage(context) ? bedrooms: replaceToArabicNumber(bedrooms.toString())}",
             style: const TextStyle(fontSize: 12),
           ),
         ),

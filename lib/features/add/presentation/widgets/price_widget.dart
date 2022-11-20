@@ -19,13 +19,13 @@ class PriceAddWidget extends StatelessWidget {
     return Column(
       children: [
         ListTileAllDetailsWidget(
-            image: title == "Price"
+            image: title == translateText(AppStrings.priceText, context)
                 ? ImageAssets.priceIcon
                 : ImageAssets.areaGoldIcon,
             text: title,
             iconColor: AppColors.primary),
         const SizedBox(height: 6),
-        title == "Price"
+        title == translateText(AppStrings.priceText, context)
             ? Row(
                 children: [
                   Expanded(
@@ -33,11 +33,11 @@ class PriceAddWidget extends StatelessWidget {
                     child: CustomTextField(
                       controller: context.read<AddAdsCubit>().priceController,
                       image: "null",
-                      title: title == "Area" ? "$title in m" : title,
+                      title: title == translateText(AppStrings.areaText, context) ? "$title in m" : title,
                       textInputType: TextInputType.number,
-                      validatorMessage: title == 'Area'
-                          ? "Please Inter The Area"
-                          : "Please Inter The Price",
+                      validatorMessage: title == translateText(AppStrings.areaText, context)
+                          ? translateText(AppStrings.areaText, context)
+                          : translateText(AppStrings.priceValidator, context),
                     ),
                   ),
                   Expanded(
@@ -55,11 +55,11 @@ class PriceAddWidget extends StatelessWidget {
             : CustomTextField(
                 controller: context.read<AddAdsCubit>().areaController,
                 image: "null",
-                title: title == "Area" ? "$title in m" : title,
+                title: title == translateText(AppStrings.areaText, context) ? "$title in m" : title,
                 textInputType: TextInputType.number,
-                validatorMessage: title == 'Area'
-                    ? "Please Inter The Area"
-                    : "Please Inter The Price",
+                validatorMessage: title == translateText(AppStrings.areaText, context)
+                    ? translateText(AppStrings.areaText, context)
+                    : translateText(AppStrings.priceValidator, context),
               ),
       ],
     );

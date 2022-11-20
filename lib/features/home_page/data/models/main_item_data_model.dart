@@ -53,6 +53,8 @@ class MainItemModel extends MainItem {
     required super.locationNameKu,
     required super.services,
     required super.userModel,
+    required super.livingRoom,
+    required super.isFavourite,
   });
 
   factory MainItemModel.fromJson(Map<String, dynamic> json) => MainItemModel(
@@ -75,6 +77,7 @@ class MainItemModel extends MainItem {
         bedroom: json["bedroom"],
         babyRoom: json["baby_room"],
         kitchen: json["kitchen"],
+        livingRoom: json["living_room"],
         receptionRoom: json["reception_room"],
         diningRoom: json["dining_room"],
         bathRoom: json["bath_room"] == null ? null : json["bath_room"],
@@ -101,6 +104,7 @@ class MainItemModel extends MainItem {
         userId: json["user_id"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        isFavourite: json["is_favourite"],
         images: List<FloorPlan>.from(
             json["images"].map((x) => FloorPlan.fromJson(x))),
         videos: List<FloorPlan>.from(
@@ -144,6 +148,7 @@ class MainItemModel extends MainItem {
         "bedroom": bedroom,
         "baby_room": babyRoom,
         "kitchen": kitchen,
+        "living_room": livingRoom,
         "reception_room": receptionRoom,
         "dining_room": diningRoom,
         "bath_room": bathRoom == null ? null : bathRoom,
@@ -173,6 +178,7 @@ class MainItemModel extends MainItem {
         "agent": agent == null ? null : agent!.toJson(),
         "user": userModel!.toJson(),
         "company": company!.toJson(),
+        "is_favourite": isFavourite,
         "services": List<dynamic>.from(services!.map((x) => x.toJson())),
       };
 }

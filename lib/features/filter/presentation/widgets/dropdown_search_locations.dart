@@ -17,14 +17,12 @@ class DropdownSearchLocationWidget extends StatelessWidget {
     required this.labelText,
     required this.isEnable,
     this.kind = 'null',
-    this.update = 'null',
   }) : super(key: key);
   final List<String> dropdownList;
   final IconData icon;
   final String labelText;
   final bool isEnable;
   final String kind;
-  final String update;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +32,32 @@ class DropdownSearchLocationWidget extends StatelessWidget {
       s.add(element.split("/")[0]);
       ids.add(element.split("/")[1]);
     }
-print(s);
     return DropdownSearch<String>(
       selectedItem: kind == 'addAds'
           ? context.read<AddAdsCubit>().btnText == 'update'
               ? context.read<AddAdsCubit>().citiesLocationEn.isNotEmpty
-                  ? s[ids.indexOf(context.read<AddAdsCubit>().locationId.toString())]
+                  ? ids.contains(
+                          context.read<AddAdsCubit>().locationId.toString())
+                      ? s[ids.indexOf(
+                          context.read<AddAdsCubit>().locationId.toString())]
+                      : null
                   : null
               : null
-          : null,
+          : kind == "addProject"
+              ? context.read<AddProjectCubit>().btnText == 'update'
+                  ? context.read<AddProjectCubit>().citiesLocationEn.isNotEmpty
+                      ? ids.contains(context
+                              .read<AddProjectCubit>()
+                              .locationId
+                              .toString())
+                          ? s[ids.indexOf(context
+                              .read<AddProjectCubit>()
+                              .locationId
+                              .toString())]
+                          : null
+                      : null
+                  : null
+              : null,
       popupProps: const PopupProps.menu(
         showSelectedItems: true,
         fit: FlexFit.loose,
@@ -73,15 +88,12 @@ print(s);
           for (var element in dropdownList) {
             if (element.contains(text!)) {
               if (kind == 'addAds') {
-                print("111111");
                 context.read<AddAdsCubit>().locationId =
                     int.parse(element.split("/")[1]);
               } else if (kind == 'addProject') {
-                print("111111");
                 context.read<AddProjectCubit>().locationId =
                     int.parse(element.split("/")[1]);
               } else {
-                print("222222");
                 context.read<FilterCubit>().locationId =
                     int.parse(element.split("/")[1]);
               }

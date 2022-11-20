@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/call_method.dart';
 import '../../../../core/utils/whatsapp_launch_method.dart';
-import '../../../chat/data/models/MyRooms.dart';
 import '../../../chat/domain/entities/open_room_model.dart';
 import '../../../chat/presentation/screens/chat_page.dart';
 import '../../../chat/presentation/screens/conversation_screen/cubit/conversation_page_cubit.dart';

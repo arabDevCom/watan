@@ -44,16 +44,18 @@ class AddScreen extends StatefulWidget {
 
 class _AddScreenState extends State<AddScreen> {
   final formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
-    if(!widget.isUpdate){
-      context.read<AddAdsCubit>().btnText='';
+    if (!widget.isUpdate) {
+      context.read<AddAdsCubit>().btnText = '';
     }
-    if(context.read<AddAdsCubit>().btnText!='update'){
+    if (context.read<AddAdsCubit>().btnText != 'update') {
       context.read<AddAdsCubit>().clearData();
     }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddAdsCubit, AddAdsState>(
@@ -61,7 +63,7 @@ class _AddScreenState extends State<AddScreen> {
         AddAdsCubit addAdsCubit = context.read<AddAdsCubit>();
         if (state is AddAdsPostLoaded) {
           Future.delayed(const Duration(milliseconds: 500), () {
-            snackBar("SuccessFully", context, color: AppColors.success);
+            snackBar(translateText(AppStrings.successFullyAddedMessage, context), context, color: AppColors.success);
           });
         }
         if (state is AddAdsPostError ||
@@ -70,7 +72,9 @@ class _AddScreenState extends State<AddScreen> {
           Future.delayed(
             const Duration(milliseconds: 500),
             () {
-              snackBar("Error", context, color: AppColors.error);
+              snackBar(
+                  translateText(AppStrings.someErrorMessage, context), context,
+                  color: AppColors.error);
             },
           );
         }
@@ -138,95 +142,98 @@ class _AddScreenState extends State<AddScreen> {
                   const GrayLine(),
                   const FurnishedWidget(),
                   const GrayLine(),
-                  const PriceAddWidget(title: "Price"),
+                   PriceAddWidget(title: translateText(AppStrings.priceText, context)),
                   const GrayLine(),
-                  const PriceAddWidget(title: "Area"),
+                   PriceAddWidget(title: translateText(AppStrings.areaText, context)),
                   const GrayLine(),
                   const AmenitiesAddWidget(isSelected: true, kind: 'addAds'),
                   const GrayLine(),
                   const BedRoomsWidget(typeClass: 'add'),
                   const GrayLine(),
-                  const ListNumbersWidget(
+                   ListNumbersWidget(
                     image: ImageAssets.bathGoldIcon,
-                    title: "Bathroom",
+                    title: translateText(AppStrings.bathroomText, context),
                     kind: 'bathroom',
                   ),
                   const GrayLine(),
-                  const ListNumbersWidget(
+                   ListNumbersWidget(
                     image: ImageAssets.kitchenIcon,
-                    title: "Kitchen",
+                    title: translateText(AppStrings.kitchenText, context),
                     kind: 'kitchen',
                   ),
                   const GrayLine(),
-                  const ListNumbersWidget(
+                   ListNumbersWidget(
                     image: ImageAssets.livingRoomIcon,
-                    title: "Living Rooms",
+                    title: translateText(AppStrings.livingText, context),
                     kind: 'living',
                   ),
                   const GrayLine(),
-                  const ListNumbersWidget(
+                   ListNumbersWidget(
                     image: ImageAssets.dinnerIcon,
-                    title: "Dining Rooms",
+                    title: translateText(AppStrings.diningText, context),
                     kind: 'dining',
                   ),
                   const GrayLine(),
-                  const SelectYourLocation(),
+                  const SelectYourLocation(kindOfSelected: 'addAds'),
                   const GrayLine(),
                   PickImagesContainerWidget(
-                      title: "Image", isUpdate: widget.isUpdate),
+                      title: translateText(AppStrings.imagesText, context), isUpdate: widget.isUpdate),
                   const GrayLine(),
-                  const PickVideosContainerWidget(
-                    title: "Video",
+                   PickVideosContainerWidget(
+                    title: translateText(AppStrings.videoText, context),
                     kind: 'addAds',
                   ),
                   const GrayLine(),
                   const ContactWidget(),
                   CustomButton(
                     text: context.read<AddAdsCubit>().btnText == 'update'
-                        ? "Update"
-                        : "Add Property",
+                        ? translateText(AppStrings.updateBtnText, context)
+                        : translateText(AppStrings.addBtn, context),
                     color: AppColors.primary,
                     paddingHorizontal: 60,
                     onClick: () {
                       if (formKey.currentState!.validate()) {
                         if (addAdsCubit.cityId == 0) {
-                          snackBar("Please Select Your City", context,
+                          snackBar(translateText(AppStrings.selectCityText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.locationId == 0) {
-                          snackBar("Please Select Your Location", context,
+                          snackBar(translateText(AppStrings.selectLocationText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.type == -1) {
-                          snackBar("Please Select Your Property Type", context,
+                          snackBar(translateText(AppStrings.selectPropertyTypeText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.currency == '') {
-                          snackBar("Please Select Currency of Price ", context,
+                          snackBar(translateText(AppStrings.selectCurrencyText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.bedroom == -1) {
-                          snackBar("Please Select BedRoom Count ", context,
+                          snackBar(translateText(AppStrings.selectBedRoomText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.kitchen == 0) {
-                          snackBar("Please Select Kitchen Count ", context,
+                          snackBar(translateText(AppStrings.selectKitchenText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.bathroom == 0) {
-                          snackBar("Please Select BathRoom Count ", context,
+                          snackBar(translateText(AppStrings.selectBathRoomText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.livingRoom == 0) {
-                          snackBar("Please Select LivingRoom Count ", context,
+                          snackBar(translateText(AppStrings.selectLivingRoomText, context), context,
                               color: AppColors.primary);
                         } else if (addAdsCubit.diningRoom == 0) {
-                          snackBar("Please Select DiningRoom Count ", context,
+                          snackBar(translateText(AppStrings.selectDiningRoomText, context), context,
                               color: AppColors.primary);
+                        } else if (addAdsCubit.longitude == 0 ||
+                            addAdsCubit.latitude == 0) {
+                          snackBar(
+                            translateText(AppStrings.selectLocationText, context),
+                            context,
+                            color: AppColors.primary,
+                          );
                         } else if (addAdsCubit.image.isEmpty) {
-                          snackBar("Please Select Your Image ", context,
+                          snackBar(translateText(AppStrings.selectImageValidator, context), context,
                               color: AppColors.primary);
                         } else {
                           context.read<AddAdsCubit>().btnText == 'update'
-                              ? context.read<AddAdsCubit>().addAdsPost()
+                              ? context.read<AddAdsCubit>().updateAdsPost()
                               : context.read<AddAdsCubit>().addAdsPost();
-
-                          // context
-                          //     .read<AddAdsCubit>()
-                          //     .addAdsPost(loginModel.data!.accessToken!);
                         }
                       }
                     },

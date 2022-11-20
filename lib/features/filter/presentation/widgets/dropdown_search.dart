@@ -35,7 +35,6 @@ class DropdownSearchWidget extends StatelessWidget {
       ids.add(element.split("/")[1]);
     }
 
-    print(s);
     return Theme(
       data: ThemeData(
           textTheme: const TextTheme(subtitle1: TextStyle(fontSize: 14))),
@@ -51,7 +50,14 @@ class DropdownSearchWidget extends StatelessWidget {
                 ? context.read<AddAdsCubit>().currency == 'USD'
                     ? s[0]
                     : s[1]
-                : null,
+                : kind == "addProject"
+                    ? context.read<AddProjectCubit>().btnText == 'update'
+                        ? context.read<AddProjectCubit>().citiesEn.isNotEmpty
+                            ? s[ids.indexOf(
+                                context.read<AddProjectCubit>().cityId.toString())]
+                            : null
+                        : null
+                    : null,
         popupProps: const PopupProps.menu(
           showSelectedItems: true,
           fit: FlexFit.loose,

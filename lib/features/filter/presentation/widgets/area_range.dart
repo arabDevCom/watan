@@ -1,8 +1,13 @@
+import 'package:elwatn/core/utils/app_strings.dart';
+import 'package:elwatn/features/app_settings/domain/entities/app_setting_domain_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/convert_numbers_method.dart';
+import '../../../../core/utils/is_language_methods.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../cubit/filter_cubit.dart';
 
 class AreaRangeWidget extends StatelessWidget {
@@ -14,7 +19,7 @@ class AreaRangeWidget extends StatelessWidget {
       Row(children: [
         SvgPicture.asset(ImageAssets.areaGoldIcon,width: 20,height: 20,),
         const SizedBox(width: 10),
-        const Text("Area Range",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+         Text(translateText(AppStrings.areaRangeText,context),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
       ],),
       const SizedBox(height: 20),
       Row(children: [
@@ -24,13 +29,17 @@ class AreaRangeWidget extends StatelessWidget {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                hintText: "0"
+              hintText: IsLanguage.isEnLanguage(context)
+                  ? "0"
+                  : replaceToArabicNumber('0'),
             ),
             textAlign: TextAlign.center,
           ),
         ),
         const SizedBox(width: 25),
-        const Text("To",style: TextStyle(fontSize: 12),),
+         Text(
+          translateText(AppStrings.toText, context),
+          style: TextStyle(fontSize: 12),),
         const SizedBox(width: 25),
         Expanded(
           child: TextFormField(
@@ -39,7 +48,7 @@ class AreaRangeWidget extends StatelessWidget {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                hintText: "any"
+              hintText: translateText(AppStrings.anyHint, context),
             ),
           ),
         ),

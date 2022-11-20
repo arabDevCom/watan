@@ -9,7 +9,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/assets_manager.dart';
+import '../../../../core/utils/translate_text_method.dart';
 import '../../../add_project/presentation/cubit/add_project_cubit.dart';
 import '../../../details/presentation/widgets/list_tile_all_details.dart';
 
@@ -32,20 +34,29 @@ class PickImagesContainerWidget extends StatefulWidget {
 class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
   final picker = ImagePicker();
 
-  int indexCount = 0;
+  int imageIndexCount = 0;
+  int floorIndexCount = 0;
 
   @override
   void initState() {
     super.initState();
     if (widget.kind == 'addProject') {
       if (widget.title == 'Image') {
-        context.read<AddProjectCubit>().image = [];
+        if (!widget.isUpdate) {
+          context.read<AddProjectCubit>().image = [];
+        }else{
+          imageIndexCount = context.read<AddProjectCubit>().image.length;
+        }
       } else {
-        context.read<AddProjectCubit>().floorPlan = [];
+        if (!widget.isUpdate) {
+          context.read<AddProjectCubit>().floorPlan = [];
+        }else{
+          floorIndexCount = context.read<AddProjectCubit>().floorPlan.length;
+        }
       }
     } else {
       if (widget.isUpdate) {
-        indexCount = context.read<AddAdsCubit>().image.length;
+        imageIndexCount = context.read<AddAdsCubit>().image.length;
       } else {
         context.read<AddAdsCubit>().image = [];
       }
@@ -70,7 +81,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                     .pickImage(source: ImageSource.gallery)
                     .then((value) {
                   setState(() {
-                    if (widget.title == 'Image') {
+                    if (widget.title == translateText(AppStrings.imagesText, context)) {
                       context.read<AddProjectCubit>().image.add(value!.path);
                       context.read<AddProjectCubit>().convertImage(value.path);
                     } else {
@@ -114,7 +125,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                             SvgPicture.asset(ImageAssets.addIcon),
                             const SizedBox(width: 5),
                             Text(
-                              "Upload Property ${widget.title}s",
+                              translateText(AppStrings.uploadText, context),
                               style: TextStyle(
                                 color: AppColors.gray,
                                 fontSize: 16,
@@ -145,7 +156,9 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                                               height: 110,
                                               imageUrl: context
                                                   .read<AddAdsCubit>()
-                                                  .image[index],
+                                                  .image[index]
+                                                  .split('@')
+                                                  .first,
                                             )
                                           : Image.file(
                                               File(
@@ -177,9 +190,10 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                                                       .add(
                                                         context
                                                             .read<AddAdsCubit>()
-                                                            .image[index],
+                                                            .image[index]
+                                                            .split('@')[1],
                                                       );
-                                                  indexCount = indexCount - 1;
+                                                  imageIndexCount = imageIndexCount - 1;
                                                   context
                                                       .read<AddAdsCubit>()
                                                       .image
@@ -193,7 +207,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                                                       .read<AddAdsCubit>()
                                                       .images
                                                       .removeAt(
-                                                        index - indexCount,
+                                                        index - imageIndexCount,
                                                       );
                                                   context
                                                       .read<AddAdsCubit>()
@@ -251,7 +265,6 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                                         .read<AddAdsCubit>()
                                         .image
                                         .add(value!.path);
-                                    print(value.path);
                                     context
                                         .read<AddAdsCubit>()
                                         .convertImage(value.path);
@@ -280,7 +293,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                                       ),
                                       const SizedBox(height: 5),
                                       Text(
-                                        "Upload",
+                                        translateText(AppStrings.uploadText, context),
                                         style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 15),
@@ -293,7 +306,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                           )
                         ],
                       )
-                : (widget.title == 'Image'
+                : (widget.title == translateText(AppStrings.uploadText, context)
                         ? context.read<AddProjectCubit>().image.isEmpty
                         : context.read<AddProjectCubit>().floorPlan.isEmpty)
                     ? Padding(
@@ -305,7 +318,7 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                             SvgPicture.asset(ImageAssets.addIcon),
                             const SizedBox(width: 5),
                             Text(
-                              "Upload Property ${widget.title}s",
+                              translateText(AppStrings.uploadText, context),
                               style: TextStyle(
                                 color: AppColors.gray,
                                 fontSize: 16,
@@ -314,148 +327,375 @@ class _PickImagesContainerWidgetState extends State<PickImagesContainerWidget> {
                           ],
                         ),
                       )
-                    : Column(
-                        children: [
-                          SizedBox(
-                            height: 150,
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const Divider(),
-                              itemBuilder: (context, index) => Center(
-                                child: Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.file(
-                                        File(
-                                          widget.title == 'Image'
-                                              ? context
+                    : widget.title == translateText(AppStrings.imagesText, context)
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(),
+                                  itemBuilder: (context, index) => Center(
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: context
                                                   .read<AddProjectCubit>()
                                                   .image[index]
-                                              : context
-                                                  .read<AddProjectCubit>()
-                                                  .floorPlan[index],
+                                                  .contains(
+                                                      'https://watan.motaweron.com')
+                                              ? ManageNetworkImage(
+                                                  width: 110,
+                                                  height: 110,
+                                                  imageUrl: context
+                                                      .read<AddProjectCubit>()
+                                                      .image[index]
+                                                      .split('@')
+                                                      .first,
+                                                )
+                                              : Image.file(
+                                                  File(
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .image[index],
+                                                  ),
+                                                  width: 110,
+                                                  height: 110,
+                                                  fit: BoxFit.fill,
+                                                ),
                                         ),
-                                        width: 110,
-                                        height: 110,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            if (widget.title == 'Image') {
-                                              context
-                                                  .read<AddProjectCubit>()
-                                                  .images
-                                                  .removeAt(index);
-                                              context
-                                                  .read<AddProjectCubit>()
-                                                  .image
-                                                  .removeAt(index);
-                                            } else {
-                                              context
-                                                  .read<AddProjectCubit>()
-                                                  .floorPlans
-                                                  .removeAt(index);
-                                              context
-                                                  .read<AddProjectCubit>()
-                                                  .floorPlan
-                                                  .removeAt(index);
-                                            }
-                                          });
-                                        },
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              color: AppColors.primary,
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (widget.isUpdate) {
+                                                if (context
+                                                    .read<AddProjectCubit>()
+                                                    .image[index]
+                                                    .contains(
+                                                        'https://watan.motaweron.com')) {
+                                                  setState(
+                                                    () {
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .removedImages
+                                                          .add(
+                                                            context
+                                                                .read<
+                                                                AddProjectCubit>()
+                                                                .image[index]
+                                                                .split('@')[1],
+                                                          );
+                                                      imageIndexCount =
+                                                          imageIndexCount - 1;
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .image
+                                                          .removeAt(index);
+                                                    },
+                                                  );
+                                                } else {
+                                                  setState(
+                                                    () {
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .images
+                                                          .removeAt(
+                                                            index - imageIndexCount,
+                                                          );
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .image
+                                                          .removeAt(index);
+                                                    },
+                                                  );
+                                                }
+                                              } else {
+                                                setState(
+                                                  () {
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .images
+                                                        .removeAt(index);
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .image
+                                                        .removeAt(index);
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                color: AppColors.primary,
+                                              ),
+                                              child: Icon(
+                                                Icons.clear,
+                                                size: 16,
+                                                color: AppColors.white,
+                                              ),
                                             ),
-                                            child: Icon(
-                                              Icons.clear,
-                                              size: 16,
-                                              color: AppColors.white,
-                                            )),
-                                      ),
-                                    )
-                                  ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  itemCount: context
+                                      .read<AddProjectCubit>()
+                                      .image
+                                      .length,
+                                  scrollDirection: Axis.horizontal,
                                 ),
                               ),
-                              itemCount: widget.title == 'Image'
-                                  ? context.read<AddProjectCubit>().image.length
-                                  : context
+                              Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await picker
+                                        .pickImage(source: ImageSource.gallery)
+                                        .then(
+                                      (value) {
+                                        setState(
+                                          () {
+                                            context
+                                                .read<AddProjectCubit>()
+                                                .image
+                                                .add(value!.path);
+                                            context
+                                                .read<AddProjectCubit>()
+                                                .convertImage(value.path);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 80,
+                                    width: 110,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            ImageAssets.addIcon,
+                                            width: 16,
+                                            height: 16,
+                                            color: AppColors.primary,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            translateText(AppStrings.uploadText, context),
+                                            style: TextStyle(
+                                              color: AppColors.primary,
+                                              fontSize: 15,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(),
+                                  itemBuilder: (context, index) => Center(
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: context
+                                                  .read<AddProjectCubit>()
+                                                  .floorPlan[index]
+                                                  .contains(
+                                                      'https://watan.motaweron.com')
+                                              ? ManageNetworkImage(
+                                                  width: 110,
+                                                  height: 110,
+                                                  imageUrl: context
+                                                      .read<AddProjectCubit>()
+                                                      .floorPlan[index]
+                                                      .split('@')
+                                                      .first,
+                                                )
+                                              : Image.file(
+                                                  File(
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .floorPlan[index],
+                                                  ),
+                                                  width: 110,
+                                                  height: 110,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (widget.isUpdate) {
+                                                if (context
+                                                    .read<AddProjectCubit>()
+                                                    .floorPlan[index]
+                                                    .contains(
+                                                        'https://watan.motaweron.com')) {
+                                                  setState(
+                                                    () {
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .removedFloors
+                                                          .add(
+                                                            context
+                                                                .read<
+                                                                    AddProjectCubit>()
+                                                                .floorPlan[index]
+                                                                .split('@')[1],
+                                                          );
+                                                      floorIndexCount =
+                                                          floorIndexCount - 1;
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .floorPlan
+                                                          .removeAt(index);
+                                                    },
+                                                  );
+                                                } else {
+                                                  setState(
+                                                    () {
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .floorPlans
+                                                          .removeAt(
+                                                            index - floorIndexCount,
+                                                          );
+                                                      context
+                                                          .read<AddProjectCubit>()
+                                                          .floorPlan
+                                                          .removeAt(index);
+                                                    },
+                                                  );
+                                                }
+                                              } else {
+                                                setState(
+                                                  () {
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .floorPlans
+                                                        .removeAt(index);
+                                                    context
+                                                        .read<AddProjectCubit>()
+                                                        .floorPlan
+                                                        .removeAt(index);
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                color: AppColors.primary,
+                                              ),
+                                              child: Icon(
+                                                Icons.clear,
+                                                size: 16,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  itemCount: context
                                       .read<AddProjectCubit>()
                                       .floorPlan
                                       .length,
-                              scrollDirection: Axis.horizontal,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: InkWell(
-                              onTap: () async {
-                                await picker
-                                    .pickImage(source: ImageSource.gallery)
-                                    .then((value) {
-                                  setState(() {
-                                    if (widget.title == 'Image') {
-                                      context
-                                          .read<AddProjectCubit>()
-                                          .image
-                                          .add(value!.path);
-                                      context
-                                          .read<AddProjectCubit>()
-                                          .convertImage(value.path);
-                                    } else {
-                                      context
-                                          .read<AddProjectCubit>()
-                                          .floorPlan
-                                          .add(value!.path);
-                                      context
-                                          .read<AddProjectCubit>()
-                                          .convertFloorPlan(value.path);
-                                    }
-                                  });
-                                });
-                              },
-                              child: Container(
-                                height: 80,
-                                width: 110,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border:
-                                        Border.all(color: AppColors.primary)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageAssets.addIcon,
-                                        width: 16,
-                                        height: 16,
-                                        color: AppColors.primary,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        "Upload",
-                                        style: TextStyle(
-                                            color: AppColors.primary,
-                                            fontSize: 15),
-                                      )
-                                    ],
-                                  ),
+                                  scrollDirection: Axis.horizontal,
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
+                              Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await picker
+                                        .pickImage(source: ImageSource.gallery)
+                                        .then(
+                                      (value) {
+                                        setState(
+                                          () {
+                                            context
+                                                .read<AddProjectCubit>()
+                                                .floorPlan
+                                                .add(value!.path);
+                                            context
+                                                .read<AddProjectCubit>()
+                                                .convertFloorPlan(value.path);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 80,
+                                    width: 110,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            ImageAssets.addIcon,
+                                            width: 16,
+                                            height: 16,
+                                            color: AppColors.primary,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            translateText(AppStrings.uploadText, context),
+                                            style: TextStyle(
+                                              color: AppColors.primary,
+                                              fontSize: 15,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
           ),
         ),
       ],

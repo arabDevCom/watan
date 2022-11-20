@@ -1,6 +1,7 @@
 import 'package:elwatn/core/utils/is_language_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -93,7 +94,8 @@ class AppSettingsScreens extends StatelessWidget {
                         ],
                       ),
                     ),
-                    LongText(text: text),
+                    HtmlWidget(text),
+                    // LongText(text: text),
                   ],
                 ),
               ),

@@ -21,6 +21,7 @@ class FilterModel {
     this.bathRoom,
     this.sizeFrom,
     this.sizeTo,
+    this.userId,
   });
 
  final String? status;
@@ -34,6 +35,7 @@ class FilterModel {
  final int? bathRoom;
  final int? sizeFrom;
  final int? sizeTo;
+ final int? userId;
 
   factory FilterModel.fromJson(Map<String, dynamic> json) => FilterModel(
     status: json["status"],
@@ -61,5 +63,6 @@ class FilterModel {
     "bath_room": bathRoom,
     "size_from": sizeFrom,
     "size_to": sizeTo,
+    "user_id": userId,
   };
 }
